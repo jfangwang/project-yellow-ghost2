@@ -7,6 +7,7 @@ import SwipeableViews from 'react-swipeable-views';
 import Camera from '../Screens/Camera/Camera';
 import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
+import Footer from '../Components/Footer/Footer';
 import { resize, changeToIndex } from '../Actions/globalActions';
 import { connect } from 'react-redux'
 
@@ -31,20 +32,21 @@ export class App extends Component {
     }
   }
   render() {
-    const {height, width, changeToIndex, index} = this.props
+    const { height, width, changeToIndex, index } = this.props
     return (
       <Router>
         <SwipeableRoutes
           enableMouseEvents
-          replace
           index={index}
           onChangeIndex={changeToIndex}
-          style={{backgroundColor: 'lightCoral', height:height, width: width}}
+          style={{ backgroundColor: 'lightCoral', height: height, width: width }}
+          replace
         >
-          <Route path="/messages" component={Messages}/>
-          <Route path="/camera" component={Camera}/>
-          <Route path="/discover" component={Discover}/>
+          <Route path="/messages" component={Messages} />
+          <Route index path="/camera" component={Camera} />
+          <Route path="/discover" component={Discover} />
         </SwipeableRoutes>
+        <Footer />
       </Router>
     );
   }
