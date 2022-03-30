@@ -12,6 +12,9 @@
     padding-top: 0.3rem;
     padding-bottom: 0.3rem;
 }
+h1 {
+    margin: 0;
+}
 .mainNavbar > div {
     display: flex;
     justify-content: center;

@@ -27,6 +27,9 @@ function Navbar(props) {
           <button><MagnifyingGlass /></button>
         </div>
         <div>
+          <h1>Chat</h1>
+        </div>
+        <div>
           <button><UserPlus /></button>
           <button><DotsThree /></button>
         </div>

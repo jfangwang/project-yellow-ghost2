@@ -8,14 +8,14 @@ export function globalReducer(state = initialState, action) {
   switch (action.type) {
     case "global/resize":
       return {
-        ...initialState,
+        ...state,
         height: window.innerHeight,
         width: window.innerWidth,
       }
     case "global/changeToIndex":
       // console.log(action.index);
       return {
-        ...initialState,
+        ...state,
         height: window.innerHeight,
         width: window.innerWidth,
         index: action.index,
@@ -23,7 +23,7 @@ export function globalReducer(state = initialState, action) {
       }
     case "global/updateDecimalIndex":
       return {
-        ...initialState,
+        ...state,
         dec_index: action.dec_index,
       }
     default:
