@@ -1,6 +1,7 @@
 export const initialState = {
   height: window.innerHeight,
   width: window.innerWidth,
+  index: 1,
 }
 export function globalReducer(state = initialState, action) {
   switch (action.type) {
@@ -9,6 +10,14 @@ export function globalReducer(state = initialState, action) {
         ...initialState,
         height: window.innerHeight,
         width: window.innerWidth,
+      }
+    case "global/changeToIndex":
+      // console.log(action.index);
+      return {
+        ...initialState,
+        height: window.innerHeight,
+        width: window.innerWidth,
+        index: action.index
       }
     default:
       return state
