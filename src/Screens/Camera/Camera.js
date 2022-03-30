@@ -10,7 +10,9 @@ function Camera(props) {
     <div>
       <h1>Camera</h1>
       <button onClick={() => testRef.current.toggle()}>Click Me</button>
-      <SlidingMenu ref={testRef} height={height} width={width}/>
+      <SlidingMenu ref={testRef} height={height} width={width}>
+        <h1>Testing</h1>
+      </SlidingMenu>
     </div>
   )
 }

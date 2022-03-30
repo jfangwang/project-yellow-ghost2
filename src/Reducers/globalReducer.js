@@ -2,6 +2,7 @@ export const initialState = {
   height: window.innerHeight,
   width: window.innerWidth,
   index: 1,
+  dec_index: 1,
 }
 export function globalReducer(state = initialState, action) {
   switch (action.type) {
@@ -17,7 +18,13 @@ export function globalReducer(state = initialState, action) {
         ...initialState,
         height: window.innerHeight,
         width: window.innerWidth,
-        index: action.index
+        index: action.index,
+        dec_index: action.index,
+      }
+    case "global/updateDecimalIndex":
+      return {
+        ...initialState,
+        dec_index: action.dec_index,
       }
     default:
       return state

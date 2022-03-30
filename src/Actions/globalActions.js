@@ -1,5 +1,6 @@
 export const RESIZE = "global/resize"
 export const CHANGE_TO_INDEX = "global/changeToIndex"
+export const UPDATE_DEC_INDEX = "global/updateDecimalIndex"
 
 export function resize() {
   return {
@@ -9,6 +10,12 @@ export function resize() {
 export function changeToIndex(index) {
   return {
     type: CHANGE_TO_INDEX,
-    index: index
+    index: index,
+  }
+}
+export function updateDecimalIndex(dec_index) {
+  return {
+    type: UPDATE_DEC_INDEX,
+    dec_index: dec_index,
   }
 }

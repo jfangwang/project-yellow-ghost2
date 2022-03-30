@@ -7,8 +7,9 @@ import SwipeableViews from 'react-swipeable-views';
 import Camera from '../Screens/Camera/Camera';
 import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
+import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
-import { resize, changeToIndex } from '../Actions/globalActions';
+import { resize, changeToIndex, updateDecimalIndex } from '../Actions/globalActions';
 import { connect } from 'react-redux'
 
 export class App extends Component {
@@ -22,7 +23,7 @@ export class App extends Component {
     window.addEventListener('keydown', this.logKey);
   }
   test(e) {
-    console.log(e);
+    console.log(e)
   }
   logKey(e) {
     if ((this.props.index < 2) && (e.code === "KeyD" || e.code === "ArrowRight")) {
@@ -32,11 +33,12 @@ export class App extends Component {
     }
   }
   render() {
-    const { height, width, changeToIndex, index } = this.props
+    const { height, width, changeToIndex, index, updateDecimalIndex } = this.props
     return (
       <Router>
         <SwipeableRoutes
           enableMouseEvents
+          onSwitching={updateDecimalIndex}
           index={index}
           onChangeIndex={changeToIndex}
           style={{ backgroundColor: 'lightCoral', height: height, width: width }}
@@ -46,6 +48,7 @@ export class App extends Component {
           <Route index path="/camera" component={Camera} />
           <Route path="/discover" component={Discover} />
         </SwipeableRoutes>
+        <Navbar />
         <Footer />
       </Router>
     );
@@ -66,6 +69,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   resize,
   changeToIndex,
+  updateDecimalIndex,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

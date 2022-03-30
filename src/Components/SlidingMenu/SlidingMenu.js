@@ -3,14 +3,9 @@ import PropTypes from 'prop-types'
 import { forwardRef, useImperativeHandle } from "react"
 import SwipeableViews from 'react-swipeable-views'
 
-let list = [];
-for (var i = 0; i < 200; i++) {
-  list.push(<h1 style={{ margin: 0 }}>filler</h1>)
-}
-
 
 const SlidingMenu = forwardRef((props, ref) => {
-  const { height, width, axis } = props
+  const { height, width, axis, children } = props
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0)
   const [disabled, setDisabled] = useState(false)
@@ -59,7 +54,7 @@ const SlidingMenu = forwardRef((props, ref) => {
               style={{ backgroundColor: "white", height: height, overflowY: 'scroll' }}
             >
              <div style={{backgroundColor: "white"}}>
-               {list}
+               {children}
              </div>
             </div>
           </SwipeableViews>
