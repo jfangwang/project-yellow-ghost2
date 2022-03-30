@@ -5,7 +5,7 @@ import SwipeableViews from 'react-swipeable-views'
 
 
 const SlidingMenu = forwardRef((props, ref) => {
-  const { height, width, axis, children } = props
+  const { height, width, axis, children, toggleSlide } = props
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0)
   const [disabled, setDisabled] = useState(false)
@@ -25,6 +25,7 @@ const SlidingMenu = forwardRef((props, ref) => {
   function checkIndex(e) {
     if (index == 0) {
       setShow(false);
+      toggleSlide();
     }
   }
   const handleScroll = (e) => {
@@ -68,8 +69,10 @@ SlidingMenu.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   axis: PropTypes.string,
+  toggleSlide: PropTypes.func,
 }
 SlidingMenu.defaultProps = {
+  toggleSlide: () => {},
   axis: 'y'
 }
 

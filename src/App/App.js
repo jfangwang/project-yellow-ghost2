@@ -9,7 +9,7 @@ import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
-import { resize, changeToIndex, updateDecimalIndex } from '../Actions/globalActions';
+import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../Actions/globalActions';
 import { connect } from 'react-redux'
 
 export class App extends Component {
@@ -26,14 +26,14 @@ export class App extends Component {
     console.log(e)
   }
   logKey(e) {
-    if ((this.props.index < 2) && (e.code === "KeyD" || e.code === "ArrowRight")) {
+    if ((this.props.index < 2 && this.props.slide_disabled === false) && (e.code === "KeyD" || e.code === "ArrowRight")) {
       this.props.changeToIndex(this.props.index + 1)
-    } else if ((this.props.index > 0) && (e.code === "KeyA" || e.code === "ArrowLeft")) {
+    } else if ((this.props.index > 0 && this.props.slide_disabled === false) && (e.code === "KeyA" || e.code === "ArrowLeft")) {
       this.props.changeToIndex(this.props.index - 1)
     }
   }
   render() {
-    const { height, width, changeToIndex, index, updateDecimalIndex } = this.props
+    const { height, width, changeToIndex, index, updateDecimalIndex, slide_disabled, } = this.props
     return (
       <Router>
         <SwipeableRoutes
@@ -41,6 +41,7 @@ export class App extends Component {
           onSwitching={updateDecimalIndex}
           index={index}
           onChangeIndex={changeToIndex}
+          disabled={slide_disabled}
           style={{ backgroundColor: 'lightCoral', height: height, width: width }}
           replace
         >
@@ -48,8 +49,8 @@ export class App extends Component {
           <Route index path="/camera" component={Camera} />
           <Route path="/discover" component={Discover} />
         </SwipeableRoutes>
-        <Navbar />
         <Footer />
+        <Navbar />
       </Router>
     );
   }
@@ -63,6 +64,7 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     index: state.global.index,
+    slide_disabled: state.global.slide_disabled
   }
 }
 
@@ -70,6 +72,7 @@ const mapDispatchToProps = {
   resize,
   changeToIndex,
   updateDecimalIndex,
+  toggleSlide,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

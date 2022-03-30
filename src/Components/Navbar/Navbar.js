@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 import SlidingMenu from '../SlidingMenu/SlidingMenu'
 import styles from './Navbar.module.css';
 import { connect } from 'react-redux';
+import { toggleSlide } from '../../Actions/globalActions';
 import { IconContext, User, MagnifyingGlass, UserPlus, DotsThree } from 'phosphor-react';
 
 function Navbar(props) {
-  const { index, dec_index } = props;
+  const { index, dec_index, height, width, toggleSlide } = props;
   const accountMenu = useRef();
+
   return (
     <div className={styles.mainNavbar} style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - dec_index)})` }}>
       <IconContext.Provider
@@ -23,16 +25,27 @@ function Navbar(props) {
         }}
       >
         <div>
-          <button><User /></button>
+          <button onClick={() => {
+            accountMenu.current.toggle();
+            toggleSlide()
+          }}><User /></button>
           <button><MagnifyingGlass /></button>
         </div>
         <div>
-          <h1>Chat</h1>
+          <h1 style={{color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})`}}>
+            {dec_index < 1 && "Chat"}
+            {dec_index > 1 && "Discover"}
+          </h1>
         </div>
         <div>
           <button><UserPlus /></button>
           <button><DotsThree /></button>
         </div>
+        <SlidingMenu ref={accountMenu}  height={height} width={width} toggleSlide={toggleSlide}>
+          <div>
+            <h1>Account Menu</h1>
+          </div>
+        </SlidingMenu>
       </IconContext.Provider>
     </div>
   )
@@ -52,6 +65,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   // resize,
   // changeToIndex,
+  toggleSlide,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar)

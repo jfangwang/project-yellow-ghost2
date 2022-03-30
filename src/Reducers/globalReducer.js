@@ -3,6 +3,7 @@ export const initialState = {
   width: window.innerWidth,
   index: 1,
   dec_index: 1,
+  slide_disabled: false,
 }
 export function globalReducer(state = initialState, action) {
   switch (action.type) {
@@ -25,6 +26,18 @@ export function globalReducer(state = initialState, action) {
       return {
         ...state,
         dec_index: action.dec_index,
+      }
+    case "global/toggleSlide":
+      if (action.state) {
+        return {
+          ...state,
+          slide_disabled: action.state
+        }
+      } else {
+        return {
+          ...state,
+          slide_disabled: !state.slide_disabled
+        }
       }
     default:
       return state
