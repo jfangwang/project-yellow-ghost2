@@ -12,6 +12,7 @@ const SlidingMenu = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     toggle(e = !show) {
       setShow(e);
+      toggleSlide();
     }
   }))
   useEffect(() => {

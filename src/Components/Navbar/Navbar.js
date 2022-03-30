@@ -32,14 +32,8 @@ function Navbar(props) {
         }}
       >
         <div>
-          <button onClick={() => {
-            accountMenu.current.toggle();
-            toggleSlide()
-          }}><User /></button>
-          <button onClick={() => {
-            searchMenu.current.toggle();
-            toggleSlide()
-          }}><MagnifyingGlass /></button>
+          <button onClick={() => accountMenu.current.toggle()}><User /></button>
+          <button onClick={() => searchMenu.current.toggle()}><MagnifyingGlass /></button>
         </div>
         <div>
           <h1 style={{ color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})` }}>
@@ -48,17 +42,11 @@ function Navbar(props) {
           </h1>
         </div>
         <div>
-          <button onClick={() => {
-            addFriendMenu.current.toggle();
-            toggleSlide()
-          }}><UserPlus /></button>
+          <button onClick={() => addFriendMenu.current.toggle()}><UserPlus /></button>
           {index == 1 ?
             <button><ArrowsClockwise /></button>
             :
-            <button onClick={() => {
-              extraMenu.current.toggle();
-              toggleSlide()
-            }}><DotsThree /></button>
+            <button onClick={() => extraMenu.current.toggle()}><DotsThree /></button>
           }
         </div>
         <SlidingMenu axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide}>
