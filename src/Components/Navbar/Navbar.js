@@ -9,6 +9,9 @@ import { IconContext, User, MagnifyingGlass, UserPlus, DotsThree } from 'phospho
 function Navbar(props) {
   const { index, dec_index, height, width, toggleSlide } = props;
   const accountMenu = useRef();
+  const searchMenu = useRef();
+  const addFriendMenu = useRef();
+  const extraMenu = useRef();
 
   return (
     <div className={styles.mainNavbar} style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - dec_index)})` }}>
@@ -29,7 +32,10 @@ function Navbar(props) {
             accountMenu.current.toggle();
             toggleSlide()
           }}><User /></button>
-          <button><MagnifyingGlass /></button>
+          <button onClick={() => {
+            searchMenu.current.toggle();
+            toggleSlide()
+          }}><MagnifyingGlass /></button>
         </div>
         <div>
           <h1 style={{color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})`}}>
@@ -38,12 +44,33 @@ function Navbar(props) {
           </h1>
         </div>
         <div>
-          <button><UserPlus /></button>
-          <button><DotsThree /></button>
+          <button onClick={() => {
+            addFriendMenu.current.toggle();
+            toggleSlide()
+          }}><UserPlus /></button>
+          <button onClick={() => {
+            extraMenu.current.toggle();
+            toggleSlide()
+          }}><DotsThree /></button>
         </div>
-        <SlidingMenu ref={accountMenu}  height={height} width={width} toggleSlide={toggleSlide}>
+        <SlidingMenu axis='x' ref={accountMenu}  height={height} width={width} toggleSlide={toggleSlide}>
           <div>
             <h1>Account Menu</h1>
+          </div>
+        </SlidingMenu>
+        <SlidingMenu ref={searchMenu}  height={height} width={width} toggleSlide={toggleSlide}>
+          <div>
+            <h1>Search Menu</h1>
+          </div>
+        </SlidingMenu>
+        <SlidingMenu ref={addFriendMenu}  height={height} width={width} toggleSlide={toggleSlide}>
+          <div>
+            <h1>Add Friends Menu</h1>
+          </div>
+        </SlidingMenu>
+        <SlidingMenu ref={extraMenu}  height={height} width={width} toggleSlide={toggleSlide}>
+          <div>
+            <h1>Extra Menu</h1>
           </div>
         </SlidingMenu>
       </IconContext.Provider>
