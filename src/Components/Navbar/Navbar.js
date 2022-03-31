@@ -16,7 +16,7 @@ function Navbar(props) {
   return (
     <div
       className={styles.mainNavbar}
-      style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - opacity)})`, position: position }}
+      style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - dec_index)})`, position: position }}
     // style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - dec_index)})` }}
     >
       <IconContext.Provider
@@ -49,22 +49,22 @@ function Navbar(props) {
             <button onClick={() => extraMenu.current.toggle()}><DotsThree /></button>
           }
         </div>
-        <SlidingMenu axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide}>
+        <SlidingMenu axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide} title="Account">
           <div>
             <h1>Account Menu</h1>
           </div>
         </SlidingMenu>
-        <SlidingMenu ref={searchMenu} height={height} width={width} toggleSlide={toggleSlide}>
+        <SlidingMenu ref={searchMenu} height={height} width={width} toggleSlide={toggleSlide} title="Search">
           <div>
             <h1>Search Menu</h1>
           </div>
         </SlidingMenu>
-        <SlidingMenu ref={addFriendMenu} height={height} width={width} toggleSlide={toggleSlide}>
+        <SlidingMenu ref={addFriendMenu} height={height} width={width} toggleSlide={toggleSlide} title="Add Friends">
           <div>
             <h1>Add Friends Menu</h1>
           </div>
         </SlidingMenu>
-        <SlidingMenu ref={extraMenu} height={height} width={width} toggleSlide={toggleSlide}>
+        <SlidingMenu ref={extraMenu} height={height} width={width} toggleSlide={toggleSlide} title="Extra">
           <div>
             <h1>Extra Menu</h1>
           </div>

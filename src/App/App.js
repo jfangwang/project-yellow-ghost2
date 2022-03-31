@@ -43,6 +43,7 @@ export class App extends Component {
           onChangeIndex={changeToIndex}
           disabled={slide_disabled}
           style={{ backgroundColor: 'lightCoral', height: height, width: width }}
+          containerStyle={{height:'100%'}}
           replace
         >
           <Route path="/messages" component={Messages} />

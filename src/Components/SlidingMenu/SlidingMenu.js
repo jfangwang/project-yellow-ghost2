@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { forwardRef, useImperativeHandle } from "react"
 import SwipeableViews from 'react-swipeable-views'
+import styles from './SlidingMenu.module.css';
+import { IconContext, CaretLeft, CaretDown } from 'phosphor-react';
 
 
 const SlidingMenu = forwardRef((props, ref) => {
-  const { height, width, axis, children, toggleSlide } = props
+  const { height, width, axis, children, toggleSlide, title } = props
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0)
   const [disabled, setDisabled] = useState(false)
@@ -24,10 +26,14 @@ const SlidingMenu = forwardRef((props, ref) => {
     setIndex(e)
   }
   function checkIndex(e) {
-    if (index == 0) {
+    if (index === 0) {
       setShow(false);
       toggleSlide();
     }
+  }
+  const close = () => {
+    console.log("close")
+    changeToIndex(0)
   }
   const handleScroll = (e) => {
     console.log(e)
@@ -55,9 +61,29 @@ const SlidingMenu = forwardRef((props, ref) => {
               onScroll={handleScroll}
               style={{ backgroundColor: "white", height: height, overflowY: 'scroll' }}
             >
-             <div style={{backgroundColor: "white"}}>
-               {children}
-             </div>
+              <div className={styles.slidingMenuNavbar}>
+                <IconContext.Provider
+                  value={{
+                    color: "black",
+                    size: "1.5rem",
+                    weight: "bold",
+                    mirrored: true,
+                  }}
+                >
+                <div>
+                  <button onClick={close}>{axis === 'y' ? <CaretDown/> : <CaretLeft/>}</button>
+                </div>
+                <div>
+                  <h1>{title}</h1>
+                </div>
+                <div>
+                  <button style={{opacity: 0}}><CaretLeft/></button>
+                </div>
+                </IconContext.Provider>
+              </div>
+              <div>
+                {children}
+              </div>
             </div>
           </SwipeableViews>
         </div>
@@ -73,7 +99,7 @@ SlidingMenu.propTypes = {
   toggleSlide: PropTypes.func,
 }
 SlidingMenu.defaultProps = {
-  toggleSlide: () => {},
+  toggleSlide: () => { },
   axis: 'y'
 }
 
