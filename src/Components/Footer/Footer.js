@@ -7,9 +7,9 @@ import styles from './Footer.module.css';
 import { IconContext, Chat, Camera, Users } from "phosphor-react";
 
 function Footer(props) {
-  const { index } = props
+  const { index, opacity, position } = props
   return (
-    <footer className={styles.mainFooter}>
+    <footer className={styles.mainFooter} style={{opacity: opacity, position: position}}>
       <IconContext.Provider
         value={{
           color: "black",
@@ -29,6 +29,8 @@ function Footer(props) {
 Footer.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  opacity: 1,
+  position: 'absolute'
 }
 
 Footer.propTypes = {

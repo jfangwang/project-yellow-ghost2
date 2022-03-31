@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 
 let list = []
 for (var i = 0; i < 200; i++) {
@@ -14,6 +15,7 @@ export class Messages extends Component {
         <Navbar opacity={0} position="relative" />
         <h1>Messages</h1>
         {list}
+        <Footer position="relative" opacity={0} />
       </div>
     );
   }
