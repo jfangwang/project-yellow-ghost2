@@ -7,7 +7,7 @@ import { toggleSlide } from '../../Actions/globalActions';
 import { IconContext, User, MagnifyingGlass, UserPlus, DotsThree, ArrowsClockwise } from 'phosphor-react';
 
 function Navbar(props) {
-  const { index, dec_index, height, width, toggleSlide } = props;
+  const { index, dec_index, height, width, toggleSlide, position, opacity } = props;
   const accountMenu = useRef();
   const searchMenu = useRef();
   const addFriendMenu = useRef();
@@ -16,7 +16,7 @@ function Navbar(props) {
   return (
     <div
       className={styles.mainNavbar}
-      style={{ backgroundColor: `rgba(255, 255, 255, 0)` }}
+      style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - opacity)})`, position: position }}
     // style={{ backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - dec_index)})` }}
     >
       <IconContext.Provider
@@ -31,17 +31,17 @@ function Navbar(props) {
           mirrored: true,
         }}
       >
-        <div>
+        <div style={{opacity: opacity}}>
           <button onClick={() => accountMenu.current.toggle()}><User /></button>
           <button onClick={() => searchMenu.current.toggle()}><MagnifyingGlass /></button>
         </div>
-        <div>
+        <div style={{opacity: opacity}}>
           <h1 style={{ color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})` }}>
             {dec_index < 1 && "Chat"}
             {dec_index > 1 && "Discover"}
           </h1>
         </div>
-        <div>
+        <div style={{opacity: opacity}}>
           <button onClick={() => addFriendMenu.current.toggle()}><UserPlus /></button>
           {index == 1 ?
             <button><ArrowsClockwise /></button>
@@ -74,7 +74,15 @@ function Navbar(props) {
   )
 }
 
-Navbar.propTypes = {}
+Navbar.propTypes = {
+  position: PropTypes.string,
+  opacity: PropTypes.number,
+}
+
+Navbar.defaultProps = {
+  position: "absolute",
+  opacity: 1,
+}
 
 function mapStateToProps(state) {
   return {
