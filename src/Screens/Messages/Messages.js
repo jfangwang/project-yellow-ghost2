@@ -14,7 +14,7 @@ export class Messages extends Component {
       <div style={{ overflow: 'hidden' }}>
         <Navbar opacity={0} position="relative" />
         <h1>Messages</h1>
-        {list}
+        {/* {list} */}
         <Footer position="relative" opacity={0} />
       </div>
     );
