@@ -8,31 +8,6 @@ function Account(props) {
   return (
     <div style={{height:height, width:width, backgroundColor: 'white'}}>
       <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
-      <h1>Account Page</h1>
     </div>
   )
 }
