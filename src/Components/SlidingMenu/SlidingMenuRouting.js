@@ -75,7 +75,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
             {title !== "" ?
               <div
                 onScroll={handleScroll}
-                style={{ backgroundColor: "white", height: height, overflowY: 'scroll' }}
+                style={{ backgroundColor: "white", height: height, width: width, overflowY: 'scroll' }}
               >
                 <div className={styles.slidingMenuNavbar}>
                   <IconContext.Provider

@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../../Actions/globalActions';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import styles from './Account.module.css';
 
 function Account(props) {
-  const { height, width, changeToIndex, index, updateDecimalIndex, slide_disabled, } = props
+  const { height, width } = props
   return (
-    <div style={{height:height, width:width, backgroundColor: 'white'}}>
-      <h1>Account Page</h1>
+    <div style={{ backgroundColor: 'white' }}>
+      <h1>Account</h1>
     </div>
   )
 }
@@ -18,16 +19,10 @@ function mapStateToProps(state) {
   return {
     height: state.global.height,
     width: state.global.width,
-    index: state.global.index,
-    slide_disabled: state.global.slide_disabled
   }
 }
 
 const mapDispatchToProps = {
-  resize,
-  changeToIndex,
-  updateDecimalIndex,
-  toggleSlide,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

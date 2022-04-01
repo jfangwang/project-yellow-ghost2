@@ -4,6 +4,10 @@ import SlidingMenuRouting from '../SlidingMenu/SlidingMenuRouting';
 import styles from './Navbar.module.css';
 import { connect } from 'react-redux';
 import { toggleSlide } from '../../Actions/globalActions';
+import Account from '../../Screens/Account/Account';
+import Search from '../../Screens/Search/Search';
+import AddFriends from '../../Screens/AddFriends/AddFriends';
+import Extra from '../../Screens/Extra/Extra';
 import { IconContext, User, MagnifyingGlass, UserPlus, DotsThree, ArrowsClockwise } from 'phosphor-react';
 
 function Navbar(props) {
@@ -38,6 +42,7 @@ function Navbar(props) {
         <div style={{ opacity: opacity }}>
           <h1 style={{ color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})` }}>
             {dec_index < 1 && "Chat"}
+            {dec_index === 1 && "Chat"}
             {dec_index > 1 && "Discover"}
           </h1>
         </div>
@@ -58,9 +63,7 @@ function Navbar(props) {
           title="Account"
           path="/account"
         >
-          <div>
-            <h1>Account Menu</h1>
-          </div>
+          <Account />
         </SlidingMenuRouting>
         <SlidingMenuRouting
           ref={searchMenu}
@@ -70,9 +73,7 @@ function Navbar(props) {
           title="Search"
           path="/search"
         >
-          <div>
-            <h1>Search Menu</h1>
-          </div>
+          <Search />
         </SlidingMenuRouting>
         <SlidingMenuRouting
           ref={addFriendMenu}
@@ -80,11 +81,9 @@ function Navbar(props) {
           width={width}
           toggleSlide={toggleSlide}
           title="Add Friends"
-          path="add_friends"
+          path="/add_friends"
         >
-          <div>
-            <h1>Add Friends Menu</h1>
-          </div>
+          <AddFriends />
         </SlidingMenuRouting>
         <SlidingMenuRouting
           ref={extraMenu}
@@ -94,9 +93,7 @@ function Navbar(props) {
           title="Extra"
           path="/extra"
         >
-          <div>
-            <h1>Extra Menu</h1>
-          </div>
+          <Extra />
         </SlidingMenuRouting>
       </IconContext.Provider>
     </div>

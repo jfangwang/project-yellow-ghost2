@@ -56,8 +56,8 @@ export class App extends Component {
               <Route path="/discover" component={Discover} />
             </SwipeableRoutes>
             <SlidingMenuRouting path="/account" />
-            <Navbar />
             <Footer />
+            <Navbar />
           </Router>
         </BrowserRouter>
       </>
