@@ -15,7 +15,6 @@ import {
   toggleSlide,
 } from '../Actions/globalActions';
 import {connect} from 'react-redux';
-import SlidingMenuRouting from '../Components/SlidingMenu/SlidingMenuRouting';
 
 /**
  * App Class
@@ -84,7 +83,6 @@ export class App extends Component {
               <Route path="/camera" component={Camera} />
               <Route path="/discover" component={Discover} />
             </SwipeableRoutes>
-            <SlidingMenuRouting path="/account" />
             <Footer />
             <Navbar placeHolder={false}/>
           </Router>

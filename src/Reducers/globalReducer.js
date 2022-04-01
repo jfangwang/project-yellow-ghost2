@@ -2,7 +2,7 @@ export const initialState = {
   height: window.innerHeight,
   width: window.innerWidth,
   index: 1,
-  dec_index: 1,
+  decIndex: 1,
   slideDisabled: false,
 };
 
@@ -21,13 +21,12 @@ export function globalReducer(state = initialState, action) {
         width: window.innerWidth,
       };
     case 'global/changeToIndex':
-      // console.log(action.index);
       return {
         ...state,
         height: window.innerHeight,
         width: window.innerWidth,
         index: action.index,
-        dec_index: action.index,
+        decIndex: action.index,
       };
     case 'global/updateDecimalIndex':
       return {
