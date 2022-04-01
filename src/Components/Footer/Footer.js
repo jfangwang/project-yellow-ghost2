@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { BrowserRouter as Router, Route, Link, BrowserRouter } from "react-router-dom";
-import SwipeableRoutes from "react-swipeable-routes";
+import { BrowserRouter as Link} from "react-router-dom";
 import { connect } from 'react-redux'
 import styles from './Footer.module.css';
 import { IconContext, Chat, Camera, Users } from "phosphor-react";
@@ -26,17 +25,21 @@ export function Footer(props) {
   )
 }
 
+Footer.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+  opacity: PropTypes.number,
+  position: PropTypes.string,
+  index: PropTypes.number,
+};
+
 Footer.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
   opacity: 1,
-  position: 'absolute'
+  position: 'absolute',
+  index: 1,
 }
-
-Footer.propTypes = {
-  height: PropTypes.number,
-  width: PropTypes.number,
-};
 
 function mapStateToProps(state) {
   return {

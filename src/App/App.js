@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
-import { BrowserRouter as Router, Route, Link, BrowserRouter } from "react-router-dom";
+import { BrowserRouter as Router, Route, BrowserRouter } from "react-router-dom";
 import SwipeableRoutes from "react-swipeable-routes";
-import SwipeableViews from 'react-swipeable-views';
 import Camera from '../Screens/Camera/Camera';
 import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
-import Account from '../Screens/Account/Account';
-import Search from '../Screens/Search/Search';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
 import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../Actions/globalActions';
@@ -67,7 +64,18 @@ export class App extends Component {
 }
 
 App.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+  index: PropTypes.number,
+  slide_disabled: PropTypes.bool,
 };
+
+App.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+  index: 1,
+  slide_disabled: false,
+}
 
 function mapStateToProps(state) {
   return {

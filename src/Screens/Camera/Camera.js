@@ -1,17 +1,12 @@
-import React, { useRef } from 'react'
-import PropTypes from 'prop-types'
+import React from 'react'
 import { connect } from 'react-redux';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-
+// import PropTypes from 'prop-types'
 
 function Camera(props) {
-  const { height, width } = props;
-  const testRef = useRef();
   return (
-    <>
+    <div>
       <h1>Camera</h1>
-    </>
+    </div>
   )
 }
 

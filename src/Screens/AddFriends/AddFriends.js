@@ -4,15 +4,22 @@ import { connect } from 'react-redux'
 import styles from './AddFriends.module.css'
 
 function AddFriends(props) {
-  const { height, width } = props
   return (
-    <div style={{ background: "white" }}>
+    <div className={styles.background}>
       <h1>Add Friends</h1>
     </div>
   )
 }
 
-AddFriends.propTypes = {}
+AddFriends.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
+
+AddFriends.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 function mapStateToProps(state) {
   return {

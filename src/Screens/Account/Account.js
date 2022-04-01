@@ -1,19 +1,25 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../../Actions/globalActions';
 import { connect } from 'react-redux';
 import styles from './Account.module.css';
 
 function Account(props) {
-  const { height, width } = props
   return (
-    <div style={{ backgroundColor: 'white' }}>
+    <div className={styles.background}>
       <h1>Account</h1>
     </div>
   )
 }
 
-Account.propTypes = {}
+Account.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
+
+Account.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 function mapStateToProps(state) {
   return {

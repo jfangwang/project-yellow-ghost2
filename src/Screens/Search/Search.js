@@ -1,20 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../../Actions/globalActions';
 import { connect } from 'react-redux'
 import styles from './Search.module.css'
 
 
 function Search(props) {
-  const { height, width } = props
   return (
-    <div style={{ background: "white"}}>
+    <div className={styles.background}>
       <h1>Search</h1>
     </div>
   )
 }
 
-Search.propTypes = {}
+Search.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
+
+Search.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 function mapStateToProps(state) {
   return {

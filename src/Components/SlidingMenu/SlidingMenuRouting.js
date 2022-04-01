@@ -1,9 +1,7 @@
-import React, { Component, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Route, Link, BrowserRouter, useLocation } from "react-router-dom";
+import { BrowserRouter as Route, useLocation } from "react-router-dom";
 import SwipeableRoutes from "react-swipeable-routes";
-import Account from '../../Screens/Account/Account';
-import Search from '../../Screens/Search/Search';
 import styles from './SlidingMenu.module.css';
 import { IconContext, CaretLeft, CaretDown } from 'phosphor-react';
 
@@ -31,7 +29,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
       setShow(true);
       toggleSlide(true)
     }
-  }, [])
+  }, [location.pathname, path, toggleSlide])
   function changeToIndex(e) {
     setIndex(e)
   }

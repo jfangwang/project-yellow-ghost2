@@ -5,15 +5,22 @@ import styles from './Extra.module.css'
 
 
 function Extra(props) {
-  const { height, width } = props
   return (
-    <div style={{ background: "white" }}>
+    <div className={styles.background}>
       <h1>Extra</h1>
     </div>
   )
 }
 
-Extra.propTypes = {}
+Extra.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
+
+Extra.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 function mapStateToProps(state) {
   return {
