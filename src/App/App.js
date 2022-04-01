@@ -35,8 +35,6 @@ function App(props) {
           <Route exact path="/" component={Main} />
         </SwipeableRoutes>
       </Router>
-      <Navbar />
-      <Footer />
     </BrowserRouter>
   )
 }

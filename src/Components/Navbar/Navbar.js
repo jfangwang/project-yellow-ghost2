@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import SlidingMenu from '../SlidingMenu/SlidingMenu'
+import SlidingMenuRouting from '../SlidingMenu/SlidingMenuRouting';
 import styles from './Navbar.module.css';
 import { connect } from 'react-redux';
 import { toggleSlide } from '../../Actions/globalActions';
@@ -49,11 +50,11 @@ function Navbar(props) {
             <button onClick={() => extraMenu.current.toggle()}><DotsThree /></button>
           }
         </div>
-        <SlidingMenu axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide} title="Account">
+        <SlidingMenuRouting axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide} title="Account" path="/account">
           <div>
             <h1>Account Menu</h1>
           </div>
-        </SlidingMenu>
+        </SlidingMenuRouting>
         <SlidingMenu ref={searchMenu} height={height} width={width} toggleSlide={toggleSlide} title="Search">
           <div>
             <h1>Search Menu</h1>

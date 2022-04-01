@@ -9,26 +9,17 @@ import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
 import Account from '../Screens/Account/Account';
 import Search from '../Screens/Search/Search';
+import Navbar from '../Components/Navbar/Navbar';
+import Footer from '../Components/Footer/Footer';
 import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../Actions/globalActions';
 import { connect } from 'react-redux'
-
-function Account2(props) {
-  return (
-    <div style={{ height: props.h, width: props.w, backgroundColor: "lightseagreen", opacity: 0.3 }}>
-    </div>
-  )
-}
+import SlidingMenuRouting from '../Components/SlidingMenu/SlidingMenuRouting';
 
 export class Main extends Component {
   constructor(props) {
     super(props);
     this.test = this.test.bind(this);
     this.logKey = this.logKey.bind(this);
-    this.testChange = this.testChange.bind(this);
-    this.testCheckI = this.testCheckI.bind(this);
-    this.state = {
-      testIndex: 1
-    }
   }
   componentDidMount() {
     window.addEventListener('resize', this.props.resize)
@@ -36,14 +27,6 @@ export class Main extends Component {
   }
   test(e) {
     console.log(e)
-  }
-  testChange(e) {
-    console.log(e)
-    this.setState({
-      testIndex: e
-    })
-  }
-  testCheckI() {
   }
   logKey(e) {
     if ((this.props.index < 2 && this.props.slide_disabled === false) && (e.code === "KeyD" || e.code === "ArrowRight")) {
@@ -56,6 +39,7 @@ export class Main extends Component {
     const { height, width, changeToIndex, index, updateDecimalIndex, slide_disabled, } = this.props
     return (
       <>
+
         <SwipeableRoutes
           enableMouseEvents
           onSwitching={updateDecimalIndex}
@@ -70,28 +54,9 @@ export class Main extends Component {
           <Route path="/camera" component={Camera} />
           <Route path="/discover" component={Discover} />
         </SwipeableRoutes>
-        {this.state.testIndex === 1 &&
-          <SwipeableRoutes
-            axis="y"
-            enableMouseEvents
-            hysteresis={0.1}
-            // onSwitching={updateDecimalIndex}
-            index={this.state.testIndex}
-            onTransitionEnd={this.testChange}
-            disabled={slide_disabled}
-            containerStyle={{ height: height, width: width }}
-            style={{
-              position: 'absolute',
-              top: 0,
-            }}
-            replace
-          >
-            <Route path="/">
-              <Account2 h={height} w={width} />
-            </Route>
-            <Route path="/account" component={index == 1 ? Search : Account} />
-          </SwipeableRoutes>
-        }
+        <SlidingMenuRouting path="/account"/>
+        <Navbar />
+        <Footer />
       </>
 
     );
