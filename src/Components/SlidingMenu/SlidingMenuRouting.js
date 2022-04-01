@@ -127,7 +127,7 @@ SlidingMenuRouting.defaultProps = {
   height: 0,
   width: 0,
   axis: 'y',
-  title: 'Error',
+  title: '',
   path: '/error',
   toggleSlide: () => { },
 };
