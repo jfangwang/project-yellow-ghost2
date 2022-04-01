@@ -1,39 +1,67 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
-import { BrowserRouter as Router, Route, BrowserRouter } from "react-router-dom";
-import SwipeableRoutes from "react-swipeable-routes";
+import {BrowserRouter as Router, Route, BrowserRouter} from 'react-router-dom';
+import SwipeableRoutes from 'react-swipeable-routes';
 import Camera from '../Screens/Camera/Camera';
 import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
-import { resize, changeToIndex, updateDecimalIndex, toggleSlide } from '../Actions/globalActions';
-import { connect } from 'react-redux'
+import {
+  resize,
+  changeToIndex,
+  updateDecimalIndex,
+  toggleSlide,
+} from '../Actions/globalActions';
+import {connect} from 'react-redux';
 import SlidingMenuRouting from '../Components/SlidingMenu/SlidingMenuRouting';
 
+/**
+ * App Class
+ */
 export class App extends Component {
+  /**
+   * Constructor
+   * @param {*} props
+   */
   constructor(props) {
     super(props);
-    this.test = this.test.bind(this);
     this.logKey = this.logKey.bind(this);
   }
+  /**
+   * Runs when component is mounted
+   */
   componentDidMount() {
-    window.addEventListener('resize', this.props.resize)
+    window.addEventListener('resize', this.props.resize);
     window.addEventListener('keydown', this.logKey);
   }
-  test(e) {
-    console.log(e)
-  }
+  /**
+   * tied to event listener, changes index based on given key input.
+   * @param {*} e
+   */
   logKey(e) {
-    if ((this.props.index < 2 && this.props.slide_disabled === false) && (e.code === "KeyD" || e.code === "ArrowRight")) {
-      this.props.changeToIndex(this.props.index + 1)
-    } else if ((this.props.index > 0 && this.props.slide_disabled === false) && (e.code === "KeyA" || e.code === "ArrowLeft")) {
-      this.props.changeToIndex(this.props.index - 1)
+    if ((this.props.index < 2 && this.props.slideDisabled === false) &&
+    (e.code === 'KeyD' || e.code === 'ArrowRight')) {
+      this.props.changeToIndex(this.props.index + 1);
+    } else if ((this.props.index > 0 && this.props.slideDisabled === false) &&
+    (e.code === 'KeyA' || e.code === 'ArrowLeft')) {
+      this.props.changeToIndex(this.props.index - 1);
     }
   }
+  /**
+   * Renders
+   * @return {*}
+   */
   render() {
-    const { height, width, changeToIndex, index, updateDecimalIndex, slide_disabled, } = this.props
+    const {
+      height,
+      width,
+      changeToIndex,
+      index,
+      updateDecimalIndex,
+      slideDisabled,
+    } = this.props;
     return (
       <>
         <BrowserRouter>
@@ -43,9 +71,13 @@ export class App extends Component {
               onSwitching={updateDecimalIndex}
               index={index}
               onChangeIndex={changeToIndex}
-              disabled={slide_disabled}
-              style={{ backgroundColor: 'lightCoral', height: height, width: width }}
-              containerStyle={{ height: '100%' }}
+              disabled={slideDisabled}
+              style={{
+                backgroundColor: 'lightCoral',
+                height: height,
+                width: width,
+              }}
+              containerStyle={{height: '100%'}}
               replace
             >
               <Route path="/messages" component={Messages} />
@@ -67,7 +99,7 @@ App.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   index: PropTypes.number,
-  slide_disabled: PropTypes.bool,
+  slideDisabled: PropTypes.bool,
   resize: PropTypes.func,
   changeToIndex: PropTypes.func,
   updateDecimalIndex: PropTypes.func,
@@ -78,20 +110,24 @@ App.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
   index: 1,
-  slide_disabled: false,
+  slideDisabled: false,
   resize: () => {},
   changeToIndex: () => {},
   updateDecimalIndex: () => {},
   toggleSlide: () => {},
-}
-
+};
+/**
+ * mapStateToProps to fetch states from redux store
+ * @param {int} state
+ * @return {object}
+ */
 function mapStateToProps(state) {
   return {
     height: state.global.height,
     width: state.global.width,
     index: state.global.index,
-    slide_disabled: state.global.slide_disabled
-  }
+    slideDisabled: state.global.slideDisabled,
+  };
 }
 
 const mapDispatchToProps = {
@@ -99,6 +135,6 @@ const mapDispatchToProps = {
   changeToIndex,
   updateDecimalIndex,
   toggleSlide,
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -3,17 +3,24 @@ export const initialState = {
   width: window.innerWidth,
   index: 1,
   dec_index: 1,
-  slide_disabled: false,
-}
+  slideDisabled: false,
+};
+
+/**
+ * globalReducer: Contains states any component may need from redux store.
+ * @param {object} state Defaults to initialState obj
+ * @param {object} action
+ * @return {object}
+ */
 export function globalReducer(state = initialState, action) {
   switch (action.type) {
-    case "global/resize":
+    case 'global/resize':
       return {
         ...state,
         height: window.innerHeight,
         width: window.innerWidth,
-      }
-    case "global/changeToIndex":
+      };
+    case 'global/changeToIndex':
       // console.log(action.index);
       return {
         ...state,
@@ -21,25 +28,25 @@ export function globalReducer(state = initialState, action) {
         width: window.innerWidth,
         index: action.index,
         dec_index: action.index,
-      }
-    case "global/updateDecimalIndex":
+      };
+    case 'global/updateDecimalIndex':
       return {
         ...state,
-        dec_index: action.dec_index,
-      }
-    case "global/toggleSlide":
+        decIndex: action.decIndex,
+      };
+    case 'global/toggleSlide':
       if (action.state) {
         return {
           ...state,
-          slide_disabled: action.state
-        }
+          slideDisabled: action.state,
+        };
       } else {
         return {
           ...state,
-          slide_disabled: !state.slide_disabled
-        }
+          slideDisabled: !state.slideDisabled,
+        };
       }
     default:
-      return state
+      return state;
   }
 }
