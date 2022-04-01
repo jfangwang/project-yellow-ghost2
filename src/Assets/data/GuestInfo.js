@@ -1,0 +1,102 @@
+import GuestPic from '../images/guest-profile-pic.png';
+import RickPic from '../images/rick-profile-pic.jpg';
+import MortyPic from '../images/morty-profile-pic.jpg';
+
+const c = new Date().toLocaleString();
+
+export const Guest = {
+  id: 'Guest@Guest.com',
+  created: 'N/A',
+  name: 'Guest',
+  email: 'Guest@Guest.com',
+  username: 'Guest123',
+  profilePicUrl: GuestPic,
+  streakEmoji: '\u{1F525}',
+  phoneNumber: null,
+  sent: 0,
+  received: 0,
+  addedMe: {},
+  pending: {},
+  friends: {
+    'Guest@Guest.com': {
+      created: c,
+      profilePicUrl: GuestPic,
+      name: 'Guest',
+      status: 'new-friend',
+      streak: 0,
+      sent: 0,
+      received: 0,
+      lastTimeStamp: null,
+      snaps: {},
+    },
+  },
+};
+export const Strangers = {
+  'Rick@Guest.com': {
+    id: 'Rick@Guest.com',
+    created: 'N/A',
+    profilePicUrl: RickPic,
+    name: 'Rick',
+    status: 'new-friend',
+    streak: 0,
+    streakRef: null,
+    sent: 0,
+    received: 0,
+    lastTimeStamp: null,
+    snaps: {},
+  },
+  'Morty@Guest.com': {
+    id: 'Morty@Guest.com',
+    created: 'N/A',
+    profilePicUrl: MortyPic,
+    name: 'Morty',
+    status: 'new-friend',
+    streak: 0,
+    streakRef: null,
+    sent: 0,
+    received: 0,
+    lastTimeStamp: null,
+    snaps: {},
+  },
+};
+export const Everyone = {
+  'Guest@Guest.com': {
+    id: 'Guest@Guest.com',
+    created: 'N/A',
+    profilePicUrl: GuestPic,
+    name: 'Guest',
+    status: 'new-friend',
+    streak: 0,
+    streakRef: null,
+    sent: 0,
+    received: 0,
+    lastTimeStamp: null,
+    snaps: {},
+  },
+  'Rick@Guest.com': {
+    id: 'Rick@Guest.com',
+    created: 'N/A',
+    profilePicUrl: RickPic,
+    name: 'Rick',
+    status: 'new-friend',
+    streak: 0,
+    streakRef: null,
+    sent: 0,
+    received: 0,
+    lastTimeStamp: null,
+    snaps: {},
+  },
+  'Morty@Guest.com': {
+    id: 'Morty@Guest.com',
+    created: 'N/A',
+    profilePicUrl: MortyPic,
+    name: 'Morty',
+    status: 'new-friend',
+    streak: 0,
+    streakRef: null,
+    sent: 0,
+    received: 0,
+    lastTimeStamp: null,
+    snaps: {},
+  },
+};

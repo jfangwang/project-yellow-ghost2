@@ -1,5 +1,6 @@
+import {Guest} from '../Assets/data/GuestInfo';
 export const initialState = {
-  user: {},
+  user: Guest,
   isUserLoggedIn: false,
 };
 
