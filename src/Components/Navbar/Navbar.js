@@ -10,7 +10,7 @@ import AddFriends from '../../Screens/AddFriends/AddFriends';
 import Extra from '../../Screens/Extra/Extra';
 import { IconContext, User, MagnifyingGlass, UserPlus, DotsThree, ArrowsClockwise } from 'phosphor-react';
 
-function Navbar(props) {
+export function Navbar(props) {
   const { index, dec_index, height, width, toggleSlide, position, opacity } = props;
   const accountMenu = useRef();
   const searchMenu = useRef();

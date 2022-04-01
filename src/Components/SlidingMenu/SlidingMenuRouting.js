@@ -13,7 +13,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
   const [index, setIndex] = useState(0)
   const [disabled, setDisabled] = useState(false)
   const [prevPath, setPrevPath] = useState("/");
-  const location = useLocation();
+  let location = useLocation();
   useImperativeHandle(ref, () => ({
     toggle() {
       setPrevPath(location.pathname)

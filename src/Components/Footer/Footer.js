@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import styles from './Footer.module.css';
 import { IconContext, Chat, Camera, Users } from "phosphor-react";
 
-function Footer(props) {
+export function Footer(props) {
   const { index, opacity, position } = props
   return (
     <footer className={styles.mainFooter} style={{opacity: opacity, position: position}}>
