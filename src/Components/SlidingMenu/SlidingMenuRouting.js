@@ -124,8 +124,8 @@ SlidingMenuRouting.propTypes = {
   toggleSlide: PropTypes.func,
 };
 SlidingMenuRouting.defaultProps = {
-  height: window.innerHeight,
-  width: window.innerWidth,
+  height: 0,
+  width: 0,
   axis: 'y',
   title: 'Error',
   path: '/error',
