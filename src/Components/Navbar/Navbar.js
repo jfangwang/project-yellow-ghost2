@@ -32,17 +32,17 @@ function Navbar(props) {
           mirrored: true,
         }}
       >
-        <div style={{opacity: opacity}}>
+        <div style={{ opacity: opacity }}>
           <button onClick={() => accountMenu.current.toggle()}><User /></button>
           <button onClick={() => searchMenu.current.toggle()}><MagnifyingGlass /></button>
         </div>
-        <div style={{opacity: opacity}}>
+        <div style={{ opacity: opacity }}>
           <h1 style={{ color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})` }}>
             {dec_index < 1 && "Chat"}
             {dec_index > 1 && "Discover"}
           </h1>
         </div>
-        <div style={{opacity: opacity}}>
+        <div style={{ opacity: opacity }}>
           <button onClick={() => addFriendMenu.current.toggle()}><UserPlus /></button>
           {index == 1 ?
             <button><ArrowsClockwise /></button>
@@ -50,26 +50,55 @@ function Navbar(props) {
             <button onClick={() => extraMenu.current.toggle()}><DotsThree /></button>
           }
         </div>
-        <SlidingMenuRouting axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide} title="Account" path="/account">
+        <SlidingMenuRouting
+          axis='x'
+          ref={accountMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Account"
+          path="/account"
+        >
           <div>
             <h1>Account Menu</h1>
           </div>
         </SlidingMenuRouting>
-        <SlidingMenu ref={searchMenu} height={height} width={width} toggleSlide={toggleSlide} title="Search">
+        <SlidingMenuRouting
+          ref={searchMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Search"
+          path="/search"
+        >
           <div>
             <h1>Search Menu</h1>
           </div>
-        </SlidingMenu>
-        <SlidingMenu ref={addFriendMenu} height={height} width={width} toggleSlide={toggleSlide} title="Add Friends">
+        </SlidingMenuRouting>
+        <SlidingMenuRouting
+          ref={addFriendMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Add Friends"
+          path="add_friends"
+        >
           <div>
             <h1>Add Friends Menu</h1>
           </div>
-        </SlidingMenu>
-        <SlidingMenu ref={extraMenu} height={height} width={width} toggleSlide={toggleSlide} title="Extra">
+        </SlidingMenuRouting>
+        <SlidingMenuRouting
+          ref={extraMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Extra"
+          path="/extra"
+        >
           <div>
             <h1>Extra Menu</h1>
           </div>
-        </SlidingMenu>
+        </SlidingMenuRouting>
       </IconContext.Provider>
     </div>
   )

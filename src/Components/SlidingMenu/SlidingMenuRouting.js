@@ -35,7 +35,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
       } else {
         console.log("asdf")
         changeIndex(1)
-        history.replace('/account')
+        history.replace(path)
       }
     }
   }))
