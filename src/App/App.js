@@ -86,7 +86,7 @@ export class App extends Component {
             </SwipeableRoutes>
             <SlidingMenuRouting path="/account" />
             <Footer />
-            <Navbar />
+            <Navbar placeHolder={false}/>
           </Router>
         </BrowserRouter>
       </>

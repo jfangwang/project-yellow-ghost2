@@ -33,6 +33,7 @@ export function Navbar(props) {
     toggleSlide,
     position,
     opacity,
+    placeHolder,
   } = props;
   const accountMenu = useRef();
   const searchMenu = useRef();
@@ -60,10 +61,14 @@ export function Navbar(props) {
         }}
       >
         <div style={{opacity: opacity}}>
-          <button onClick={() => accountMenu.current.toggle()}>
+          <button onClick={
+            !placeHolder ? () => accountMenu.current.toggle() : () => { }
+          }>
             <User />
           </button>
-          <button onClick={() => searchMenu.current.toggle()}>
+          <button onClick={
+            !placeHolder ? () => searchMenu.current.toggle() : () => { }
+          }>
             <MagnifyingGlass />
           </button>
         </div>
@@ -71,9 +76,9 @@ export function Navbar(props) {
           <h1
             style={{
               color: `rgba(${255 - (Math.abs(1 - decIndex) * 255)},` +
-               `${255 - (Math.abs(1 - decIndex) * 255)},` +
-               `${255 - (Math.abs(1 - decIndex) * 255)},` +
-               `${(Math.abs(1 - decIndex))})`,
+                `${255 - (Math.abs(1 - decIndex) * 255)},` +
+                `${255 - (Math.abs(1 - decIndex) * 255)},` +
+                `${(Math.abs(1 - decIndex))})`,
             }}>
             {decIndex < 1 && 'Chat'}
             {decIndex === 1 && 'Chat'}
@@ -81,59 +86,68 @@ export function Navbar(props) {
           </h1>
         </div>
         <div style={{opacity: opacity}}>
-          <button onClick={() => addFriendMenu.current.toggle()}>
+          <button onClick={
+            !placeHolder ? () => addFriendMenu.current.toggle() : () => { }
+          }>
             <UserPlus />
           </button>
           {index === 1 ?
             <button>
               <ArrowsClockwise />
             </button> :
-            <button onClick={() => extraMenu.current.toggle()}>
+            <button
+              onClick={
+                !placeHolder ? () => extraMenu.current.toggle() : () => { }
+              }>
               <DotsThree />
             </button>
           }
         </div>
-        <SlidingMenuRouting
-          axis='x'
-          ref={accountMenu}
-          height={height}
-          width={width}
-          toggleSlide={toggleSlide}
-          title="Account"
-          path="/account"
-        >
-          <Account />
-        </SlidingMenuRouting>
-        <SlidingMenuRouting
-          ref={searchMenu}
-          height={height}
-          width={width}
-          toggleSlide={toggleSlide}
-          title="Search"
-          path="/search"
-        >
-          <Search />
-        </SlidingMenuRouting>
-        <SlidingMenuRouting
-          ref={addFriendMenu}
-          height={height}
-          width={width}
-          toggleSlide={toggleSlide}
-          title="Add Friends"
-          path="/add_friends"
-        >
-          <AddFriends />
-        </SlidingMenuRouting>
-        <SlidingMenuRouting
-          ref={extraMenu}
-          height={height}
-          width={width}
-          toggleSlide={toggleSlide}
-          title="Extra"
-          path="/extra"
-        >
-          <Extra />
-        </SlidingMenuRouting>
+        {!placeHolder &&
+          <>
+            <SlidingMenuRouting
+              axis='x'
+              ref={accountMenu}
+              height={height}
+              width={width}
+              toggleSlide={toggleSlide}
+              title="Account"
+              path="/account"
+            >
+              <Account />
+            </SlidingMenuRouting>
+            <SlidingMenuRouting
+              ref={searchMenu}
+              height={height}
+              width={width}
+              toggleSlide={toggleSlide}
+              title="Search"
+              path="/search"
+            >
+              <Search />
+            </SlidingMenuRouting>
+            <SlidingMenuRouting
+              ref={addFriendMenu}
+              height={height}
+              width={width}
+              toggleSlide={toggleSlide}
+              title="Add Friends"
+              path="/add_friends"
+            >
+              <AddFriends />
+            </SlidingMenuRouting>
+            <SlidingMenuRouting
+              ref={extraMenu}
+              height={height}
+              width={width}
+              toggleSlide={toggleSlide}
+              title="Extra"
+              path="/extra"
+            >
+              <Extra />
+            </SlidingMenuRouting>
+          </>
+        }
       </IconContext.Provider>
     </div>
   );
@@ -147,6 +161,7 @@ Navbar.propTypes = {
   position: PropTypes.string,
   opacity: PropTypes.number,
   toggleSlide: PropTypes.func,
+  placeHolder: PropTypes.bool,
 };
 
 Navbar.defaultProps = {
@@ -157,7 +172,7 @@ Navbar.defaultProps = {
   position: 'absolute',
   opacity: 1,
   toggleSlide: () => { },
-
+  placeHolder: true,
 };
 
 /**
