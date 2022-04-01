@@ -13,7 +13,7 @@ function Footer(props) {
       <IconContext.Provider
         value={{
           color: "black",
-          size: "2rem",
+          size: 32,
           weight: "bold",
           mirrored: true,
         }}

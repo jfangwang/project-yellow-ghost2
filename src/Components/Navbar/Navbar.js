@@ -1,6 +1,5 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import SlidingMenu from '../SlidingMenu/SlidingMenu'
 import SlidingMenuRouting from '../SlidingMenu/SlidingMenuRouting';
 import styles from './Navbar.module.css';
 import { connect } from 'react-redux';
@@ -27,7 +26,7 @@ function Navbar(props) {
             ${255 - (Math.abs(1 - dec_index) * 255)},
             ${255 - (Math.abs(1 - dec_index) * 255)}
           )`,
-          size: "1.5rem",
+          size: 32,
           weight: "bold",
           mirrored: true,
         }}
@@ -44,7 +43,7 @@ function Navbar(props) {
         </div>
         <div style={{ opacity: opacity }}>
           <button onClick={() => addFriendMenu.current.toggle()}><UserPlus /></button>
-          {index == 1 ?
+          {index === 1 ?
             <button><ArrowsClockwise /></button>
             :
             <button onClick={() => extraMenu.current.toggle()}><DotsThree /></button>
