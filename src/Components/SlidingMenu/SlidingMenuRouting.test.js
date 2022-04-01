@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import {shallow} from 'enzyme';
 import SlidingMenuRouting from './SlidingMenuRouting';
 
 jest.mock('react-router-dom', () => ({
@@ -19,6 +19,6 @@ describe('SlidingMenuRouting Basic Test Suite', () => {
 
   it('Renders without crashing', () => {
     const wrapper = shallow(<SlidingMenuRouting />);
-    expect(wrapper.exists()).toBe(true)
-  })
-})
+    expect(wrapper.exists()).toBe(true);
+  });
+});
