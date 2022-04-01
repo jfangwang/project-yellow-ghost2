@@ -1,21 +1,23 @@
 import React from 'react'
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import styles from './Search.module.css'
 
-function Camera(props) {
+
+function Search(props) {
   return (
-    <div>
-      <h1>Camera</h1>
+    <div className={styles.background}>
+      <h1>Search</h1>
     </div>
   )
 }
 
-Camera.propTypes = {
+Search.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
 }
 
-Camera.defaultProps = {
+Search.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
 }
@@ -27,4 +29,7 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Camera);
+const mapDispatchToProps = {
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Search);

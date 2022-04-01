@@ -22,7 +22,13 @@ export class Messages extends Component {
 }
 
 Messages.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
 
-};
+Messages.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 export default Messages;

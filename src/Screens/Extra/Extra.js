@@ -1,21 +1,23 @@
 import React from 'react'
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
+import styles from './Extra.module.css'
 
-function Camera(props) {
+
+function Extra(props) {
   return (
-    <div>
-      <h1>Camera</h1>
+    <div className={styles.background}>
+      <h1>Extra</h1>
     </div>
   )
 }
 
-Camera.propTypes = {
+Extra.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
 }
 
-Camera.defaultProps = {
+Extra.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
 }
@@ -27,4 +29,8 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(Camera);
+const mapDispatchToProps = {
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Extra);

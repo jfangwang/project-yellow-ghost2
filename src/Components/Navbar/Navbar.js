@@ -1,12 +1,16 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import SlidingMenu from '../SlidingMenu/SlidingMenu'
+import SlidingMenuRouting from '../SlidingMenu/SlidingMenuRouting';
 import styles from './Navbar.module.css';
 import { connect } from 'react-redux';
 import { toggleSlide } from '../../Actions/globalActions';
+import Account from '../../Screens/Account/Account';
+import Search from '../../Screens/Search/Search';
+import AddFriends from '../../Screens/AddFriends/AddFriends';
+import Extra from '../../Screens/Extra/Extra';
 import { IconContext, User, MagnifyingGlass, UserPlus, DotsThree, ArrowsClockwise } from 'phosphor-react';
 
-function Navbar(props) {
+export function Navbar(props) {
   const { index, dec_index, height, width, toggleSlide, position, opacity } = props;
   const accountMenu = useRef();
   const searchMenu = useRef();
@@ -26,62 +30,95 @@ function Navbar(props) {
             ${255 - (Math.abs(1 - dec_index) * 255)},
             ${255 - (Math.abs(1 - dec_index) * 255)}
           )`,
-          size: "1.5rem",
+          size: 32,
           weight: "bold",
           mirrored: true,
         }}
       >
-        <div style={{opacity: opacity}}>
+        <div style={{ opacity: opacity }}>
           <button onClick={() => accountMenu.current.toggle()}><User /></button>
           <button onClick={() => searchMenu.current.toggle()}><MagnifyingGlass /></button>
         </div>
-        <div style={{opacity: opacity}}>
+        <div style={{ opacity: opacity }}>
           <h1 style={{ color: `rgba(${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${255 - (Math.abs(1 - dec_index) * 255)}, ${(Math.abs(1 - dec_index))})` }}>
             {dec_index < 1 && "Chat"}
+            {dec_index === 1 && "Chat"}
             {dec_index > 1 && "Discover"}
           </h1>
         </div>
-        <div style={{opacity: opacity}}>
+        <div style={{ opacity: opacity }}>
           <button onClick={() => addFriendMenu.current.toggle()}><UserPlus /></button>
-          {index == 1 ?
+          {index === 1 ?
             <button><ArrowsClockwise /></button>
             :
             <button onClick={() => extraMenu.current.toggle()}><DotsThree /></button>
           }
         </div>
-        <SlidingMenu axis='x' ref={accountMenu} height={height} width={width} toggleSlide={toggleSlide} title="Account">
-          <div>
-            <h1>Account Menu</h1>
-          </div>
-        </SlidingMenu>
-        <SlidingMenu ref={searchMenu} height={height} width={width} toggleSlide={toggleSlide} title="Search">
-          <div>
-            <h1>Search Menu</h1>
-          </div>
-        </SlidingMenu>
-        <SlidingMenu ref={addFriendMenu} height={height} width={width} toggleSlide={toggleSlide} title="Add Friends">
-          <div>
-            <h1>Add Friends Menu</h1>
-          </div>
-        </SlidingMenu>
-        <SlidingMenu ref={extraMenu} height={height} width={width} toggleSlide={toggleSlide} title="Extra">
-          <div>
-            <h1>Extra Menu</h1>
-          </div>
-        </SlidingMenu>
+        <SlidingMenuRouting
+          axis='x'
+          ref={accountMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Account"
+          path="/account"
+        >
+          <Account />
+        </SlidingMenuRouting>
+        <SlidingMenuRouting
+          ref={searchMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Search"
+          path="/search"
+        >
+          <Search />
+        </SlidingMenuRouting>
+        <SlidingMenuRouting
+          ref={addFriendMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Add Friends"
+          path="/add_friends"
+        >
+          <AddFriends />
+        </SlidingMenuRouting>
+        <SlidingMenuRouting
+          ref={extraMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Extra"
+          path="/extra"
+        >
+          <Extra />
+        </SlidingMenuRouting>
       </IconContext.Provider>
     </div>
   )
 }
 
 Navbar.propTypes = {
+  index: PropTypes.number,
+  dev_index: PropTypes.number,
+  height: PropTypes.number,
+  width: PropTypes.number,
   position: PropTypes.string,
   opacity: PropTypes.number,
+  toggleSlide: PropTypes.func,
 }
 
 Navbar.defaultProps = {
+  index: 1,
+  dec_index: 1,
+  height: window.innerHeight,
+  width: window.innerWidth,
   position: "absolute",
   opacity: 1,
+  toggleSlide: () => {},
+
 }
 
 function mapStateToProps(state) {
@@ -94,8 +131,6 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  // resize,
-  // changeToIndex,
   toggleSlide,
 }
 
