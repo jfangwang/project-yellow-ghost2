@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 
@@ -22,7 +22,13 @@ export class Messages extends Component {
 }
 
 Messages.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
 
-};
+Messages.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 export default Messages;

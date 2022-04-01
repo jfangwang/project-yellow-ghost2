@@ -101,13 +101,24 @@ export function Navbar(props) {
 }
 
 Navbar.propTypes = {
+  index: PropTypes.number,
+  dev_index: PropTypes.number,
+  height: PropTypes.number,
+  width: PropTypes.number,
   position: PropTypes.string,
   opacity: PropTypes.number,
+  toggleSlide: PropTypes.func,
 }
 
 Navbar.defaultProps = {
+  index: 1,
+  dec_index: 1,
+  height: window.innerHeight,
+  width: window.innerWidth,
   position: "absolute",
   opacity: 1,
+  toggleSlide: () => {},
+
 }
 
 function mapStateToProps(state) {
@@ -120,8 +131,6 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-  // resize,
-  // changeToIndex,
   toggleSlide,
 }
 

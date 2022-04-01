@@ -68,6 +68,10 @@ App.propTypes = {
   width: PropTypes.number,
   index: PropTypes.number,
   slide_disabled: PropTypes.bool,
+  resize: PropTypes.func,
+  changeToIndex: PropTypes.func,
+  updateDecimalIndex: PropTypes.func,
+  toggleSlide: PropTypes.func,
 };
 
 App.defaultProps = {
@@ -75,6 +79,10 @@ App.defaultProps = {
   width: window.innerWidth,
   index: 1,
   slide_disabled: false,
+  resize: () => {},
+  changeToIndex: () => {},
+  updateDecimalIndex: () => {},
+  toggleSlide: () => {},
 }
 
 function mapStateToProps(state) {

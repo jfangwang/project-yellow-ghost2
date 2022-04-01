@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 
 function Camera(props) {
   return (
@@ -10,7 +10,15 @@ function Camera(props) {
   )
 }
 
-Camera.propTypes = {}
+Camera.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
+}
+
+Camera.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+}
 
 function mapStateToProps(state) {
   return {

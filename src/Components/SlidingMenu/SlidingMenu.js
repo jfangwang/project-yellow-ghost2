@@ -96,11 +96,15 @@ SlidingMenu.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   axis: PropTypes.string,
+  title: PropTypes.string,
   toggleSlide: PropTypes.func,
 }
 SlidingMenu.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
+  axis: 'y',
+  title: "Error",
   toggleSlide: () => { },
-  axis: 'y'
 }
 
 export default SlidingMenu;

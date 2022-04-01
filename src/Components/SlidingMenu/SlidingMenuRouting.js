@@ -110,12 +110,19 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
 });
 
 SlidingMenuRouting.propTypes = {
+  height: PropTypes.number,
+  width: PropTypes.number,
   axis: PropTypes.string,
+  title: PropTypes.string,
+  path: PropTypes.string,
   toggleSlide: PropTypes.func,
 };
 SlidingMenuRouting.defaultProps = {
+  height: window.innerHeight,
+  width: window.innerWidth,
   axis: 'y',
-  title: "",
+  title: "Error",
+  path: "/error",
   toggleSlide: () => { },
 }
 
