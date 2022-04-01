@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import PropTypes from 'prop-types';
-import { BrowserRouter as Router, Route, Link, BrowserRouter, useLocation, useHistory } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, BrowserRouter, useLocation, useHistory, Redirect } from "react-router-dom";
 import SwipeableRoutes from "react-swipeable-routes";
 import Account from '../../Screens/Account/Account';
 import Search from '../../Screens/Search/Search';
@@ -24,15 +24,18 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
   } = props
   const [localIndex, setlocalIndex] = useState(0);
   const [disabled, setDisabled] = useState(false)
+  const [show, setShow] = useState(false)
   const location = useLocation();
   let history = useHistory();
   useImperativeHandle(ref, () => ({
     toggle(e = localIndex) {
-      console.log(e)
       if (e === 1) {
         changeIndex(0)
+        toggleSlide();
       } else {
+        console.log("asdf")
         changeIndex(1)
+        history.replace('/account')
       }
     }
   }))
@@ -46,10 +49,12 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
   function changeIndex(e) {
     setlocalIndex(e)
     toggleSlide();
+    setShow(!show)
   }
   const close = () => {
     console.log("close")
     changeIndex(0)
+    history.replace('/')
   }
   const handleScroll = (e) => {
     console.log(e)
