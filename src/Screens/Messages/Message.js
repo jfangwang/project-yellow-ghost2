@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Message.module.css';
 import {connect} from 'react-redux';
-import {LinuxLogo} from 'phosphor-react';
+import {XSquare} from 'phosphor-react';
 import TimeAgo from 'react-timeago';
+import GuestPic from '../../Assets/images/guest-profile-pic.png';
 import enShort from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
@@ -17,11 +18,13 @@ const statusDict = {
   'pending': 'Pending',
   'not-friends': 'Unfriended You',
   'blocked': 'Blocked',
+  'unknown': 'Unknown',
 };
 const emojiDict = {
   'pending': '\u{23F3}',
   'not-friends': '\u{1F494}',
   'blocked': '\u{26D4}',
+  'unknown': '\u{26A0}',
 };
 /**
  *
@@ -36,8 +39,21 @@ function Message(props) {
   const messageReceived = <div className={styles.messageReceived}></div>;
   const messageSent = <div className={styles.messageSent}></div>;
   const messageOpened = <div className={styles.messageOpened}></div>;
-  let icon = <div></div>;
+  const messagePending = <p className={styles.emojiIcon}>
+    {emojiDict['pending']}
+  </p>;
+  const messageNotFriends = <p className={styles.emojiIcon}>
+    {emojiDict['not-friends']}
+  </p>;
+  const messageBlocked = <p className={styles.emojiIcon}>
+    {emojiDict['blocked']}
+  </p>;
+  const messageUnknown = <p className={styles.emojiIcon}>
+    {emojiDict['unknown']}
+  </p>;
+  let icon;
 
+  console.log(friend['status']);
   switch (friend['status']) {
     case 'new-friend':
       icon = messageNewFriend;
@@ -54,8 +70,14 @@ function Message(props) {
     case 'opened':
       icon = messageOpened;
       break;
+    case 'pending':
+      icon = messagePending;
+    case 'not-friends':
+      icon = messageNotFriends;
+    case 'blocked':
+      icon = messageBlocked;
     default:
-      icon = <div>asdf</div>;
+      icon = messageUnknown;
       break;
   }
 
@@ -74,9 +96,9 @@ function Message(props) {
               src={friend['profilePicUrl']}
               className={styles.friendProfilePic}
             /> :
-            <LinuxLogo
+            <XSquare
               className={styles.friendProfilePic}
-              size='4rem'
+              size={32}
             />
           }
         </div>
@@ -91,17 +113,23 @@ function Message(props) {
             className={styles.row}
             style={{justifyContent: 'start', marginTop: '0.2rem'}}
           >
-            {emojiDict[friend['status']] ?
-              <p className={styles.emojiIcon}>
-                {emojiDict[friend['status']]}
-              </p> :
-              <>{icon}</>
+            {icon != null &&
+              <>
+                {icon}
+                <h3>{statusDict[friend['status']]}</h3>
+              </>
             }
-            <h3>{statusDict[friend['status']]}</h3>
-            <div className={styles.separator}/>
-            <h3>
-              <TimeAgo date='Apr 1, 2022' formatter={formatter}/>
-            </h3>
+            { friend['lastTimeStamp'] !== null &&
+              <>
+                <div className={styles.separator}/>
+                <h3>
+                  <TimeAgo
+                    date={friend['lastTimeStamp']}
+                    formatter={formatter}
+                  />
+                </h3>
+              </>
+            }
             <div className={styles.separator}/>
             <h3>{friend['streak']}</h3>
             <h5>{user.streakEmoji}</h5>
@@ -126,10 +154,14 @@ Message.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
   friend: {
-    name: 'Error',
+    username: 'User',
+    profilePicUrl: GuestPic,
+    status: 'unknown',
+    streak: 0,
+    lastTimeStamp: null,
   },
   user: {
-    name: 'Error',
+    streakEmoji: '\u{1F525}',
   },
 };
 
