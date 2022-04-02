@@ -32,13 +32,25 @@ const emojiDict = {
 function Message(props) {
   const {friend, user} = props;
   return (
-    <div className={styles.background}>
+    <button
+      className={styles.background}
+      onClick={() => console.log(friend.name)}
+    >
       <div className={styles.row}>
         <div
           className={styles.row}
-          style={{marginRight: '0.5rem', borderRadius: '1rem'}}
+          style={{marginRight: '0.5rem'}}
         >
-          <LinuxLogo size='4rem'/>
+          {friend.profilePicUrl ?
+            <img
+              src={friend.profilePicUrl}
+              className={styles.friendProfilePic}
+            /> :
+            <LinuxLogo
+              className={styles.friendProfilePic}
+              size='4rem'
+            />
+          }
         </div>
         <div className={styles.col}>
           <div className={styles.row} style={{justifyContent: 'start'}}>
@@ -66,7 +78,7 @@ function Message(props) {
       {/* <div className={styles.row}>
         <p>Streak</p>
       </div> */}
-    </div>
+    </button>
   );
 }
 

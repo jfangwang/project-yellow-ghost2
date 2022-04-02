@@ -7,6 +7,11 @@
     align-items: center;
     border: 1px lightblue solid;
     flex-wrap: wrap;
+    width: 100%;
+}
+button.background {
+    color: black;
+    cursor: auto;
 }
 .row {
     display: flex;
@@ -16,7 +21,7 @@
     flex-wrap: wrap;
 }
 .row > * {
-    border: 1px red solid;
+    /* border: 1px red solid; */
     padding: 0;
     margin: 0;
 }
@@ -30,6 +35,11 @@
 }
 h6 {
     font-size:smaller;
+}
+.friendProfilePic {
+    height: 4rem;
+    width: 4rem;
+    border-radius: 1rem;
 }
 /* Message Types */
 .message-new {
