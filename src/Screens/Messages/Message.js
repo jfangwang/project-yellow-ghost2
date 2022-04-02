@@ -19,9 +19,9 @@ const statusDict = {
   'blocked': 'Blocked',
 };
 const emojiDict = {
+  'pending': '\u{23F3}',
   'not-friends': '\u{1F494}',
   'blocked': '\u{26D4}',
-  'pending': '\u{23F3}',
 };
 /**
  *
@@ -31,6 +31,34 @@ const emojiDict = {
  */
 function Message(props) {
   const {friend, user} = props;
+  const messageNewFriend = <div className={styles.messageNewFriend}></div>;
+  const messageNew = <div className={styles.messageNew}></div>;
+  const messageReceived = <div className={styles.messageReceived}></div>;
+  const messageSent = <div className={styles.messageSent}></div>;
+  const messageOpened = <div className={styles.messageOpened}></div>;
+  let icon = <div></div>;
+
+  switch (friend['status']) {
+    case 'new-friend':
+      icon = messageNewFriend;
+      break;
+    case 'new':
+      icon = messageNew;
+      break;
+    case 'received':
+      icon = messageReceived;
+      break;
+    case 'sent':
+      icon = messageSent;
+      break;
+    case 'opened':
+      icon = messageOpened;
+      break;
+    default:
+      icon = <div>asdf</div>;
+      break;
+  }
+
   return (
     <button
       className={styles.background}
@@ -61,8 +89,10 @@ function Message(props) {
             style={{justifyContent: 'start'}}
           >
             {emojiDict[friend['status']] ?
-              <p>{emojiDict[friend['status']]}</p> :
-              <div className={styles.row}><p>EMOJI</p></div>
+              <p className={styles.emojiIcon}>
+                {emojiDict[friend['status']]}
+              </p> :
+              <>{icon}</>
             }
             <h6>{statusDict[friend['status']]}</h6>
             <div className={styles.separator}/>

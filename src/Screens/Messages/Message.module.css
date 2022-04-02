@@ -41,22 +41,33 @@ h6 {
     width: 4rem;
     border-radius: 1rem;
 }
+.emojiIcon {
+    background-color: red;
+}
 /* Message Types */
-.message-new {
+.messageNewFriend,
+.messageNew,
+.messageReceived,
+.messageOpened,
+.messageSent {
+    margin-right: 0.2rem;
+}
+
+.messageNew {
     height: 0.95rem;
     width: 0.95rem;
     background-color: red;
     color: red;
     border-radius: 0.2rem;
 }
-.message-received {
-    height: 0.6rem;
-    width: 0.6rem;
+.messageReceived {
+    height: 0.9rem;
+    width: 0.9rem;
     background-color: none;
     border: 0.17rem solid red;
     border-radius: 0.2rem;
 }
-.message-opened {
+.messageOpened {
     width: 0.9rem;
 	height: 0.9rem;
     background-image: url('../../Assets/images/opened-img-icon.png');
@@ -67,7 +78,7 @@ h6 {
 	border-left: 1rem solid black;
 	border-bottom: 0.5rem solid transparent; */
 }
-.message-sent {
+.messageSent {
     width: 0.9rem;
 	height: 0.9rem;
     background-image: url('../../Assets/images/sent-img-icon.png');
@@ -78,9 +89,10 @@ h6 {
 	border-left: 1rem solid #664db1;
 	border-bottom: 0.5rem solid transparent; */
 }
-.message-new-friend {
-    height: 0.6rem;
-    width: 0.6rem;
+.messageNewFriend {
+
+    height: 0.9rem;
+    width: 0.9rem;
     background-color: none;
     border: 0.17rem solid lightgrey;
     border-radius: 0.2rem;
