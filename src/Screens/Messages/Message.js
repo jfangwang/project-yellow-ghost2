@@ -81,12 +81,15 @@ function Message(props) {
           }
         </div>
         <div className={styles.col}>
-          <div className={styles.row} style={{justifyContent: 'start'}}>
-            <h3>{friend['username']}</h3>
+          <div
+            className={styles.row}
+            style={{justifyContent: 'start', marginBottom: '0.2rem'}}
+          >
+            <h1>{friend['username']}</h1>
           </div>
           <div
             className={styles.row}
-            style={{justifyContent: 'start'}}
+            style={{justifyContent: 'start', marginTop: '0.2rem'}}
           >
             {emojiDict[friend['status']] ?
               <p className={styles.emojiIcon}>
@@ -94,19 +97,19 @@ function Message(props) {
               </p> :
               <>{icon}</>
             }
-            <h6>{statusDict[friend['status']]}</h6>
+            <h3>{statusDict[friend['status']]}</h3>
             <div className={styles.separator}/>
-            <h6>
-              <TimeAgo date='3-24-2022, 1:50:23 AM' formatter={formatter}/>
-            </h6>
+            <h3>
+              <TimeAgo date='Apr 1, 2022' formatter={formatter}/>
+            </h3>
             <div className={styles.separator}/>
-            <h6>{friend['streak']}</h6>
-            <h6>{user.streakEmoji}</h6>
+            <h3>{friend['streak']}</h3>
+            <h5>{user.streakEmoji}</h5>
           </div>
         </div>
       </div>
       {/* <div className={styles.row}>
-        <p>Streak</p>
+        <p>Friend Status Emoji</p>
       </div> */}
     </button>
   );

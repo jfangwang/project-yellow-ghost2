@@ -1,6 +1,6 @@
 .background {
     background-color: white;
-    padding: 0.5rem;
+    padding: 0.6rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -33,12 +33,9 @@ button.background {
     margin-left: 0.3rem;
     margin-right: 0.3rem;
 }
-h6 {
-    font-size:smaller;
-}
 .friendProfilePic {
-    height: 4rem;
-    width: 4rem;
+    height: 3.5rem;
+    width: 3.5rem;
     border-radius: 1rem;
 }
 .emojiIcon {
@@ -61,8 +58,8 @@ h6 {
     border-radius: 0.2rem;
 }
 .messageReceived {
-    height: 0.9rem;
-    width: 0.9rem;
+    height: 0.7rem;
+    width: 0.7rem;
     background-color: none;
     border: 0.17rem solid red;
     border-radius: 0.2rem;
@@ -91,8 +88,8 @@ h6 {
 }
 .messageNewFriend {
 
-    height: 0.9rem;
-    width: 0.9rem;
+    height: 0.7rem;
+    width: 0.7rem;
     background-color: none;
     border: 0.17rem solid lightgrey;
     border-radius: 0.2rem;
