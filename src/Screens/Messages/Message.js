@@ -34,16 +34,16 @@ function Message(props) {
   return (
     <button
       className={styles.background}
-      onClick={() => console.log(friend.name)}
+      onClick={() => console.log(friend)}
     >
       <div className={styles.row}>
         <div
           className={styles.row}
           style={{marginRight: '0.5rem'}}
         >
-          {friend.profilePicUrl ?
+          {friend['profilePicUrl'] ?
             <img
-              src={friend.profilePicUrl}
+              src={friend['profilePicUrl']}
               className={styles.friendProfilePic}
             /> :
             <LinuxLogo
@@ -54,23 +54,23 @@ function Message(props) {
         </div>
         <div className={styles.col}>
           <div className={styles.row} style={{justifyContent: 'start'}}>
-            <h3>{friend.name}</h3>
+            <h3>{friend['username']}</h3>
           </div>
           <div
             className={styles.row}
             style={{justifyContent: 'start'}}
           >
-            {emojiDict[friend.status] ?
-              <p>{emojiDict[friend.status]}</p> :
+            {emojiDict[friend['status']] ?
+              <p>{emojiDict[friend['status']]}</p> :
               <div className={styles.row}><p>EMOJI</p></div>
             }
-            <h6>{statusDict[friend.status]}</h6>
+            <h6>{statusDict[friend['status']]}</h6>
             <div className={styles.separator}/>
             <h6>
               <TimeAgo date='3-24-2022, 1:50:23 AM' formatter={formatter}/>
             </h6>
             <div className={styles.separator}/>
-            <h6>{friend.streak}</h6>
+            <h6>{friend['streak']}</h6>
             <h6>{user.streakEmoji}</h6>
           </div>
         </div>
