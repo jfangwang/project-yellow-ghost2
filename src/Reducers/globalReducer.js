@@ -1,3 +1,9 @@
+import {
+  RESIZE,
+  CHANGE_TO_INDEX,
+  UPDATE_DEC_INDEX,
+  TOGGLE_SLIDE,
+} from '../Actions/globalActions';
 export const initialState = {
   height: window.innerHeight,
   width: window.innerWidth,
@@ -14,13 +20,13 @@ export const initialState = {
  */
 export function globalReducer(state = initialState, action) {
   switch (action.type) {
-    case 'global/resize':
+    case RESIZE:
       return {
         ...state,
         height: window.innerHeight,
         width: window.innerWidth,
       };
-    case 'global/changeToIndex':
+    case CHANGE_TO_INDEX:
       return {
         ...state,
         height: window.innerHeight,
@@ -28,12 +34,12 @@ export function globalReducer(state = initialState, action) {
         index: action.index,
         decIndex: action.index,
       };
-    case 'global/updateDecimalIndex':
+    case UPDATE_DEC_INDEX:
       return {
         ...state,
         decIndex: action.decIndex,
       };
-    case 'global/toggleSlide':
+    case TOGGLE_SLIDE:
       if (action.state) {
         return {
           ...state,
