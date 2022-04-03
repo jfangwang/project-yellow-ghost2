@@ -26,6 +26,7 @@ function Camera(props) {
     index,
     orientation,
     toggleFacingMode,
+    setCameraPermissions,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(16/9);
@@ -153,6 +154,7 @@ Camera.propTypes = {
   cameraPermissions: PropTypes.bool,
   orientation: PropTypes.string,
   toggleFacingMode: PropTypes.func,
+  setCameraPermissions: PropTypes.func,
 };
 
 Camera.defaultProps = {
@@ -164,6 +166,7 @@ Camera.defaultProps = {
   orientation: window.innerHeight >= window.innerWidth ?
   'portrait' : 'landscape',
   toggleFacingMode: () => {},
+  setCameraPermissions: () => {},
 };
 
 /**
