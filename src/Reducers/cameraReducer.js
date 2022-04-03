@@ -4,7 +4,7 @@ import {
 } from '../Actions/cameraActions';
 export const initialState = {
   facingMode: 'user',
-  cameraPermissions: false,
+  cameraPermissions: true,
 };
 
 

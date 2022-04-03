@@ -44,6 +44,7 @@ function Camera(props) {
         })
         .catch(function(err) {
           console.log(err.name + ': ' + err.message);
+          setCameraPermissions(false);
         });
   }
 
@@ -68,11 +69,13 @@ function Camera(props) {
   }, []);
 
   useEffect(() => {
-    if (index === 1) {
-      stopCamera();
-      startCamera();
-    } else {
-      stopCamera();
+    if (cameraPermissions === true) {
+      if (index === 1) {
+        stopCamera();
+        startCamera();
+      } else {
+        stopCamera();
+      }
     }
   }, [index]);
 
@@ -87,7 +90,9 @@ function Camera(props) {
         id='mainCamera'
         className={styles.mainCamera}
       />
-      <h1>Camera Permisions {`${cameraPermissions}`}</h1>
+      { !cameraPermissions &&
+        <h1>Camera Permisions {`${cameraPermissions}`}</h1>
+      }
     </div>
   );
 }
@@ -124,4 +129,8 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(Camera);
+const mapDispatchToProps = {
+  setCameraPermissions,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Camera);
