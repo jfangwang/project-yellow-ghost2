@@ -9,7 +9,7 @@ import enShort from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 
 const formatter = buildFormatter(enShort);
-const statusDict = {
+export const statusDict = {
   'new-friend': 'New Friend!',
   'new': 'New Snap',
   'received': 'Received',
@@ -32,7 +32,7 @@ const emojiDict = {
  * @param {*} props
  * @return {*}
  */
-function Message(props) {
+export function Message(props) {
   const {friend, user} = props;
   const messageNewFriend = <div className={styles.messageNewFriend}></div>;
   const messageNew = <div className={styles.messageNew}></div>;
@@ -53,7 +53,6 @@ function Message(props) {
   </p>;
   let icon;
 
-  console.log(friend['status']);
   switch (friend['status']) {
     case 'new-friend':
       icon = messageNewFriend;
@@ -93,6 +92,7 @@ function Message(props) {
         >
           {friend['profilePicUrl'] ?
             <img
+              id='friendProfilePic'
               src={friend['profilePicUrl']}
               className={styles.friendProfilePic}
             /> :
@@ -102,8 +102,12 @@ function Message(props) {
             />
           }
         </div>
-        <div className={styles.col}>
+        <div
+          id="messageInfo"
+          className={styles.col}
+        >
           <div
+            id="messageFriendName"
             className={styles.row}
             style={{justifyContent: 'start', marginBottom: '0.2rem'}}
           >
@@ -113,12 +117,10 @@ function Message(props) {
             className={styles.row}
             style={{justifyContent: 'start', marginTop: '0.2rem'}}
           >
-            {icon != null &&
-              <>
-                {icon}
-                <h3>{statusDict[friend['status']]}</h3>
-              </>
-            }
+            {icon}
+            <h3 id='messageStatus'>
+              {statusDict[friend['status']]}
+            </h3>
             { friend['lastTimeStamp'] !== null &&
               <>
                 <div className={styles.separator}/>

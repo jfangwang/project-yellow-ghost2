@@ -38,7 +38,6 @@ class Messages extends Component {
         {Object.keys(friends).map((id) => (
           <Message key={id} friend={friends[id]} user={user}/>
         ))}
-        <Message/>
         <Footer position="relative" opacity={0} />
       </div>
     );
