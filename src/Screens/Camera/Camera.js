@@ -2,11 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './Camera.module.css';
+import {useDoubleTap} from 'use-double-tap';
 import {
   isMobile,
 } from 'react-device-detect';
 import {
   setCameraPermissions,
+  toggleFacingMode,
 } from '../../Actions/cameraActions';
 
 /**
@@ -23,9 +25,11 @@ function Camera(props) {
     facingMode,
     index,
     orientation,
+    toggleFacingMode,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(16/9);
+  const doubleTap = useDoubleTap(() => toggleFacingMode());
 
   /**
    * Starts the camera
@@ -100,13 +104,13 @@ function Camera(props) {
     setAspectRatio(isMobile ?
       (orientation !== 'portrait' ? width / height : height / width ) :
       9.5 / 16);
-    console.log('asdf');
   }, [orientation, height, width]);
 
   return (
     <div
       className={styles.background}
       style={{height: height, width: width}}
+      {...doubleTap}
     >
       <video
         autoPlay
@@ -148,6 +152,7 @@ Camera.propTypes = {
   index: PropTypes.number,
   cameraPermissions: PropTypes.bool,
   orientation: PropTypes.string,
+  toggleFacingMode: PropTypes.func,
 };
 
 Camera.defaultProps = {
@@ -158,6 +163,7 @@ Camera.defaultProps = {
   cameraPermissions: false,
   orientation: window.innerHeight >= window.innerWidth ?
   'portrait' : 'landscape',
+  toggleFacingMode: () => {},
 };
 
 /**
@@ -178,6 +184,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   setCameraPermissions,
+  toggleFacingMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);

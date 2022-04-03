@@ -36,16 +36,6 @@ export class App extends Component {
     window.addEventListener('keydown', this.logKey);
   }
   /**
-   * @param {*} nextProps
-   * @memberof App
-   */
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.height !== this.props.height ||
-        nextProps.width !== this.props.width) {
-      this.props.resize();
-    }
-  }
-  /**
    * tied to event listener, changes index based on given key input.
    * @param {*} e
    */
