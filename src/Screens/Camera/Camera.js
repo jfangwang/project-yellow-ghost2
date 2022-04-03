@@ -1,6 +1,9 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
+import styles from './Camera.module.css';
+import {isMobile} from 'react-device-detect';
+import {setCameraPermissions} from '../../Actions/cameraActions';
 
 /**
  *
@@ -9,9 +12,82 @@ import PropTypes from 'prop-types';
  * @return {*}
  */
 function Camera(props) {
+  const {height, width, cameraPermissions, facingMode, index} = props;
+  const [currentStream, setCurrentStream] = useState(null);
+
+  /**
+   * Starts the camera
+   */
+  function startCamera() {
+    // Prefer camera resolution nearest to 1280x720.
+    const constraints = {
+      audio: false,
+      video: {
+        facingMode: facingMode,
+        aspectRatio: {
+          exact: isMobile ? width / height : 9.5 / 16,
+        },
+        width: {ideal: 1920},
+        height: {ideal: 1920},
+      },
+    };
+
+
+    navigator.mediaDevices.getUserMedia(constraints)
+        .then(function(mediaStream) {
+          setCameraPermissions(true);
+          document.getElementById('mainCamera').srcObject = mediaStream;
+          setCurrentStream(mediaStream);
+          document.getElementById('mainCamera').onloadedmetadata = function(e) {
+            document.getElementById('mainCamera').play();
+          };
+        })
+        .catch(function(err) {
+          console.log(err.name + ': ' + err.message);
+        });
+  }
+
+
+  /**
+   * Stops the camera
+   */
+  function stopCamera() {
+    if (currentStream !== null) {
+      currentStream.getTracks().forEach((element) => {
+        element.stop();
+      });
+      document.querySelector('video').srcObject = null;
+    }
+    setCurrentStream(null);
+  }
+
+  useEffect(() => {
+    document.querySelector('video').onloadeddata = () => {
+      console.log('video loaded');
+    };
+  }, []);
+
+  useEffect(() => {
+    if (index === 1) {
+      stopCamera();
+      startCamera();
+    } else {
+      stopCamera();
+    }
+  }, [index]);
+
   return (
-    <div>
-      <h1>Camera</h1>
+    <div
+      className={styles.background}
+      style={{height: height, width: width}}
+    >
+      <video
+        autoPlay
+        playsInline
+        id='mainCamera'
+        className={styles.mainCamera}
+      />
+      <h1>Camera Permisions {`${cameraPermissions}`}</h1>
     </div>
   );
 }
@@ -19,11 +95,17 @@ function Camera(props) {
 Camera.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
+  facingMode: PropTypes.string,
+  index: PropTypes.number,
+  cameraPermissions: PropTypes.bool,
 };
 
 Camera.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  facingMode: 'user',
+  index: 1,
+  cameraPermissions: false,
 };
 
 /**
@@ -36,6 +118,9 @@ function mapStateToProps(state) {
   return {
     height: state.global.height,
     width: state.global.width,
+    facingMode: state.camera.facingMode,
+    index: state.global.index,
+    cameraPermissions: state.camera.cameraPermissions,
   };
 }
 
