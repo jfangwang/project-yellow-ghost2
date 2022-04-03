@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import styles from './Camera.module.css';
 import {useDoubleTap} from 'use-double-tap';
 import Navbar from '../../Components/Navbar/Navbar';
+import Footer from '../../Components/Footer/Footer';
 import {
   isMobile,
 } from 'react-device-detect';
@@ -127,12 +128,22 @@ function Camera(props) {
         }}
       />
       <div className={styles.cameraOverlay}>
-        <Navbar opacity={0} position="relative" />
-        <div className={styles.cameraStats}>
-          <p>Height: {height}</p>
-          <p>Width: {width}</p>
-          <p>orientation: {orientation}</p>
-          <p>aspectRatio: {aspectRatio}</p>
+        <div className={styles.cameraHeader}>
+          <Navbar opacity={0} position="relative" />
+          <div className={styles.cameraStats}>
+            <p>Height: {height}</p>
+            <p>Width: {width}</p>
+            <p>orientation: {orientation}</p>
+            <p>aspectRatio: {aspectRatio}</p>
+          </div>
+        </div>
+        <div className={styles.cameraFooter}>
+          <div className={styles.cameraButtons}>
+            <button>Mems</button>
+            <button className={styles.captureButton}>button</button>
+            <button>Face</button>
+          </div>
+          <Footer position="relative" opacity={0} />
         </div>
       </div>
     </div>

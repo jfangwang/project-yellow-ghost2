@@ -19,4 +19,42 @@
     width: 100%;
     height: 100%;
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
+
+.cameraOverlay > * {
+    border: 2px red solid;
+}
+
+.cameraHeader {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.cameraFooter {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cameraButtons {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.cameraButtons > * {
+    margin: 0.5rem 0.5rem 0rem 0.5rem;
+}
+
+.captureButton {
+    width: 7em;
+    height: 7em;
+    background: transparent;
+    border: 0.5rem solid rgb(255, 255, 255);
+    border-radius: 50%;
+  }
