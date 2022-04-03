@@ -32,6 +32,7 @@ export class App extends Component {
    * Runs when component is mounted
    */
   componentDidMount() {
+    this.props.resize();
     window.addEventListener('resize', this.props.resize);
     window.addEventListener('keydown', this.logKey);
   }

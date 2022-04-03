@@ -37,17 +37,16 @@ function Camera(props) {
    */
   function startCamera() {
     // Prefer camera resolution nearest to 1280x720.
-    setAspectRatio(isMobile ?
-      (orientation !== 'portrait' ? width / height : height / width ) :
-      9.5 / 16);
+    const ratio = isMobile ?
+    (orientation !== 'portrait' ? width / height : height / width ) :
+    9.5 / 16;
+    setAspectRatio(ratio);
     const constraints = {
       audio: false,
       video: {
         facingMode: facingMode,
         aspectRatio: {
-          exact: isMobile ?
-          (orientation !== 'portrait' ? width / height : height / width ) :
-          9.5 / 16,
+          exact: ratio,
         },
         width: {ideal: 1920},
         height: {ideal: 1920},
@@ -99,13 +98,7 @@ function Camera(props) {
         stopCamera();
       }
     }
-  }, [index, facingMode]);
-
-  useEffect(() => {
-    setAspectRatio(isMobile ?
-      (orientation !== 'portrait' ? width / height : height / width ) :
-      9.5 / 16);
-  }, [orientation, height, width]);
+  }, [index, facingMode, orientation]);
 
   return (
     <div
@@ -182,6 +175,7 @@ function mapStateToProps(state) {
     facingMode: state.camera.facingMode,
     index: state.global.index,
     cameraPermissions: state.camera.cameraPermissions,
+    orientation: state.global.orientation,
   };
 }
 
