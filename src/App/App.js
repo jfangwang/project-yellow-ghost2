@@ -36,6 +36,16 @@ export class App extends Component {
     window.addEventListener('keydown', this.logKey);
   }
   /**
+   * @param {*} nextProps
+   * @memberof App
+   */
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.height !== this.props.height ||
+        nextProps.width !== this.props.width) {
+      this.props.resize();
+    }
+  }
+  /**
    * tied to event listener, changes index based on given key input.
    * @param {*} e
    */
@@ -102,6 +112,7 @@ App.propTypes = {
   changeToIndex: PropTypes.func,
   updateDecimalIndex: PropTypes.func,
   toggleSlide: PropTypes.func,
+  orientation: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -109,6 +120,8 @@ App.defaultProps = {
   width: window.innerWidth,
   index: 1,
   slideDisabled: false,
+  orientation: window.innerHeight >= window.innerWidth ?
+  'portrait' : 'landscape',
   resize: () => {},
   changeToIndex: () => {},
   updateDecimalIndex: () => {},
@@ -125,6 +138,7 @@ function mapStateToProps(state) {
     width: state.global.width,
     index: state.global.index,
     slideDisabled: state.global.slideDisabled,
+    orientation: state.global.orientation,
   };
 }
 

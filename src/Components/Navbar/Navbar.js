@@ -4,6 +4,7 @@ import SlidingMenuRouting from '../SlidingMenu/SlidingMenuRouting';
 import styles from './Navbar.module.css';
 import {connect} from 'react-redux';
 import {toggleSlide} from '../../Actions/globalActions';
+import {toggleFacingMode} from '../../Actions/cameraActions';
 import Account from '../../Screens/Account/Account';
 import Search from '../../Screens/Search/Search';
 import AddFriends from '../../Screens/AddFriends/AddFriends';
@@ -34,6 +35,7 @@ export function Navbar(props) {
     position,
     opacity,
     placeHolder,
+    toggleFacingMode,
   } = props;
   const accountMenu = useRef();
   const searchMenu = useRef();
@@ -97,7 +99,7 @@ export function Navbar(props) {
             <UserPlus />
           </button>
           {index === 1 ?
-            <button>
+            <button onClick={() => toggleFacingMode()}>
               <ArrowsClockwise />
             </button> :
             <button
@@ -167,6 +169,7 @@ Navbar.propTypes = {
   opacity: PropTypes.number,
   toggleSlide: PropTypes.func,
   placeHolder: PropTypes.bool,
+  toggleFacingMode: PropTypes.func,
 };
 
 Navbar.defaultProps = {
@@ -177,6 +180,7 @@ Navbar.defaultProps = {
   position: 'absolute',
   opacity: 1,
   toggleSlide: () => { },
+  toggleFacingMode: () => { },
   placeHolder: true,
 };
 
@@ -197,6 +201,7 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
   toggleSlide,
+  toggleFacingMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

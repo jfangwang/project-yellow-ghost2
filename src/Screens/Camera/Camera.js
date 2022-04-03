@@ -2,8 +2,12 @@ import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './Camera.module.css';
-import {isMobile} from 'react-device-detect';
-import {setCameraPermissions} from '../../Actions/cameraActions';
+import {
+  isMobile,
+} from 'react-device-detect';
+import {
+  setCameraPermissions,
+} from '../../Actions/cameraActions';
 
 /**
  *
@@ -12,20 +16,33 @@ import {setCameraPermissions} from '../../Actions/cameraActions';
  * @return {*}
  */
 function Camera(props) {
-  const {height, width, cameraPermissions, facingMode, index} = props;
+  const {
+    height,
+    width,
+    cameraPermissions,
+    facingMode,
+    index,
+    orientation,
+  } = props;
   const [currentStream, setCurrentStream] = useState(null);
+  const [aspectRatio, setAspectRatio] = useState(16/9);
 
   /**
    * Starts the camera
    */
   function startCamera() {
     // Prefer camera resolution nearest to 1280x720.
+    setAspectRatio(isMobile ?
+      (orientation !== 'portrait' ? width / height : height / width ) :
+      9.5 / 16);
     const constraints = {
       audio: false,
       video: {
         facingMode: facingMode,
         aspectRatio: {
-          exact: isMobile ? width / height : 9.5 / 16,
+          exact: isMobile ?
+          (orientation !== 'portrait' ? width / height : height / width ) :
+          9.5 / 16,
         },
         width: {ideal: 1920},
         height: {ideal: 1920},
@@ -77,7 +94,14 @@ function Camera(props) {
         stopCamera();
       }
     }
-  }, [index]);
+  }, [index, facingMode]);
+
+  useEffect(() => {
+    setAspectRatio(isMobile ?
+      (orientation !== 'portrait' ? width / height : height / width ) :
+      9.5 / 16);
+    console.log('asdf');
+  }, [orientation, height, width]);
 
   return (
     <div
@@ -89,10 +113,30 @@ function Camera(props) {
         playsInline
         id='mainCamera'
         className={styles.mainCamera}
+        style={{
+          transform: facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)',
+        }}
       />
-      { !cameraPermissions &&
-        <h1>Camera Permisions {`${cameraPermissions}`}</h1>
-      }
+      <canvas
+        id="main-canvas"
+        style={{
+          width: isMobile ? '100%' :
+          (width / height < aspectRatio ? '100%' : 'auto'),
+          height: isMobile ? '100%' :
+          (width / height > aspectRatio ? '100%' : 'auto'),
+          position: 'absolute',
+        }}
+      />
+      {/* <div style={{
+        position: 'absolute',
+        backgroundColor: 'white',
+        width: '100%',
+      }}>
+        <p>Height: {height}</p>
+        <p>Width: {width}</p>
+        <p>orientation: {orientation}</p>
+        <p>aspectRatio: {aspectRatio}</p>
+      </div> */}
     </div>
   );
 }
@@ -103,6 +147,7 @@ Camera.propTypes = {
   facingMode: PropTypes.string,
   index: PropTypes.number,
   cameraPermissions: PropTypes.bool,
+  orientation: PropTypes.string,
 };
 
 Camera.defaultProps = {
@@ -111,6 +156,8 @@ Camera.defaultProps = {
   facingMode: 'user',
   index: 1,
   cameraPermissions: false,
+  orientation: window.innerHeight >= window.innerWidth ?
+  'portrait' : 'landscape',
 };
 
 /**
