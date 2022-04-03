@@ -49,9 +49,7 @@ export function Navbar(props) {
       //   backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - decIndex)})`
       // }}
       style={{
-        backgroundColor: placeHolder ?
-        `rgba(255, 255, 255, 1)` :
-        `rgba(255, 255, 255, 0)`,
+        backgroundColor: `rgba(255, 255, 255, 0)`,
         position: position,
       }}
     >

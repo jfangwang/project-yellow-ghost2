@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './Camera.module.css';
 import {useDoubleTap} from 'use-double-tap';
+import Navbar from '../../Components/Navbar/Navbar';
 import {
   isMobile,
 } from 'react-device-detect';
@@ -125,16 +126,15 @@ function Camera(props) {
           position: 'absolute',
         }}
       />
-      {/* <div style={{
-        position: 'absolute',
-        backgroundColor: 'white',
-        width: '100%',
-      }}>
-        <p>Height: {height}</p>
-        <p>Width: {width}</p>
-        <p>orientation: {orientation}</p>
-        <p>aspectRatio: {aspectRatio}</p>
-      </div> */}
+      <div className={styles.cameraOverlay}>
+        <Navbar opacity={0} position="relative" />
+        <div className={styles.cameraStats}>
+          <p>Height: {height}</p>
+          <p>Width: {width}</p>
+          <p>orientation: {orientation}</p>
+          <p>aspectRatio: {aspectRatio}</p>
+        </div>
+      </div>
     </div>
   );
 }
