@@ -17,6 +17,7 @@ import {
   setScreen,
   captureImage,
 } from '../../Actions/cameraActions';
+import Send from '../Send/Send';
 
 /**
  *
@@ -265,7 +266,10 @@ function Camera(props) {
         </SlidingMenuRouting>
       </IconContext.Provider>
       { screen === 'capture' &&
-        <Capture />
+        <Capture aspectRatio={aspectRatio} camH={h} camW={w}/>
+      }
+      { screen === 'send' &&
+        <Send />
       }
     </div>
   );
