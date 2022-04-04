@@ -4,6 +4,7 @@ import styles from './Capture.module.css';
 import {connect} from 'react-redux';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {setScreen} from '../../Actions/cameraActions';
+import {IconContext, X} from 'phosphor-react';
 
 
 /**
@@ -29,10 +30,19 @@ function Capture(props) {
     <div
       className={styles.background}
     >
-      <div>
-        <button onClick={close}>Close</button>
-      </div>
-      <h1>Capture</h1>
+      <IconContext.Provider
+        value={{
+          color: 'black',
+          size: '2rem',
+          weight: 'bold',
+        }}
+      >
+        <header>
+          <div>
+            <button onClick={close}><X /></button>
+          </div>
+        </header>
+      </IconContext.Provider>
     </div>
   );
 }

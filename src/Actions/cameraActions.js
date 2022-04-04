@@ -1,6 +1,7 @@
 export const TOGGLE_FACING_MODE = 'camera/toggleFacingMode';
 export const SET_CAMERA_PERMISSIONS = 'camera/setCameraPermissions';
 export const SET_SCREEN = 'camera/setScreen';
+export const CAPTURED_IMAGE = 'camera/capturedImage';
 
 /**
  * @export
@@ -36,5 +37,17 @@ export function setScreen(screen) {
   return {
     type: SET_SCREEN,
     screen: screen,
+  };
+}
+
+/**
+ * @export
+ * @param {*} image
+ * @return {*}
+ */
+export function captureImage(image) {
+  return {
+    type: CAPTURED_IMAGE,
+    capturedImage: image,
   };
 }

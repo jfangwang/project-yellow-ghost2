@@ -2,11 +2,13 @@ import {
   TOGGLE_FACING_MODE,
   SET_CAMERA_PERMISSIONS,
   SET_SCREEN,
+  CAPTURED_IMAGE,
 } from '../Actions/cameraActions';
 export const initialState = {
   facingMode: 'user',
   cameraPermissions: true,
   screen: 'camera',
+  capturedImage: null,
 };
 
 
@@ -46,6 +48,11 @@ export function cameraReducer(state = initialState, action) {
       return {
         ...state,
         screen: action.screen,
+      };
+    case CAPTURED_IMAGE:
+      return {
+        ...state,
+        capturedImage: action.capturedImage,
       };
     default:
       return state;

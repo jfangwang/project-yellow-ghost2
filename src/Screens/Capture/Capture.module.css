@@ -4,3 +4,12 @@
     background-color: white;
     position: absolute;
 }
+header {
+    padding: 1rem;
+    background-color: transparent;
+    border: 2px red solid;
+}
+button {
+    border: none;
+    background-color: none;
+}
