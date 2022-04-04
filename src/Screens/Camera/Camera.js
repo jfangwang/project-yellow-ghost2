@@ -41,7 +41,8 @@ function Camera(props) {
     captureImage,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
-  const [aspectRatio, setAspectRatio] = useState(16 / 9);
+  const [aspectRatio, setAspectRatio] = useState(
+    isMobile ? (width/height) : 9.5/16);
   const [w, setw] = useState(null);
   const [h, seth] = useState(null);
   const doubleTap = useDoubleTap(() => toggleFacingMode());
@@ -76,18 +77,17 @@ function Camera(props) {
           setCurrentStream(mediaStream);
           document.getElementById('mainCamera').onloadedmetadata = function(e) {
             const v = document.getElementById('mainCamera');
-            const vec = document.getElementById('visualEffectsCanvas');
             v.play();
             setw(v.videoWidth);
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
-            vec.width = width;
-            vec.height = height;
+            updateVECanvas();
           };
         })
         .catch(function(err) {
           console.log(err.name + ': ' + err.message);
           setCameraPermissions(false);
+          setAspectRatio(isMobile ? (width/height) : 9.5/16);
         });
   }
 
@@ -123,16 +123,35 @@ function Camera(props) {
     const ctx = canvas.getContext('2d');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-    // toggleNavFoot(false);
-    // toggleSlide(false);
-    // setScreen('capture');
-    captureImage('Image Taken Place Holder');
     if (facingMode === 'user') {
       ctx.scale(-1, 1);
       ctx.drawImage(video, canvas.width * -1, 0, canvas.width, canvas.height);
+      captureImage('Image Taken Place Holder');
     } else {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      captureImage('Image Taken Place Holder');
     }
+    toggleNavFoot(false);
+    toggleSlide(false);
+    setScreen('capture');
+  }
+
+  /**
+   * Updates the visual effects canvas
+   */
+  function updateVECanvas() {
+    const vec = document.getElementById('visualEffectsCanvas');
+    const cw = (width/height) > aspectRatio ? height * aspectRatio : width;
+    const ch = (width/height) >
+    aspectRatio ? height : width * (aspectRatio ** -1);
+    if (h != null && w != null) {
+      vec.width = Math.min(cw, w);
+      vec.height = Math.min(ch, h);
+    } else {
+      vec.width = cw;
+      vec.height = ch;
+    }
+    // console.log(vec.height, vec.width, h, w);
   }
 
   useEffect(() => {
@@ -142,10 +161,21 @@ function Camera(props) {
   }, []);
 
   useEffect(() => {
+    updateVECanvas();
+  }, [height, width]);
+
+  useEffect(() => {
     if (cameraPermissions === true) {
       if (index === 1 && screen === 'camera') {
         stopCamera();
         startCamera();
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d');
+        if (facingMode === 'user') {
+          ctx.clearRect(canvas.width*-1, 0, canvas.width, canvas.height);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
       } else {
         stopCamera();
       }
@@ -196,6 +226,7 @@ function Camera(props) {
             height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
           }}
         />
+        { screen === 'camera' &&
         <div className={styles.cameraOverlay}>
           <div className={styles.cameraHeader}>
             <Navbar opacity={0} position="relative" />
@@ -221,6 +252,7 @@ function Camera(props) {
             <Footer position="relative" opacity={0} />
           </div>
         </div>
+        }
         <SlidingMenuRouting
           ref={memoriesMenu}
           height={height}

@@ -1,15 +1,20 @@
 .background {
     height: 100%;
     width: 100%;
-    background-color: white;
+    background-color: rgba(0, 0, 0, 0);
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
-header {
-    padding: 1rem;
+.background header {
     background-color: transparent;
     border: 2px red solid;
+    width: 100%;
 }
-button {
+.background button {
     border: none;
     background-color: none;
+    margin: 1rem;
 }

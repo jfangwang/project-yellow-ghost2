@@ -38,9 +38,8 @@ function Capture(props) {
         }}
       >
         <header>
-          <div>
-            <button onClick={close}><X /></button>
-          </div>
+          <button onClick={close}><X /></button>
+          {/* imageCanvas */}
         </header>
       </IconContext.Provider>
     </div>
