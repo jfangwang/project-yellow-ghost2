@@ -14,30 +14,34 @@ import {IconContext, Chat, Camera, Users} from 'phosphor-react';
  * @return {*}
  */
 export function Footer(props) {
-  const {index, opacity, position} = props;
+  const {index, opacity, position, hideNavFoot} = props;
   return (
-    <footer
-      className={styles.mainFooter}
-      style={{opacity: opacity, position: position}}
-    >
-      <IconContext.Provider
-        value={{
-          size: '1.8rem',
-          weight: 'bold',
-          mirrored: true,
-        }}
+    <>
+      { !hideNavFoot &&
+      <footer
+        className={styles.mainFooter}
+        style={{opacity: opacity, position: position}}
       >
-        <Link to="/messages" replace>
-          <Chat color={index === 0 ? 'DodgerBlue' : 'white'}/>
-        </Link>
-        <Link to="/camera" replace>
-          <Camera color={index === 1 ? 'yellow' : 'white'}/>
-        </Link>
-        <Link to="/discover" replace>
-          <Users color={index === 2 ? 'purple' : 'white'}/>
-        </Link>
-      </IconContext.Provider>
-    </footer>
+        <IconContext.Provider
+          value={{
+            size: '1.8rem',
+            weight: 'bold',
+            mirrored: true,
+          }}
+        >
+          <Link to="/messages" replace>
+            <Chat color={index === 0 ? 'DodgerBlue' : 'white'}/>
+          </Link>
+          <Link to="/camera" replace>
+            <Camera color={index === 1 ? 'yellow' : 'white'}/>
+          </Link>
+          <Link to="/discover" replace>
+            <Users color={index === 2 ? 'purple' : 'white'}/>
+          </Link>
+        </IconContext.Provider>
+      </footer>
+      }
+    </>
   );
 }
 
@@ -47,6 +51,7 @@ Footer.propTypes = {
   opacity: PropTypes.number,
   position: PropTypes.string,
   index: PropTypes.number,
+  hideNavFoot: PropTypes.bool,
 };
 
 Footer.defaultProps = {
@@ -55,6 +60,7 @@ Footer.defaultProps = {
   opacity: 1,
   position: 'absolute',
   index: 1,
+  hideNavFoot: false,
 };
 
 /**
@@ -67,6 +73,7 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     index: state.global.index,
+    hideNavFoot: state.global.hideNavFoot,
   };
 }
 

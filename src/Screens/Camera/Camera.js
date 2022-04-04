@@ -8,7 +8,7 @@ import SlidingMenuRouting
   from '../../Components/SlidingMenu/SlidingMenuRouting';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
-import {toggleSlide} from '../../Actions/globalActions';
+import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {isMobile} from 'react-device-detect';
 import {
   setCameraPermissions,
@@ -32,6 +32,7 @@ function Camera(props) {
     toggleFacingMode,
     setCameraPermissions,
     toggleSlide,
+    toggleNavFoot,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(16 / 9);
@@ -89,14 +90,13 @@ function Camera(props) {
     setCurrentStream(null);
   }
 
-
   /**
-   * Toggle Slide and Navfoot
+   * @param {*} e
    */
-  // function toggleUI() {
-  //   toggleNavFoot();
-  //   toggleSlide();
-  // }
+  function toggleUI(e) {
+    toggleNavFoot(e);
+    toggleSlide(e);
+  }
 
   useEffect(() => {
     document.querySelector('video').onloadeddata = () => {
@@ -173,7 +173,7 @@ function Camera(props) {
           ref={memoriesMenu}
           height={height}
           width={width}
-          toggleSlide={toggleSlide}
+          toggleSlide={toggleUI}
           title="Memories"
           path="/memories"
         >
@@ -208,6 +208,7 @@ Camera.defaultProps = {
   toggleFacingMode: () => { },
   setCameraPermissions: () => { },
   toggleSlide: () => { },
+  toggleNavFoot: () => { },
 };
 
 /**
@@ -231,6 +232,7 @@ const mapDispatchToProps = {
   setCameraPermissions,
   toggleFacingMode,
   toggleSlide,
+  toggleNavFoot,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);
