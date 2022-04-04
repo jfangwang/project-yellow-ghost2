@@ -4,7 +4,7 @@ import styles from './Capture.module.css';
 import {connect} from 'react-redux';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {setScreen} from '../../Actions/cameraActions';
-import SlidingMenu from '../../Components/SlidingMenu/SlidingMenu';
+import SendSlidingMenu from '../Send/SendSlidingMenu';
 import {
   IconContext,
   X,
@@ -12,7 +12,6 @@ import {
   DownloadSimple,
   Export,
 } from 'phosphor-react';
-import Send from '../Send/Send';
 
 
 /**
@@ -102,14 +101,15 @@ function Capture(props) {
           </footer>
         </IconContext.Provider>
       </div>
-      <SlidingMenu
+      <SendSlidingMenu
         ref={sendMenu}
         height={height}
         width={width}
         title="Send"
-      >
-        <Send />
-      </SlidingMenu>
+        setScreen={setScreen}
+        toggleSlide={toggleSlide}
+        toggleNavFoot={toggleNavFoot}
+      />
     </>
   );
 }

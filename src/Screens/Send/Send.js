@@ -9,6 +9,11 @@ import {
   PaperPlaneRight,
 } from 'phosphor-react';
 
+const list = [];
+for (let i = 0; i < 200; i++) {
+  list.push(<h1>{'User ' + i.toString()}</h1>);
+}
+
 /**
  * @param {*} props
  * @return {*}
@@ -37,6 +42,7 @@ function Send(props) {
         weight: 'bold',
       }}
     >
+      {list}
       <footer>
         <div className={styles.names}>
           <h1>Footer</h1>
