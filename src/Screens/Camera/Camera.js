@@ -11,6 +11,7 @@ import Footer from '../../Components/Footer/Footer';
 import Capture from '../Capture/Capture';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {isMobile} from 'react-device-detect';
+import {MetaTags} from 'react-meta-tags';
 import {
   setCameraPermissions,
   toggleFacingMode,
@@ -190,88 +191,97 @@ function Camera(props) {
   }, [index]);
 
   return (
-    <div
-      className={styles.background}
-      style={{height: height, width: width}}
-      {...doubleTap}
-    >
-      <IconContext.Provider
-        value={{
-          color: 'white',
-          size: '2rem',
-          weight: 'bold',
-        }}
+    <>
+      <MetaTags>
+        <meta
+          name = "viewport"
+          content = "width=device-width, \
+          minimum-scale=1.0, maximum-scale = 1.0, user-scalable = no"
+        />
+      </MetaTags>
+      <div
+        className={styles.background}
+        style={{height: height, width: width}}
+        {...doubleTap}
       >
-        <video
-          autoPlay
-          playsInline
-          id='mainCamera'
-          className={styles.mainCamera}
-          style={{
-            transform: facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)',
+        <IconContext.Provider
+          value={{
+            color: 'white',
+            size: '2rem',
+            weight: 'bold',
           }}
-        />
-        <canvas
-          id="imageCanvas"
-          className={styles.imageCanvas}
-          style={{
-            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-          }}
-        />
-        <canvas
-          id="visualEffectsCanvas"
-          className={styles.visualEffectsCanvas}
-          style={{
-            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-          }}
-        />
-        { screen === 'camera' &&
-        <div className={styles.cameraOverlay}>
-          <div className={styles.cameraHeader}>
-            <Navbar opacity={0} position="relative" />
-            <div className={styles.cameraStats}>
-              <p>Device AR: {width/height}</p>
-              <p>Height: {height}</p>
-              <p>Width: {width}</p>
-              <p>Cam AR: {w/h}</p>
-              <p>Cam H: {h}</p>
-              <p>Cam W: {w}</p>
-              <p>orientation: {orientation}</p>
-              <p>aspectRatio: {aspectRatio}</p>
-            </div>
-          </div>
-          <div className={styles.cameraFooter}>
-            <div className={styles.cameraButtons}>
-              <button onClick={() => memoriesMenu.current.toggle()}>
-                <Image />
-              </button>
-              <button className={styles.captureButton} onClick={capture}/>
-              <button><MaskHappy /></button>
-            </div>
-            <Footer position="relative" opacity={0} />
-          </div>
-        </div>
-        }
-        <SlidingMenuRouting
-          ref={memoriesMenu}
-          height={height}
-          width={width}
-          toggleSlide={toggleUI}
-          title="Memories"
-          path="/memories"
         >
-          <h1>Memories</h1>
-        </SlidingMenuRouting>
-      </IconContext.Provider>
-      { screen === 'capture' &&
-        <Capture aspectRatio={aspectRatio} camH={h} camW={w}/>
-      }
-      { screen === 'send' &&
-        <Send />
-      }
-    </div>
+          <video
+            autoPlay
+            playsInline
+            id='mainCamera'
+            className={styles.mainCamera}
+            style={{
+              transform: facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)',
+            }}
+          />
+          <canvas
+            id="imageCanvas"
+            className={styles.imageCanvas}
+            style={{
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            }}
+          />
+          <canvas
+            id="visualEffectsCanvas"
+            className={styles.visualEffectsCanvas}
+            style={{
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            }}
+          />
+          { screen === 'camera' &&
+          <div className={styles.cameraOverlay}>
+            <div className={styles.cameraHeader}>
+              <Navbar opacity={0} position="relative" />
+              <div className={styles.cameraStats}>
+                <p>Device AR: {width/height}</p>
+                <p>Height: {height}</p>
+                <p>Width: {width}</p>
+                <p>Cam AR: {w/h}</p>
+                <p>Cam H: {h}</p>
+                <p>Cam W: {w}</p>
+                <p>orientation: {orientation}</p>
+                <p>aspectRatio: {aspectRatio}</p>
+              </div>
+            </div>
+            <div className={styles.cameraFooter}>
+              <div className={styles.cameraButtons}>
+                <button onClick={() => memoriesMenu.current.toggle()}>
+                  <Image />
+                </button>
+                <button className={styles.captureButton} onClick={capture}/>
+                <button><MaskHappy /></button>
+              </div>
+              <Footer position="relative" opacity={0} />
+            </div>
+          </div>
+          }
+          <SlidingMenuRouting
+            ref={memoriesMenu}
+            height={height}
+            width={width}
+            toggleSlide={toggleUI}
+            title="Memories"
+            path="/memories"
+          >
+            <h1>Memories</h1>
+          </SlidingMenuRouting>
+        </IconContext.Provider>
+        { screen === 'capture' &&
+          <Capture aspectRatio={aspectRatio} camH={h} camW={w}/>
+        }
+        { screen === 'send' &&
+          <Send />
+        }
+      </div>
+    </>
   );
 }
 

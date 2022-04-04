@@ -3,12 +3,14 @@ import {
   SET_CAMERA_PERMISSIONS,
   SET_SCREEN,
   CAPTURED_IMAGE,
+  UPDATE_SEND_LIST,
 } from '../Actions/cameraActions';
 export const initialState = {
   facingMode: 'user',
   cameraPermissions: true,
   screen: 'camera',
   capturedImage: null,
+  sendList: [],
 };
 
 
@@ -53,6 +55,11 @@ export function cameraReducer(state = initialState, action) {
       return {
         ...state,
         capturedImage: action.capturedImage,
+      };
+    case UPDATE_SEND_LIST:
+      return {
+        ...state,
+        sendList: action.sendList,
       };
     default:
       return state;

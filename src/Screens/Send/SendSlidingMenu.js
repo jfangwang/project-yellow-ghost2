@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {forwardRef, useImperativeHandle} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styles from './Send.module.css';
+import SendItem from './SendItem';
 import {
   IconContext,
   CaretLeft,
@@ -11,9 +12,19 @@ import {
   PaperPlaneRight,
 } from 'phosphor-react';
 
-const list = [];
-for (let i = 0; i < 40; i++) {
-  list.push(<h1 key={i}>{'User ' + i.toString()}</h1>);
+const friends = {
+  1: {
+    id: 'user1',
+    username: 'user1',
+  },
+  2: {
+    id: 'user2',
+    username: 'user2',
+  },
+  3: {
+    id: 'user3',
+    username: 'user3',
+  },
 }
 
 const SendSlidingMenu = forwardRef((props, ref) => {
@@ -124,10 +135,16 @@ const SendSlidingMenu = forwardRef((props, ref) => {
                   style={{
                     height: height,
                     width: width,
-                    overflowY: 'scroll',
+                    overflowY: 'auto',
                   }}
+                  className={styles.body}
                 >
-                  {list}
+                  <h2>Friends</h2>
+                  <ul className={styles.friendsList}>
+                    {Object.keys(friends).map((item, index) => (
+                      <SendItem key={index} friend={friends[item]}/>
+                    ))}
+                  </ul>
                 </div>
                 <footer>
                   <div className={styles.footerNames}>

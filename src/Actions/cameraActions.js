@@ -2,6 +2,7 @@ export const TOGGLE_FACING_MODE = 'camera/toggleFacingMode';
 export const SET_CAMERA_PERMISSIONS = 'camera/setCameraPermissions';
 export const SET_SCREEN = 'camera/setScreen';
 export const CAPTURED_IMAGE = 'camera/capturedImage';
+export const UPDATE_SEND_LIST = 'camera/updateSendList';
 
 /**
  * @export
@@ -49,5 +50,17 @@ export function captureImage(image) {
   return {
     type: CAPTURED_IMAGE,
     capturedImage: image,
+  };
+}
+
+/**
+ * @export
+ * @param {*} sendList
+ * @return {*}
+ */
+export function updateSendList(sendList) {
+  return {
+    type: UPDATE_SEND_LIST,
+    sendList: sendList,
   };
 }

@@ -7,7 +7,7 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    /* overflow-y: scroll; */
+    overflow: hidden;
 }
 
 .background header {
@@ -16,6 +16,8 @@
     width: 100%;
     justify-content: flex-start;
     align-items: center;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
 }
 
 .background header button {
@@ -72,6 +74,24 @@
     background-color: yellow;
 }
 
-.list {
-    border: 2px red solid;
+.friendsList {
+    width: 90%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.friendsList li:first-child {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.friendsList li:last-child {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }

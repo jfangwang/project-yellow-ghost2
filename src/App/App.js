@@ -8,6 +8,7 @@ import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
+import {MetaTags} from 'react-meta-tags';
 import {
   resize,
   changeToIndex,
@@ -64,6 +65,13 @@ export class App extends Component {
     } = this.props;
     return (
       <>
+        <MetaTags>
+          <meta
+            name = "viewport"
+            content = "width=device-width, \
+            minimum-scale=1.0, maximum-scale = 1.0, user-scalable = no"
+          />
+        </MetaTags>
         <BrowserRouter>
           <Router>
             <SwipeableRoutes
