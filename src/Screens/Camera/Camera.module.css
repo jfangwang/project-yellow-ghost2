@@ -25,7 +25,7 @@
 }
 
 .cameraOverlay > * {
-    border: 2px red solid;
+    /* border: 2px red solid; */
 }
 
 .cameraHeader {
@@ -44,17 +44,27 @@
 .cameraButtons {
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
 }
 .cameraButtons > * {
     margin: 0.5rem 0.5rem 0rem 0.5rem;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
 }
 
 .captureButton {
-    width: 7em;
-    height: 7em;
+    width: 7.2em;
+    height: 7.2em;
     background: transparent;
     border: 0.5rem solid rgb(255, 255, 255);
     border-radius: 50%;
+  }
+
+  .slidingMenuContainer {
+    width: 7.2em;
+    height: 7.2em;
+    background-color: white;
+    position: absolute;
   }

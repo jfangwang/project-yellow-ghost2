@@ -22,20 +22,19 @@ export function Footer(props) {
     >
       <IconContext.Provider
         value={{
-          color: 'black',
-          size: 32,
+          size: '1.8rem',
           weight: 'bold',
           mirrored: true,
         }}
       >
         <Link to="/messages" replace>
-          <Chat color={index === 0 ? 'DodgerBlue' : 'black'}/>
+          <Chat color={index === 0 ? 'DodgerBlue' : 'white'}/>
         </Link>
         <Link to="/camera" replace>
-          <Camera color={index === 1 ? 'yellow' : 'black'}/>
+          <Camera color={index === 1 ? 'yellow' : 'white'}/>
         </Link>
         <Link to="/discover" replace>
-          <Users color={index === 2 ? 'purple' : 'black'}/>
+          <Users color={index === 2 ? 'purple' : 'white'}/>
         </Link>
       </IconContext.Provider>
     </footer>

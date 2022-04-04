@@ -4,6 +4,7 @@ import {
   UPDATE_DEC_INDEX,
   TOGGLE_SLIDE,
   SET_ORIENTATION,
+  TOGGLE_NAV_FOOT,
 } from '../Actions/globalActions';
 export const initialState = {
   height: window.innerHeight,
@@ -12,6 +13,7 @@ export const initialState = {
   decIndex: 1,
   slideDisabled: false,
   orientation: null,
+  hideNavFoot: false,
 };
 
 /**
@@ -68,6 +70,18 @@ export function globalReducer(state = initialState, action) {
         ...state,
         orientation: action.orientation,
       };
+    case TOGGLE_NAV_FOOT:
+      if (action.state) {
+        return {
+          ...state,
+          hideNavFoot: action.state,
+        };
+      } else {
+        return {
+          ...state,
+          hideNavFoot: !state.hideNavFoot,
+        };
+      }
     default:
       return state;
   }

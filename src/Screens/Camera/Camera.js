@@ -1,13 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './Camera.module.css';
 import {useDoubleTap} from 'use-double-tap';
+import {MaskHappy, Image, IconContext} from 'phosphor-react';
+import SlidingMenuRouting
+  from '../../Components/SlidingMenu/SlidingMenuRouting';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
-import {
-  isMobile,
-} from 'react-device-detect';
+import {toggleSlide} from '../../Actions/globalActions';
+import {isMobile} from 'react-device-detect';
 import {
   setCameraPermissions,
   toggleFacingMode,
@@ -29,10 +31,12 @@ function Camera(props) {
     orientation,
     toggleFacingMode,
     setCameraPermissions,
+    toggleSlide,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
-  const [aspectRatio, setAspectRatio] = useState(16/9);
+  const [aspectRatio, setAspectRatio] = useState(16 / 9);
   const doubleTap = useDoubleTap(() => toggleFacingMode());
+  const memoriesMenu = useRef();
 
   /**
    * Starts the camera
@@ -40,8 +44,8 @@ function Camera(props) {
   function startCamera() {
     // Prefer camera resolution nearest to 1280x720.
     const ratio = isMobile ?
-    (orientation !== 'portrait' ? width / height : height / width ) :
-    9.5 / 16;
+      (orientation !== 'portrait' ? width / height : height / width) :
+      9.5 / 16;
     setAspectRatio(ratio);
     const constraints = {
       audio: false,
@@ -85,6 +89,15 @@ function Camera(props) {
     setCurrentStream(null);
   }
 
+
+  /**
+   * Toggle Slide and Navfoot
+   */
+  // function toggleUI() {
+  //   toggleNavFoot();
+  //   toggleSlide();
+  // }
+
   useEffect(() => {
     document.querySelector('video').onloadeddata = () => {
       console.log('video loaded');
@@ -108,44 +121,65 @@ function Camera(props) {
       style={{height: height, width: width}}
       {...doubleTap}
     >
-      <video
-        autoPlay
-        playsInline
-        id='mainCamera'
-        className={styles.mainCamera}
-        style={{
-          transform: facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)',
+      <IconContext.Provider
+        value={{
+          color: 'white',
+          size: '2rem',
+          weight: 'bold',
+          mirrored: true,
         }}
-      />
-      <canvas
-        id="main-canvas"
-        style={{
-          width: isMobile ? '100%' :
-          (width / height < aspectRatio ? '100%' : 'auto'),
-          height: isMobile ? '100%' :
-          (width / height > aspectRatio ? '100%' : 'auto'),
-          position: 'absolute',
-        }}
-      />
-      <div className={styles.cameraOverlay}>
-        <div className={styles.cameraHeader}>
-          <Navbar opacity={0} position="relative" />
-          <div className={styles.cameraStats}>
-            <p>Height: {height}</p>
-            <p>Width: {width}</p>
-            <p>orientation: {orientation}</p>
-            <p>aspectRatio: {aspectRatio}</p>
+      >
+        <video
+          autoPlay
+          playsInline
+          id='mainCamera'
+          className={styles.mainCamera}
+          style={{
+            transform: facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)',
+          }}
+        />
+        <canvas
+          id="main-canvas"
+          style={{
+            width: isMobile ? '100%' :
+              (width / height < aspectRatio ? '100%' : 'auto'),
+            height: isMobile ? '100%' :
+              (width / height > aspectRatio ? '100%' : 'auto'),
+            position: 'absolute',
+          }}
+        />
+        <div className={styles.cameraOverlay}>
+          <div className={styles.cameraHeader}>
+            <Navbar opacity={0} position="relative" />
+            <div className={styles.cameraStats}>
+              <p>Height: {height}</p>
+              <p>Width: {width}</p>
+              <p>orientation: {orientation}</p>
+              <p>aspectRatio: {aspectRatio}</p>
+            </div>
+          </div>
+          <div className={styles.cameraFooter}>
+            <div className={styles.cameraButtons}>
+              <button onClick={() => memoriesMenu.current.toggle()}>
+                <Image />
+              </button>
+              <button className={styles.captureButton} />
+              <button><MaskHappy /></button>
+            </div>
+            <Footer position="relative" opacity={0} />
           </div>
         </div>
-        <div className={styles.cameraFooter}>
-          <div className={styles.cameraButtons}>
-            <button>Mems</button>
-            <button className={styles.captureButton}>button</button>
-            <button>Face</button>
-          </div>
-          <Footer position="relative" opacity={0} />
-        </div>
-      </div>
+        <SlidingMenuRouting
+          ref={memoriesMenu}
+          height={height}
+          width={width}
+          toggleSlide={toggleSlide}
+          title="Memories"
+          path="/memories"
+        >
+          <h1>Memories</h1>
+        </SlidingMenuRouting>
+      </IconContext.Provider>
     </div>
   );
 }
@@ -159,6 +193,8 @@ Camera.propTypes = {
   orientation: PropTypes.string,
   toggleFacingMode: PropTypes.func,
   setCameraPermissions: PropTypes.func,
+  toggleSlide: PropTypes.func,
+  toggleNavFoot: PropTypes.func,
 };
 
 Camera.defaultProps = {
@@ -168,9 +204,10 @@ Camera.defaultProps = {
   index: 1,
   cameraPermissions: false,
   orientation: window.innerHeight >= window.innerWidth ?
-  'portrait' : 'landscape',
-  toggleFacingMode: () => {},
-  setCameraPermissions: () => {},
+    'portrait' : 'landscape',
+  toggleFacingMode: () => { },
+  setCameraPermissions: () => { },
+  toggleSlide: () => { },
 };
 
 /**
@@ -193,6 +230,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   setCameraPermissions,
   toggleFacingMode,
+  toggleSlide,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);
