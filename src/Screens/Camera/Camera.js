@@ -8,11 +8,13 @@ import SlidingMenuRouting
   from '../../Components/SlidingMenu/SlidingMenuRouting';
 import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
+import Capture from '../Capture/Capture';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {isMobile} from 'react-device-detect';
 import {
   setCameraPermissions,
   toggleFacingMode,
+  setScreen,
 } from '../../Actions/cameraActions';
 
 /**
@@ -33,6 +35,8 @@ function Camera(props) {
     setCameraPermissions,
     toggleSlide,
     toggleNavFoot,
+    screen,
+    setScreen,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(16 / 9);
@@ -98,6 +102,16 @@ function Camera(props) {
     toggleSlide(e);
   }
 
+
+  /**
+   * Capture
+   */
+  function capture() {
+    toggleNavFoot(false);
+    toggleSlide(false);
+    setScreen('capture');
+  }
+
   useEffect(() => {
     document.querySelector('video').onloadeddata = () => {
       console.log('video loaded');
@@ -106,14 +120,20 @@ function Camera(props) {
 
   useEffect(() => {
     if (cameraPermissions === true) {
-      if (index === 1) {
+      if (index === 1 && screen === 'camera') {
         stopCamera();
         startCamera();
       } else {
         stopCamera();
       }
     }
-  }, [index, facingMode, orientation]);
+  }, [index, facingMode, orientation, screen]);
+
+  useEffect(() => {
+    if (index !== 1) {
+      setScreen('camera');
+    }
+  }, [index]);
 
   return (
     <div
@@ -163,7 +183,7 @@ function Camera(props) {
               <button onClick={() => memoriesMenu.current.toggle()}>
                 <Image />
               </button>
-              <button className={styles.captureButton} />
+              <button className={styles.captureButton} onClick={capture}/>
               <button><MaskHappy /></button>
             </div>
             <Footer position="relative" opacity={0} />
@@ -180,6 +200,9 @@ function Camera(props) {
           <h1>Memories</h1>
         </SlidingMenuRouting>
       </IconContext.Provider>
+      { screen === 'capture' &&
+        <Capture />
+      }
     </div>
   );
 }
@@ -195,6 +218,8 @@ Camera.propTypes = {
   setCameraPermissions: PropTypes.func,
   toggleSlide: PropTypes.func,
   toggleNavFoot: PropTypes.func,
+  screen: PropTypes.string,
+  setScreen: PropTypes.func,
 };
 
 Camera.defaultProps = {
@@ -209,6 +234,7 @@ Camera.defaultProps = {
   setCameraPermissions: () => { },
   toggleSlide: () => { },
   toggleNavFoot: () => { },
+  setScreen: () => { },
 };
 
 /**
@@ -225,6 +251,7 @@ function mapStateToProps(state) {
     index: state.global.index,
     cameraPermissions: state.camera.cameraPermissions,
     orientation: state.global.orientation,
+    screen: state.camera.screen,
   };
 }
 
@@ -233,6 +260,7 @@ const mapDispatchToProps = {
   toggleFacingMode,
   toggleSlide,
   toggleNavFoot,
+  setScreen,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);
