@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import styles from './Capture.module.css';
 import {connect} from 'react-redux';
@@ -20,7 +20,6 @@ import {
 } from 'phosphor-react';
 // import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
-
 /**
  * @param {*} props
  * @return {*}
@@ -40,6 +39,7 @@ function Capture(props) {
     orientation,
   } = props;
   const sendMenu = useRef();
+  const [activeTool, setActiveTool] = useState(null);
 
   /**
    * Close
@@ -128,11 +128,31 @@ function Capture(props) {
                   'row':'column',
               }}
             >
-              <button><TextT /></button>
-              <button><PencilSimple /></button>
-              <button><Crop /></button>
-              <button><Paperclip /></button>
-              <button><Alarm /></button>
+              { activeTool == null || activeTool === 'text' ?
+                <button
+                  onClick={activeTool === 'text' ?
+                    () => setActiveTool(null) : () => setActiveTool('text')}
+                ><TextT /></button> : null}
+              { activeTool == null || activeTool === 'draw' ?
+                <button
+                  onClick={activeTool === 'draw' ?
+                    () => setActiveTool(null) : () => setActiveTool('draw')}
+                ><PencilSimple /></button> : null}
+              { activeTool == null || activeTool === 'crop' ?
+                <button
+                  onClick={activeTool === 'crop' ?
+                    () => setActiveTool(null) : () => setActiveTool('crop')}
+                ><Crop /></button> : null}
+              { activeTool == null || activeTool === 'clip' ?
+                <button
+                  onClick={activeTool === 'clip' ?
+                    () => setActiveTool(null) : () => setActiveTool('clip')}
+                ><Paperclip /></button> : null}
+              { activeTool == null || activeTool === 'time' ?
+              <button
+                onClick={activeTool === 'time' ?
+                  () => setActiveTool(null) : () => setActiveTool('time')}
+              ><Alarm /></button> : null}
             </div>
           </IconContext.Provider>
         </header>
