@@ -23,6 +23,7 @@ import {
   ArrowCounterClockwise,
   ArrowClockwise,
 } from 'phosphor-react';
+import {MetaTags} from 'react-meta-tags';
 // import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
 let sdb;
@@ -157,11 +158,29 @@ function Capture(props) {
     }
   }
 
+  /**
+   * Close whatever tool is open
+   */
+  function closeTool() {
+    activeTool === 'text' && toggleText();
+    activeTool === 'draw' && toggleDraw();
+    activeTool === 'crop' && toggleCrop();
+    activeTool === 'link' && toggleLink();
+    setActiveTool(null);
+  }
+
   useEffect(() => {
     updateDrawingCanvas();
   }, [height, width]);
   return (
     <>
+      <MetaTags>
+        <meta
+          name = "viewport"
+          content = "width=device-width, \
+          minimum-scale=1, maximum-scale=1, user-scalable=no"
+        />
+      </MetaTags>
       <div
         className={styles.background}
       >
@@ -212,8 +231,7 @@ function Capture(props) {
                   }}
                 >
                   <button
-                    onClick={activeTool == null ?
-                      close : ()=>setActiveTool(null)}
+                    onClick={activeTool == null ? close : closeTool}
                   >
                     { activeTool == null ?
                       <X /> : <CaretLeft />
