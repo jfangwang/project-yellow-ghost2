@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {setScreen} from '../../Actions/cameraActions';
 import SendSlidingMenu from '../Send/SendSlidingMenu';
+import {Guest} from '../../Assets/data/GuestInfo';
 import {
   IconContext,
   X,
@@ -28,6 +29,8 @@ function Capture(props) {
     aspectRatio,
     camH,
     camW,
+    user,
+    sendList,
   } = props;
   const sendMenu = useRef();
 
@@ -109,6 +112,8 @@ function Capture(props) {
         setScreen={setScreen}
         toggleSlide={toggleSlide}
         toggleNavFoot={toggleNavFoot}
+        user={user}
+        sendList={sendList}
       />
     </>
   );
@@ -124,6 +129,8 @@ Capture.propTypes = {
   aspectRatio: PropTypes.number,
   camH: PropTypes.number,
   camW: PropTypes.number,
+  user: PropTypes.object,
+  sendList: PropTypes.array,
 };
 
 Capture.defaultProps = {
@@ -136,6 +143,8 @@ Capture.defaultProps = {
   aspectRatio: 9.5/16,
   camH: null,
   camW: null,
+  user: Guest,
+  sendList: [],
 };
 
 /**
@@ -147,6 +156,8 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     screen: state.camera.screen,
+    user: state.user.user,
+    sendList: state.camera.sendList,
   };
 }
 

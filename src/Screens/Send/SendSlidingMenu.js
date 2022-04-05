@@ -5,6 +5,7 @@ import {forwardRef, useImperativeHandle} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styles from './Send.module.css';
 import SendItem from './SendItem';
+import {Guest} from '../../Assets/data/GuestInfo';
 import {
   IconContext,
   CaretLeft,
@@ -12,20 +13,6 @@ import {
   PaperPlaneRight,
 } from 'phosphor-react';
 
-const friends = {
-  1: {
-    id: 'user1',
-    username: 'user1',
-  },
-  2: {
-    id: 'user2',
-    username: 'user2',
-  },
-  3: {
-    id: 'user3',
-    username: 'user3',
-  },
-}
 
 const SendSlidingMenu = forwardRef((props, ref) => {
   const {
@@ -35,6 +22,8 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     toggleSlide,
     setScreen,
     toggleNavFoot,
+    user,
+    sendList,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
@@ -141,29 +130,31 @@ const SendSlidingMenu = forwardRef((props, ref) => {
                 >
                   <h2>Friends</h2>
                   <ul className={styles.friendsList}>
-                    {Object.keys(friends).map((item, index) => (
-                      <SendItem key={index} friend={friends[item]}/>
+                    {Object.keys(user.friends).map((item, index) => (
+                      <SendItem key={index} friend={user.friends[item]}/>
                     ))}
                   </ul>
                 </div>
-                <footer>
-                  <div className={styles.footerNames}>
-                    <h1>Footer</h1>
-                    <h1>Footer</h1>
-                    <h1>Footer</h1>
-                    <h1>Footer</h1>
-                    <h1>Footer</h1>
-                  </div>
-                  <div>
-                    <button
-                      className={styles.sendButton}
-                      onClick={send}
-                    >
-                      <h2 style={{marginRight: '0.2rem'}}>Send</h2>
-                      <PaperPlaneRight />
-                    </button>
-                  </div>
-                </footer>
+                { sendList.length > 0 &&
+                  <footer>
+                    <div className={styles.footerNames}>
+                        {sendList.map((item) => (
+                          <h1 key={user.friends[item]['username']}>
+                            {user.friends[item]['username']}
+                          </h1>
+                        ))}
+                    </div>
+                    <div>
+                      <button
+                        className={styles.sendButton}
+                        onClick={send}
+                      >
+                        <h2 style={{marginRight: '0.2rem'}}>Send</h2>
+                        <PaperPlaneRight />
+                      </button>
+                    </div>
+                  </footer>
+                }
               </div>
             </SwipeableViews>
           </div>
@@ -180,6 +171,8 @@ SendSlidingMenu.propTypes = {
   setScreen: PropTypes.func,
   toggleSlide: PropTypes.func,
   toggleNavFoot: PropTypes.func,
+  user: PropTypes.object,
+  sendList: PropTypes.array,
 };
 SendSlidingMenu.defaultProps = {
   height: window.innerHeight,
@@ -188,6 +181,8 @@ SendSlidingMenu.defaultProps = {
   setScreen: () => { },
   toggleSlide: () => { },
   toggleNavFoot: () => { },
+  user: Guest,
+  sendList: [],
 };
 
 export default SendSlidingMenu;

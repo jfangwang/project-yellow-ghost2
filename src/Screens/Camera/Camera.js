@@ -10,6 +10,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 import Footer from '../../Components/Footer/Footer';
 import Capture from '../Capture/Capture';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
+import {updateSendList} from '../../Actions/cameraActions';
 import {isMobile} from 'react-device-detect';
 import {MetaTags} from 'react-meta-tags';
 import {
@@ -41,6 +42,7 @@ function Camera(props) {
     screen,
     setScreen,
     captureImage,
+    updateSendList,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
   const [aspectRatio, setAspectRatio] = useState(
@@ -171,6 +173,7 @@ function Camera(props) {
       if (index === 1 && screen === 'camera') {
         stopCamera();
         startCamera();
+        updateSendList([]);
         const canvas = document.getElementById('imageCanvas');
         const ctx = canvas.getContext('2d');
         if (facingMode === 'user') {
@@ -299,6 +302,7 @@ Camera.propTypes = {
   screen: PropTypes.string,
   setScreen: PropTypes.func,
   captureImage: PropTypes.func,
+  updateSendList: PropTypes.func,
 };
 
 Camera.defaultProps = {
@@ -315,6 +319,7 @@ Camera.defaultProps = {
   toggleNavFoot: () => { },
   setScreen: () => { },
   captureImage: () => { },
+  updateSendList: () => { },
 };
 
 /**
@@ -342,6 +347,7 @@ const mapDispatchToProps = {
   toggleNavFoot,
   setScreen,
   captureImage,
+  updateSendList,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Camera);
