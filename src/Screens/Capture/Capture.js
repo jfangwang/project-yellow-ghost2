@@ -12,8 +12,13 @@ import {
   PaperPlaneRight,
   DownloadSimple,
   Export,
+  TextT,
+  PencilSimple,
+  Crop,
+  Paperclip,
+  Alarm,
 } from 'phosphor-react';
-import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
+// import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
 
 /**
@@ -32,6 +37,7 @@ function Capture(props) {
     camW,
     user,
     sendList,
+    orientation,
   } = props;
   const sendMenu = useRef();
 
@@ -69,47 +75,75 @@ function Capture(props) {
       <div
         className={styles.background}
       >
-        <IconContext.Provider
-          value={{
-            color: 'black',
-            size: '1.5rem',
-            weight: 'bold',
+        <canvas
+          id='drawingCanvas'
+          className={styles.drawingCanvas}
+          style={{
+            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+          }}
+        />
+        {/* <SwipeableViews
+          enableMouseEvents
+          containerStyle={{
+            width: (width/height) <= (aspectRatio) ?
+              width : height * aspectRatio,
+            height: (width/height) <= (aspectRatio) ?
+              width * (aspectRatio ** -1) : height,
+          }}
+          style={{
+            position: 'absolute',
+            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+          }}
+          slideStyle={{
+            height: '100%',
+            width: '100%',
           }}
         >
-          <canvas
-            id='drawingCanvas'
-            className={styles.drawingCanvas}
-            style={{
-              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-            }}
-          />
-          <SwipeableViews
-            enableMouseEvents
-            containerStyle={{
-              width: (width/height) <= (aspectRatio) ?
-              width : height * aspectRatio,
-              height: (width/height) <= (aspectRatio) ?
-              width * (aspectRatio ** -1) : height,
-            }}
-            style={{
-              position: 'absolute',
-              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-            }}
-            slideStyle={{
-              height: '100%',
-              width: '100%',
+          <div/>
+          <div className={styles.screen1}/>
+        </SwipeableViews> */}
+        <header>
+          <IconContext.Provider
+            value={{
+              color: 'white',
+              size: '2rem',
+              weight: 'bold',
             }}
           >
-            <div/>
-            <div className={styles.screen1}/>
-          </SwipeableViews>
-          <header>
-            <button onClick={close}><X color='white' size='2rem'/></button>
-            {/* imageCanvas */}
-          </header>
-          <footer className={styles.captureFooter}>
+            <div
+              className={styles.toolbar}
+              style={{
+                flexDirection: orientation === 'landscape' ?
+                  'column':'column',
+              }}
+            >
+              <button onClick={close}><X /></button>
+            </div>
+            <div
+              className={styles.toolbar}
+              style={{
+                flexDirection: orientation === 'landscape' ?
+                  'row':'column',
+              }}
+            >
+              <button><TextT /></button>
+              <button><PencilSimple /></button>
+              <button><Crop /></button>
+              <button><Paperclip /></button>
+              <button><Alarm /></button>
+            </div>
+          </IconContext.Provider>
+        </header>
+        <footer className={styles.captureFooter}>
+          <IconContext.Provider
+            value={{
+              color: 'black',
+              size: '1.5rem',
+              weight: 'bold',
+            }}
+          >
             <div>
               <button disabled><DownloadSimple /></button>
               <button disabled><Export /></button>
@@ -123,8 +157,8 @@ function Capture(props) {
                 <PaperPlaneRight />
               </button>
             </div>
-          </footer>
-        </IconContext.Provider>
+          </IconContext.Provider>
+        </footer>
       </div>
       <SendSlidingMenu
         ref={sendMenu}
@@ -153,6 +187,7 @@ Capture.propTypes = {
   camW: PropTypes.number,
   user: PropTypes.object,
   sendList: PropTypes.array,
+  orientation: PropTypes.string,
 };
 
 Capture.defaultProps = {
@@ -167,6 +202,8 @@ Capture.defaultProps = {
   camW: null,
   user: Guest,
   sendList: [],
+  orientation: window.innerHeight > window.innerWidth ?
+  'portrait':'landscape',
 };
 
 /**
@@ -180,6 +217,7 @@ function mapStateToProps(state) {
     screen: state.camera.screen,
     user: state.user.user,
     sendList: state.camera.sendList,
+    orientation: state.global.orientation,
   };
 }
 

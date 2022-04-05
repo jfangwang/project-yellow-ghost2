@@ -90,14 +90,22 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                 style={{height: height, width: width}}
               >
                 <header>
-                  <button onClick={close}>
-                    {axis === 'y' ? <CaretDown/> : <CaretLeft/>}
-                  </button>
-                  <input
-                    type='search'
-                    autoComplete='on'
-                    placeholder='Send To...'
-                  ></input>
+                  <IconContext.Provider
+                    value={{
+                      color: 'black',
+                      size: '2rem',
+                      weight: 'bold',
+                    }}
+                  >
+                    <button onClick={close}>
+                      {axis === 'y' ? <CaretDown/> : <CaretLeft/>}
+                    </button>
+                    <input
+                      type='search'
+                      autoComplete='on'
+                      placeholder='Send To...'
+                    ></input>
+                  </IconContext.Provider>
                 </header>
                 <div
                   onScroll={handleScroll}
