@@ -11,6 +11,13 @@ import SwipeableRoutes from 'react-swipeable-routes';
 import styles from './SlidingMenu.module.css';
 import {IconContext, CaretLeft, CaretDown} from 'phosphor-react';
 
+export const SampleContext = React.createContext();
+
+const list = [];
+for (let i = 0; i < 50; i += 1) {
+  list.push(<h1>asdf {i}</h1>)
+}
+
 
 const SlidingMenuRouting = forwardRef((props, ref) => {
   const {height, width, axis, children, toggleSlide, title, path} = props;
@@ -79,35 +86,32 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
           <Route path={path}>
             {title !== '' ?
               <div
-                onScroll={handleScroll}
-                style={{backgroundColor: 'white', height: height, width: width, overflowY: 'scroll'}}
+                className={styles.background}
+                style={{height: height, width: width}}
               >
-                <div className={styles.slidingMenuNavbar}>
-                  <IconContext.Provider
-                    value={{
-                      color: 'black',
-                      size: 32,
-                      weight: 'bold',
-                      mirrored: true,
-                    }}
-                  >
-                    <div>
-                      <button onClick={close}>{axis === 'y' ? <CaretDown /> : <CaretLeft />}</button>
-                    </div>
-                    <div>
-                      <h1>{title}</h1>
-                    </div>
-                    <div>
-                      <button style={{opacity: 0}}><CaretLeft /></button>
-                    </div>
-                  </IconContext.Provider>
+                <header>
+                  <button onClick={close}>
+                    {axis === 'y' ? <CaretDown/> : <CaretLeft/>}
+                  </button>
+                  <input
+                    type='search'
+                    autoComplete='on'
+                    placeholder='Send To...'
+                  ></input>
+                </header>
+                <div
+                  onScroll={handleScroll}
+                  style={{
+                    height: height,
+                    width: width,
+                    overflowY: 'auto',
+                  }}
+                  className={styles.body}
+                >
+                  <h2>{title}</h2>
+                  {list}
                 </div>
-                <div>
-                  {children}
-                </div>
-              </div> :
-              <></>
-            }
+              </div> : <></>}
           </Route>
         </SwipeableRoutes>
       }

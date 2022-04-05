@@ -33,6 +33,16 @@
     margin-right: 0.5rem;
 }
 
+.background header > * {
+    padding: 1rem;
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .background footer {
     display: flex;
     flex-direction: row;
@@ -66,10 +76,6 @@
     align-items: center;
 }
 
-.background header > * {
-    padding: 1rem;
-}
-
 .sendButton {
     background-color: yellow;
 }
@@ -88,10 +94,4 @@
 .friendsList li:last-child {
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-}
-
-.body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
