@@ -67,6 +67,61 @@ function Capture(props) {
     }
   }
 
+  /**
+   * Toggle Text
+   */
+  function toggleText() {
+    if (activeTool == null) {
+      setActiveTool('text');
+    } else {
+      setActiveTool(null);
+    }
+  }
+
+  /**
+   * Toggle Draw
+   */
+  function toggleDraw() {
+    if (activeTool == null) {
+      setActiveTool('draw');
+    } else {
+      setActiveTool(null);
+    }
+  }
+
+  /**
+   * Toggle Crop
+   */
+  function toggleCrop() {
+    if (activeTool == null) {
+      setActiveTool('crop');
+    } else {
+      setActiveTool(null);
+    }
+  }
+
+  /**
+   * Toggle Link
+   */
+  function toggleLink() {
+    if (activeTool == null) {
+      setActiveTool('link');
+    } else {
+      setActiveTool(null);
+    }
+  }
+
+  /**
+   * Toggle Time
+   */
+  function toggleTime() {
+    if (activeTool == null) {
+      setActiveTool('time');
+    } else {
+      setActiveTool(null);
+    }
+  }
+
   useEffect(() => {
     updateDrawingCanvas();
   }, [height, width]);
@@ -130,28 +185,23 @@ function Capture(props) {
             >
               { activeTool == null || activeTool === 'text' ?
                 <button
-                  onClick={activeTool === 'text' ?
-                    () => setActiveTool(null) : () => setActiveTool('text')}
+                  onClick={toggleText}
                 ><TextT /></button> : null}
               { activeTool == null || activeTool === 'draw' ?
                 <button
-                  onClick={activeTool === 'draw' ?
-                    () => setActiveTool(null) : () => setActiveTool('draw')}
+                  onClick={toggleDraw}
                 ><PencilSimple /></button> : null}
               { activeTool == null || activeTool === 'crop' ?
                 <button
-                  onClick={activeTool === 'crop' ?
-                    () => setActiveTool(null) : () => setActiveTool('crop')}
+                  onClick={toggleCrop}
                 ><Crop /></button> : null}
-              { activeTool == null || activeTool === 'clip' ?
+              { activeTool == null || activeTool === 'link' ?
                 <button
-                  onClick={activeTool === 'clip' ?
-                    () => setActiveTool(null) : () => setActiveTool('clip')}
+                  onClick={toggleLink}
                 ><Paperclip /></button> : null}
               { activeTool == null || activeTool === 'time' ?
               <button
-                onClick={activeTool === 'time' ?
-                  () => setActiveTool(null) : () => setActiveTool('time')}
+                onClick={toggleTime}
               ><Alarm /></button> : null}
             </div>
           </IconContext.Provider>
