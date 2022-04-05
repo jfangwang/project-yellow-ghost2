@@ -20,6 +20,11 @@ describe('globalReducer Test Suite', () => {
     expect(globalReducer(initialState, {})).toEqual(expectedState);
   });
   it('RESIZE works', () => {
+    if (expectedState.height > expectedState.width) {
+      expectedState.orientation = 'portrait';
+    } else {
+      expectedState.orientation = 'landscape';
+    }
     expect(globalReducer(undefined, {type: RESIZE}))
         .toEqual(expectedState);
   });
