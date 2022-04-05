@@ -13,6 +13,7 @@ import {
   DownloadSimple,
   Export,
 } from 'phosphor-react';
+import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
 
 /**
@@ -75,10 +76,6 @@ function Capture(props) {
             weight: 'bold',
           }}
         >
-          <header>
-            <button onClick={close}><X color='white' size='2rem'/></button>
-            {/* imageCanvas */}
-          </header>
           <canvas
             id='drawingCanvas'
             className={styles.drawingCanvas}
@@ -87,6 +84,31 @@ function Capture(props) {
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
+          <SwipeableViews
+            enableMouseEvents
+            containerStyle={{
+              width: (width/height) <= (aspectRatio) ?
+              width : height * aspectRatio,
+              height: (width/height) <= (aspectRatio) ?
+              width * (aspectRatio ** -1) : height,
+            }}
+            style={{
+              position: 'absolute',
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            }}
+            slideStyle={{
+              height: '100%',
+              width: '100%',
+            }}
+          >
+            <div/>
+            <div className={styles.screen1}/>
+          </SwipeableViews>
+          <header>
+            <button onClick={close}><X color='white' size='2rem'/></button>
+            {/* imageCanvas */}
+          </header>
           <footer className={styles.captureFooter}>
             <div>
               <button disabled><DownloadSimple /></button>
