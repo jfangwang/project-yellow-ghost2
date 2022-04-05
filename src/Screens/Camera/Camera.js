@@ -49,6 +49,7 @@ function Camera(props) {
     isMobile ? (width/height) : 9.5/16);
   const [w, setw] = useState(null);
   const [h, seth] = useState(null);
+  const [vidLoaded, setVidLoaded] = useState(false);
   const doubleTap = useDoubleTap(() => toggleFacingMode());
   const memoriesMenu = useRef();
 
@@ -56,7 +57,7 @@ function Camera(props) {
    * Starts the camera
    */
   function startCamera() {
-    // Prefer camera resolution nearest to 1280x720.
+    setVidLoaded(false);
     const ratio = isMobile ?
       (orientation !== 'portrait' ? width / height : height / width) :
       9.5 / 16;
@@ -86,6 +87,7 @@ function Camera(props) {
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
             updateVECanvas();
+            setVidLoaded(true);
           };
         })
         .catch(function(err) {
@@ -107,6 +109,7 @@ function Camera(props) {
       document.querySelector('video').srcObject = null;
     }
     setCurrentStream(null);
+    setVidLoaded(false);
   }
 
   /**
@@ -239,7 +242,7 @@ function Camera(props) {
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
-          { screen === 'camera' &&
+          { screen === 'camera' && vidLoaded &&
           <div className={styles.cameraOverlay}>
             <div className={styles.cameraHeader}>
               <Navbar opacity={0} position="relative" />
