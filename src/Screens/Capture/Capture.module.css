@@ -36,7 +36,7 @@
 
 .background header button {
     background-color: transparent;
-    margin: 1rem;
+    margin: 0.8rem;
     /* border: 2px red solid; */
 }
 
@@ -44,6 +44,11 @@
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
+}
+
+.drawToolContainer {
+    display: flex;
+    flex-direction: row;
 }
 
 .background footer button {

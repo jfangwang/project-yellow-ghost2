@@ -5,7 +5,9 @@ import {connect} from 'react-redux';
 import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {setScreen} from '../../Actions/cameraActions';
 import SendSlidingMenu from '../Send/SendSlidingMenu';
+import SlidingMenu from '../../Components/SlidingMenu/SlidingMenu';
 import {Guest} from '../../Assets/data/GuestInfo';
+import {create} from 'simple-drawing-board';
 import {
   IconContext,
   X,
@@ -17,8 +19,13 @@ import {
   Crop,
   Paperclip,
   Alarm,
+  CaretLeft,
+  ArrowCounterClockwise,
+  ArrowClockwise,
 } from 'phosphor-react';
 // import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
+
+let sdb;
 
 /**
  * @param {*} props
@@ -39,7 +46,9 @@ function Capture(props) {
     orientation,
   } = props;
   const sendMenu = useRef();
+  const toolTime = useRef();
   const [activeTool, setActiveTool] = useState(null);
+  const [hideUI, setHideUI] = useState(false);
 
   /**
    * Close
@@ -83,10 +92,35 @@ function Capture(props) {
    */
   function toggleDraw() {
     if (activeTool == null) {
+      console.log('asdf');
       setActiveTool('draw');
+      sdb = create(document.getElementById('drawingCanvas'));
+      sdb.setLineSize(10);
+      sdb.setLineColor('red');
+      sdb.observer.on('drawBegin', (coords) => {
+        setHideUI(true);
+      });
+      sdb.observer.on('drawEnd', (coords) => {
+        setHideUI(false);
+      });
     } else {
       setActiveTool(null);
+      sdb.destroy();
     }
+  }
+
+  /**
+   * Undo draw
+   */
+  async function undo() {
+    await sdb.undo();
+  }
+
+  /**
+   * Redo draw
+   */
+  async function redo() {
+    await sdb.redo();
   }
 
   /**
@@ -116,7 +150,8 @@ function Capture(props) {
    */
   function toggleTime() {
     if (activeTool == null) {
-      setActiveTool('time');
+      setActiveTool(null);
+      toolTime.current.toggle();
     } else {
       setActiveTool(null);
     }
@@ -159,76 +194,101 @@ function Capture(props) {
           <div/>
           <div className={styles.screen1}/>
         </SwipeableViews> */}
-        <header>
-          <IconContext.Provider
-            value={{
-              color: 'white',
-              size: '2rem',
-              weight: 'bold',
-            }}
-          >
-            <div
-              className={styles.toolbar}
-              style={{
-                flexDirection: orientation === 'landscape' ?
-                  'column':'column',
-              }}
-            >
-              <button onClick={close}><X /></button>
-            </div>
-            <div
-              className={styles.toolbar}
-              style={{
-                flexDirection: orientation === 'landscape' ?
-                  'row':'column',
-              }}
-            >
-              { activeTool == null || activeTool === 'text' ?
-                <button
-                  onClick={toggleText}
-                ><TextT /></button> : null}
-              { activeTool == null || activeTool === 'draw' ?
-                <button
-                  onClick={toggleDraw}
-                ><PencilSimple /></button> : null}
-              { activeTool == null || activeTool === 'crop' ?
-                <button
-                  onClick={toggleCrop}
-                ><Crop /></button> : null}
-              { activeTool == null || activeTool === 'link' ?
-                <button
-                  onClick={toggleLink}
-                ><Paperclip /></button> : null}
-              { activeTool == null || activeTool === 'time' ?
-              <button
-                onClick={toggleTime}
-              ><Alarm /></button> : null}
-            </div>
-          </IconContext.Provider>
-        </header>
-        <footer className={styles.captureFooter}>
-          <IconContext.Provider
-            value={{
-              color: 'black',
-              size: '1.5rem',
-              weight: 'bold',
-            }}
-          >
-            <div>
-              <button disabled><DownloadSimple /></button>
-              <button disabled><Export /></button>
-            </div>
-            <div>
-              <button
-                className={styles.sendButton}
-                onClick={() => sendMenu.current.toggle()}
+        { !hideUI &&
+          <>
+            <header>
+              <IconContext.Provider
+                value={{
+                  color: 'white',
+                  size: '2rem',
+                  weight: 'bold',
+                }}
               >
-                <h2 style={{marginRight: '0.2rem'}}>Send</h2>
-                <PaperPlaneRight />
-              </button>
-            </div>
-          </IconContext.Provider>
-        </footer>
+                <div
+                  className={styles.toolbar}
+                  style={{
+                    flexDirection: orientation === 'landscape' ?
+                      'column':'column',
+                  }}
+                >
+                  <button
+                    onClick={activeTool == null ?
+                      close : ()=>setActiveTool(null)}
+                  >
+                    { activeTool == null ?
+                      <X /> : <CaretLeft />
+                    }
+                  </button>
+                </div>
+                <div
+                  className={styles.toolbar}
+                  style={{
+                    flexDirection: orientation === 'landscape' ?
+                      'row':'column',
+                  }}
+                >
+                  { activeTool == null || activeTool === 'text' ?
+                    <button
+                      onClick={toggleText}
+                    ><TextT /></button>: null}
+                  { activeTool == null || activeTool === 'draw' ?
+                    <div className={styles.drawToolContainer}>
+                      { activeTool === 'draw' &&
+                        <>
+                          <button onClick={undo}>
+                            <ArrowCounterClockwise />
+                          </button>
+                          <button onClick={redo}>
+                            <ArrowClockwise />
+                          </button>
+                        </>
+                      }
+                      <button onClick={toggleDraw}>
+                        <PencilSimple />
+                      </button>
+                    </div> :
+                    null}
+                  { activeTool == null || activeTool === 'crop' ?
+                    <button
+                      onClick={toggleCrop}
+                    ><Crop /></button> : null}
+                  { activeTool == null || activeTool === 'link' ?
+                    <button
+                      onClick={toggleLink}
+                    ><Paperclip /></button> : null}
+                  { activeTool == null || activeTool === 'time' ?
+                  <button
+                    onClick={toggleTime}
+                  ><Alarm /></button> : null}
+                </div>
+              </IconContext.Provider>
+            </header>
+
+            <footer className={styles.captureFooter}>
+              <IconContext.Provider
+                value={{
+                  color: 'black',
+                  size: '1.5rem',
+                  weight: 'bold',
+                }}
+              >
+                <div>
+                  <button disabled><DownloadSimple /></button>
+                  <button disabled><Export /></button>
+                </div>
+                <div>
+                  <button
+                    className={styles.sendButton}
+                    onClick={() => sendMenu.current.toggle()}
+                  >
+                    <h2 style={{marginRight: '0.2rem'}}>Send</h2>
+                    <PaperPlaneRight />
+                  </button>
+                </div>
+              </IconContext.Provider>
+            </footer>
+          </>
+        }
       </div>
       <SendSlidingMenu
         ref={sendMenu}
@@ -240,6 +300,13 @@ function Capture(props) {
         toggleNavFoot={toggleNavFoot}
         user={user}
         sendList={sendList}
+      />
+      <SlidingMenu
+        ref={toolTime}
+        height={height}
+        width={width}
+        title="Time"
+        axis='x'
       />
     </>
   );
