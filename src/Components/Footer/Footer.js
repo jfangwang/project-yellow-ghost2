@@ -17,10 +17,13 @@ export function Footer(props) {
   const {index, opacity, position, hideNavFoot} = props;
   return (
     <>
-      { !hideNavFoot &&
       <footer
         className={styles.mainFooter}
-        style={{opacity: opacity, position: position}}
+        style={{
+          opacity: opacity,
+          position: position,
+          zIndex: hideNavFoot ? -1 : 1,
+        }}
       >
         <IconContext.Provider
           value={{
@@ -40,7 +43,6 @@ export function Footer(props) {
           </Link>
         </IconContext.Provider>
       </footer>
-      }
     </>
   );
 }

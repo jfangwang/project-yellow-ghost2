@@ -45,7 +45,6 @@ export function Navbar(props) {
 
   return (
     <>
-      { !hideNavFoot &&
       <div
         className={styles.mainNavbar}
         // style={{
@@ -54,6 +53,7 @@ export function Navbar(props) {
         style={{
           backgroundColor: `rgba(255, 255, 255, 0)`,
           position: position,
+          zIndex: hideNavFoot ? -1 : 1,
         }}
       >
         <IconContext.Provider
@@ -158,7 +158,6 @@ export function Navbar(props) {
           }
         </IconContext.Provider>
       </div>
-      }
     </>
   );
 }
