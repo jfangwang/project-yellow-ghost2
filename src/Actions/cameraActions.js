@@ -3,6 +3,7 @@ export const SET_CAMERA_PERMISSIONS = 'camera/setCameraPermissions';
 export const SET_SCREEN = 'camera/setScreen';
 export const CAPTURED_IMAGE = 'camera/capturedImage';
 export const UPDATE_SEND_LIST = 'camera/updateSendList';
+export const UPDATE_SNAP_TIME = 'camera/updateSnapTime';
 
 /**
  * @export
@@ -62,5 +63,17 @@ export function updateSendList(sendList) {
   return {
     type: UPDATE_SEND_LIST,
     sendList: sendList,
+  };
+}
+
+/**
+ * @export
+ * @param {*} snapTime
+ * @return {*}
+ */
+export function updateSnapTime(snapTime) {
+  return {
+    type: UPDATE_SNAP_TIME,
+    snapTime: snapTime,
   };
 }

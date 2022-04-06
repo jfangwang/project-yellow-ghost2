@@ -20,7 +20,7 @@ for (let i = 0; i < 50; i += 1) {
 
 
 const SlidingMenuRouting = forwardRef((props, ref) => {
-  const {height, width, axis, children, toggleSlide, title, path} = props;
+  const {height, width, axis, children, toggleSlide, title, path, backgroundColor} = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -87,7 +87,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
             {title !== '' ?
               <div
                 className={styles.background}
-                style={{height: height, width: width}}
+                style={{height: height, width: width, backgroundColor: backgroundColor}}
               >
                 <header>
                   <IconContext.Provider
@@ -130,6 +130,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
 SlidingMenuRouting.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
+  backgroundColor: PropTypes.string,
   axis: PropTypes.string,
   title: PropTypes.string,
   path: PropTypes.string,
@@ -138,6 +139,7 @@ SlidingMenuRouting.propTypes = {
 SlidingMenuRouting.defaultProps = {
   height: 0,
   width: 0,
+  backgroundColor: 'white',
   axis: 'y',
   title: '',
   path: '/error',

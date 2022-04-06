@@ -24,6 +24,7 @@ import {
   ArrowClockwise,
 } from 'phosphor-react';
 import {MetaTags} from 'react-meta-tags';
+import Timer from '../Timer/Timer';
 // import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
 let sdb;
@@ -323,9 +324,11 @@ function Capture(props) {
         ref={toolTime}
         height={height}
         width={width}
-        title="Time"
         axis='x'
-      />
+        backgroundColor='rgba(0, 0, 0, 0.7)'
+      >
+        <Timer />
+      </SlidingMenu>
     </>
   );
 }

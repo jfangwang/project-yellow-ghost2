@@ -4,6 +4,7 @@ import {
   SET_SCREEN,
   CAPTURED_IMAGE,
   UPDATE_SEND_LIST,
+  UPDATE_SNAP_TIME,
 } from '../Actions/cameraActions';
 export const initialState = {
   facingMode: 'user',
@@ -11,6 +12,7 @@ export const initialState = {
   screen: 'camera',
   capturedImage: null,
   sendList: [],
+  snapTime: -1,
 };
 
 
@@ -61,6 +63,18 @@ export function cameraReducer(state = initialState, action) {
         ...state,
         sendList: action.sendList,
       };
+    case UPDATE_SNAP_TIME:
+      if (action.snapTime) {
+        return {
+          ...state,
+          snapTime: action.snapTime,
+        };
+      } else {
+        return {
+          ...state,
+          snapTime: -1,
+        };
+      }
     default:
       return state;
   }
