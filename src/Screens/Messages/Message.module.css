@@ -99,3 +99,17 @@ button.background {
     border: 0.17rem solid lightgrey;
     border-radius: 0.2rem;
 }
+
+.snapContainer {
+    position: absolute;
+    top: 0;
+    background-color: lightgreen;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+.currentSnap {
+    height: 100%;
+}

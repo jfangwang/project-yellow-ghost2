@@ -25,7 +25,7 @@ export const Guest = {
       id: guestID,
       lastName: 'Appleseed',
       lastTimeStamp: null,
-      messages: [],
+      messages: {},
       newSnaps: {},
       nickname: null,
       openedByMe: {

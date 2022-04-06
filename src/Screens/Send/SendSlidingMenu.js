@@ -31,6 +31,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     aspectRatio,
     isUserLoggedIn,
     editUser,
+    snapTime,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
@@ -107,12 +108,16 @@ const SendSlidingMenu = forwardRef((props, ref) => {
         friends[id]['status'] = 'sent';
         friends[id]['sent']['lastTimeStamp'] = date.toISOString();
         friends[id]['lastTimeStamp'] = date.toISOString();
-        friends[id]['sent']['receivedSnaps'] += 1
+        friends[id]['sent']['sentSnaps'] += 1
         // Update Friend's Fields in FakeDB
         FakeDB[id]['friends'][id]['received']['lastTimeStamp'] = date.toISOString();
         FakeDB[id]['friends'][id]['received']['receivedSnaps'] += 1;
         FakeDB[id]['friends'][id]['status'] = 'new';
-        FakeDB[id]['friends'][id]['newSnaps'] = {[date.toISOString()]: dataURL};
+        FakeDB[id]['friends'][id]['newSnaps'][date.toISOString()] = {
+          'imgURL': dataURL,
+          'snapTime': snapTime,
+          'type': 'image',
+        };
       })
       editUser(updated);
     }
@@ -247,6 +252,7 @@ SendSlidingMenu.defaultProps = {
     width: state.global.width,
     user: state.user.user,
     isUserLoggedIn: state.user.isUserLoggedIn,
+    snapTime: state.camera.snapTime,
   };
 }
 
