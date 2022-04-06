@@ -24,6 +24,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     toggleNavFoot,
     user,
     sendList,
+    aspectRatio,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
@@ -78,7 +79,20 @@ const SendSlidingMenu = forwardRef((props, ref) => {
   /**
    * Send
    */
-  function send() {
+   function send() {
+
+    const img = document.getElementById('imageCanvas');
+    const drawing = document.getElementById('drawingCanvas');
+    let final = document.getElementById('finalImage');
+    final.width = img.width;
+    final.height = img.height;
+    final = document.getElementById('finalImage').getContext('2d');
+    final.clearRect(0, 0, final.width, final.height);
+    final.drawImage(img, 0, 0, img.width, img.height);
+    final.drawImage(drawing, 0, 0, drawing.width, drawing.height);
+    const dataURL = document.getElementById('finalImage').toDataURL();
+    console.log(dataURL);
+
     setScreen('camera');
     toggleSlide();
     toggleNavFoot();
@@ -104,7 +118,16 @@ const SendSlidingMenu = forwardRef((props, ref) => {
               axis={axis}
               containerStyle={{height: height, width: width}}
             >
-              <div style={{height: height, width: width}}></div>
+              <div style={{height: height, width: width}}>
+                <canvas
+                  id='finalImage'
+                  style={{
+                    width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+                    height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+                    display: 'none',
+                  }}
+                />
+              </div>
               <div
                 className={styles.background}
                 style={{height: height, width: width}}
@@ -173,6 +196,7 @@ SendSlidingMenu.propTypes = {
   toggleNavFoot: PropTypes.func,
   user: PropTypes.object,
   sendList: PropTypes.array,
+  aspectRatio: PropTypes.number,
 };
 SendSlidingMenu.defaultProps = {
   height: window.innerHeight,
