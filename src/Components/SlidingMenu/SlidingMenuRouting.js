@@ -10,6 +10,7 @@ import {BrowserRouter as Route, useLocation} from 'react-router-dom';
 import SwipeableRoutes from 'react-swipeable-routes';
 import styles from './SlidingMenu.module.css';
 import {IconContext, CaretLeft, CaretDown} from 'phosphor-react';
+import {connect} from 'react-redux';
 
 export const SampleContext = React.createContext();
 
@@ -103,7 +104,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                     <input
                       type='search'
                       autoComplete='on'
-                      placeholder='Send To...'
+                      placeholder={title + '...'}
                     ></input>
                   </IconContext.Provider>
                 </header>
@@ -117,7 +118,6 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                   className={styles.body}
                 >
                   <h2>{title}</h2>
-                  {list}
                 </div>
               </div> : <></>}
           </Route>
@@ -139,11 +139,34 @@ SlidingMenuRouting.propTypes = {
 SlidingMenuRouting.defaultProps = {
   height: 0,
   width: 0,
-  backgroundColor: 'white',
+  backgroundColor: 'rgb(233, 233, 233)',
   axis: 'y',
   title: '',
   path: '/error',
   toggleSlide: () => { },
 };
 
-export default SlidingMenuRouting;
+/**
+ *
+ *
+ * @param {*} state
+ * @return {*}
+ */
+ function mapStateToProps(state) {
+  return {
+    height: state.global.height,
+    width: state.global.width,
+  };
+}
+
+const mapDispatchToProps = {
+  // setCameraPermissions,
+  // toggleFacingMode,
+  // toggleSlide,
+  // toggleNavFoot,
+  // setScreen,
+  // captureImage,
+  // updateSendList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(SlidingMenuRouting);

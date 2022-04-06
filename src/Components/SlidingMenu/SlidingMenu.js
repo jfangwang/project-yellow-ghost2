@@ -5,6 +5,7 @@ import {forwardRef, useImperativeHandle} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styles from './SlidingMenu.module.css';
 import {IconContext, CaretLeft, CaretDown} from 'phosphor-react';
+import {connect} from 'react-redux';
 
 const list =[];
 for (let i=0; i<50; i += 1) {
@@ -122,4 +123,27 @@ SlidingMenu.defaultProps = {
   toggleSlide: () => { },
 };
 
-export default SlidingMenu;
+/**
+ *
+ *
+ * @param {*} state
+ * @return {*}
+ */
+ function mapStateToProps(state) {
+  return {
+    height: state.global.height,
+    width: state.global.width,
+  };
+}
+
+const mapDispatchToProps = {
+  // setCameraPermissions,
+  // toggleFacingMode,
+  // toggleSlide,
+  // toggleNavFoot,
+  // setScreen,
+  // captureImage,
+  // updateSendList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(SlidingMenu);

@@ -246,7 +246,20 @@ function Camera(props) {
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
-          { screen === 'camera' && vidLoaded &&
+          { !cameraPermissions &&
+            <>
+              <h1>Camera Disabled</h1>
+              <button
+                style={{
+                  zIndex: 0,
+                }}
+                onClick={() => startCamera()}
+              >
+                <h1>Allow</h1>
+              </button>
+            </>
+          }
+          { screen === 'camera' && vidLoaded && cameraPermissions &&
           <div className={styles.cameraOverlay}>
             <div className={styles.cameraHeader}>
               <Navbar opacity={0} position="relative" />

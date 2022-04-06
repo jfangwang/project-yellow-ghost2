@@ -29,8 +29,6 @@ export function Navbar(props) {
   const {
     index,
     decIndex,
-    height,
-    width,
     toggleSlide,
     position,
     opacity,
@@ -116,8 +114,6 @@ export function Navbar(props) {
             <SlidingMenuRouting
               axis='x'
               ref={accountMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Account"
               path="/account"
@@ -126,8 +122,6 @@ export function Navbar(props) {
             </SlidingMenuRouting>
             <SlidingMenuRouting
               ref={searchMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Search"
               path="/search"
@@ -136,8 +130,6 @@ export function Navbar(props) {
             </SlidingMenuRouting>
             <SlidingMenuRouting
               ref={addFriendMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Add Friends"
               path="/add_friends"
@@ -146,8 +138,6 @@ export function Navbar(props) {
             </SlidingMenuRouting>
             <SlidingMenuRouting
               ref={extraMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Extra"
               path="/extra"
