@@ -26,7 +26,7 @@ export const Guest = {
       lastName: 'Appleseed',
       lastTimeStamp: null,
       messages: [],
-      newSnaps: [],
+      newSnaps: {},
       nickname: null,
       openedByMe: {
         lastTimeStamp: null,
@@ -150,4 +150,8 @@ export const Everyone = {
     profilePicUrl: Rick['profilePicUrl'],
     username: Rick['username'],
   },
+};
+
+export const FakeDB = {
+  [guestID]: Guest,
 };

@@ -322,8 +322,6 @@ function Capture(props) {
       />
       <SlidingMenu
         ref={toolTime}
-        height={height}
-        width={width}
         axis='x'
         backgroundColor='rgba(0, 0, 0, 0.7)'
       >

@@ -5,7 +5,11 @@ import {forwardRef, useImperativeHandle} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styles from './Send.module.css';
 import SendItem from './SendItem';
-import {Guest} from '../../Assets/data/GuestInfo';
+import {Guest, FakeDB} from '../../Assets/data/GuestInfo';
+import {connect} from 'react-redux';
+import {
+  editUser
+} from '../../Actions/userActions';
 import {
   IconContext,
   CaretLeft,
@@ -25,6 +29,8 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     user,
     sendList,
     aspectRatio,
+    isUserLoggedIn,
+    editUser,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
@@ -91,7 +97,25 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     final.drawImage(img, 0, 0, img.width, img.height);
     final.drawImage(drawing, 0, 0, drawing.width, drawing.height);
     const dataURL = document.getElementById('finalImage').toDataURL();
-    console.log(dataURL);
+    const date = new Date();
+    const updated = {...user}
+    const friends = updated.friends
+
+    if (!isUserLoggedIn) {
+      sendList.forEach((id) => {
+        // Update User's Fields
+        friends[id]['status'] = 'sent';
+        friends[id]['sent']['lastTimeStamp'] = date.toISOString();
+        friends[id]['lastTimeStamp'] = date.toISOString();
+        friends[id]['sent']['receivedSnaps'] += 1
+        // Update Friend's Fields in FakeDB
+        FakeDB[id]['friends'][id]['received']['lastTimeStamp'] = date.toISOString();
+        FakeDB[id]['friends'][id]['received']['receivedSnaps'] += 1;
+        FakeDB[id]['friends'][id]['status'] = 'new';
+        FakeDB[id]['friends'][id]['newSnaps'] = {[date.toISOString()]: dataURL};
+      })
+      editUser(updated);
+    }
 
     setScreen('camera');
     toggleSlide();
@@ -197,6 +221,7 @@ SendSlidingMenu.propTypes = {
   user: PropTypes.object,
   sendList: PropTypes.array,
   aspectRatio: PropTypes.number,
+  isUserLoggedIn: PropTypes.bool,
 };
 SendSlidingMenu.defaultProps = {
   height: window.innerHeight,
@@ -207,6 +232,33 @@ SendSlidingMenu.defaultProps = {
   toggleNavFoot: () => { },
   user: Guest,
   sendList: [],
+  isUserLoggedIn: false,
 };
 
-export default SendSlidingMenu;
+/**
+ *
+ *
+ * @param {*} state
+ * @return {*}
+ */
+ function mapStateToProps(state) {
+  return {
+    height: state.global.height,
+    width: state.global.width,
+    user: state.user.user,
+    isUserLoggedIn: state.user.isUserLoggedIn,
+  };
+}
+
+const mapDispatchToProps = {
+  editUser,
+  // setCameraPermissions,
+  // toggleFacingMode,
+  // toggleSlide,
+  // toggleNavFoot,
+  // setScreen,
+  // captureImage,
+  // updateSendList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(SendSlidingMenu);
