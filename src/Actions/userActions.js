@@ -1,2 +1,13 @@
-export const USER = 'USER';
-export const isUserLoggedIn = 'IS_USER_LOGGED_IN';
+export const EDIT_USER = 'user/editUser';
+
+/**
+ * @export
+ * @param {*} user
+ * @return {*}
+ */
+export function editUser(user) {
+  return {
+    type: EDIT_USER,
+    user: user,
+  };
+}

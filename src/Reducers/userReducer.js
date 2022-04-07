@@ -1,6 +1,10 @@
-import {Guest} from '../Assets/data/GuestInfo';
+import {Guest, Everyone} from '../Assets/data/GuestInfo';
+import {
+  EDIT_USER,
+} from '../Actions/userActions';
 export const initialState = {
   user: Guest,
+  everyone: Everyone,
   isUserLoggedIn: false,
 };
 
@@ -14,11 +18,16 @@ export function userReducer(state = initialState, action) {
   switch (action.type) {
     case 'user/login':
       return {
-        ...initialState,
+        ...state,
         isUserLoggedIn: true,
       };
     case 'user/logout':
-      return state;
+      return initialState;
+    case EDIT_USER:
+      return {
+        ...state,
+        user: action.user,
+      };
     default:
       return state;
   }

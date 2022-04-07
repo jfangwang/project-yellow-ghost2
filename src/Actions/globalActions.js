@@ -2,6 +2,8 @@ export const RESIZE = 'global/resize';
 export const CHANGE_TO_INDEX = 'global/changeToIndex';
 export const UPDATE_DEC_INDEX = 'global/updateDecimalIndex';
 export const TOGGLE_SLIDE = 'global/toggleSlide';
+export const SET_ORIENTATION = 'global/orientation';
+export const TOGGLE_NAV_FOOT = 'global/toggleNavFoot';
 
 /**
  * Resizes the window
@@ -42,6 +44,29 @@ export function updateDecimalIndex(decIndex) {
 export function toggleSlide(state) {
   return {
     type: TOGGLE_SLIDE,
+    state: state,
+  };
+}
+/**
+ * @export
+ * @param {*} orientation
+ * @return {*}
+ */
+export function setOrientation(orientation) {
+  return {
+    type: SET_ORIENTATION,
+    orientation: orientation,
+  };
+}
+
+/**
+ * @export
+ * @param {*} state
+ * @return {*}
+ */
+export function toggleNavFoot(state) {
+  return {
+    type: TOGGLE_NAV_FOOT,
     state: state,
   };
 }

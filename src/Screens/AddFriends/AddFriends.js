@@ -10,9 +10,13 @@ import styles from './AddFriends.module.css';
  * @return {*}
  */
 function AddFriends(props) {
+  const {
+    test,
+  } = props;
   return (
     <div className={styles.background}>
       <h1>Add Friends</h1>
+      <button onClick={test}>Test</button>
     </div>
   );
 }
@@ -20,11 +24,13 @@ function AddFriends(props) {
 AddFriends.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
+  test: PropTypes.func,
 };
 
 AddFriends.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  test: () => {},
 };
 
 /**

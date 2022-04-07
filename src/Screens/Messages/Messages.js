@@ -6,6 +6,7 @@ import Message from './Message';
 import styles from './Messages.module.css';
 import {connect} from 'react-redux';
 import {Guest} from '../../Assets/data/GuestInfo';
+import {MetaTags} from 'react-meta-tags';
 
 const list = [];
 for (let i = 0; i < 200; i++) {
@@ -33,13 +34,22 @@ class Messages extends Component {
   render() {
     const {friends, user} = this.props;
     return (
-      <div className={styles.backgrounds}>
-        <Navbar opacity={0} position="relative" />
-        {Object.keys(friends).map((id) => (
-          <Message key={id} friend={friends[id]} user={user}/>
-        ))}
-        <Footer position="relative" opacity={0} />
-      </div>
+      <>
+        <MetaTags>
+          <meta
+            name = "viewport"
+            content = "width=device-width, \
+            minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          />
+        </MetaTags>
+        <div className={styles.backgrounds}>
+          <Navbar opacity={0} position="relative" />
+          {Object.keys(friends).map((id) => (
+            <Message key={id} friend={friends[id]} user={user}/>
+          ))}
+          <Footer position="relative" opacity={0} />
+        </div>
+      </>
     );
   }
 }

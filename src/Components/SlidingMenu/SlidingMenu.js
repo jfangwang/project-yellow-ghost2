@@ -5,10 +5,15 @@ import {forwardRef, useImperativeHandle} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styles from './SlidingMenu.module.css';
 import {IconContext, CaretLeft, CaretDown} from 'phosphor-react';
+import {connect} from 'react-redux';
 
+const list =[];
+for (let i=0; i<50; i += 1) {
+  list.push(<h1>User {i}</h1>)
+}
 
 const SlidingMenu = forwardRef((props, ref) => {
-  const {height, width, axis, children, toggleSlide, title} = props;
+  const {height, width, axis, children, toggleSlide, title, backgroundColor} = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -40,7 +45,6 @@ const SlidingMenu = forwardRef((props, ref) => {
     changeToIndex(0);
   };
   const handleScroll = (e) => {
-    console.log(e);
     if (e.currentTarget.scrollTop > 0 && axis === 'y') {
       setDisabled(true);
     } else {
@@ -51,47 +55,51 @@ const SlidingMenu = forwardRef((props, ref) => {
   return (
     <>
       {show &&
-        <div style={{position: 'absolute', top: 0}}>
-          <SwipeableViews
-            disabled={disabled}
-            index={index}
-            onChangeIndex={changeToIndex}
-            onTransitionEnd={checkIndex}
-            enableMouseEvents
-            axis={axis}
-            containerStyle={{height: height, width: width}}
+        <SwipeableViews
+          disabled={disabled}
+          index={index}
+          onChangeIndex={changeToIndex}
+          onTransitionEnd={checkIndex}
+          enableMouseEvents
+          axis={axis}
+          containerStyle={{height: height, width: width}}
+        >
+          <div style={{height: height, width: width}}></div>
+          <div
+            className={styles.background}
+            style={{height: height, width: width, backgroundColor: backgroundColor}}
           >
-            <div style={{height: height, width: width}}></div>
+            <header className={styles.slidingMenuNavbar}>
+              <IconContext.Provider
+                value={{
+                  color: 'black',
+                  size: '1.5rem',
+                  weight: 'bold',
+                }}
+              >
+                <div>
+                  <button onClick={close}>{axis === 'y' ? <CaretDown/> : <CaretLeft/>}</button>
+                </div>
+                <div>
+                  <h1>{title}</h1>
+                </div>
+                <div>
+                  <button style={{opacity: 0}}><CaretLeft/></button>
+                </div>
+              </IconContext.Provider>
+            </header>
             <div
               onScroll={handleScroll}
-              style={{backgroundColor: 'white', height: height, overflowY: 'scroll'}}
+              style={{
+                height: height,
+                width: width,
+                overflowY: 'auto',
+              }}
             >
-              <div className={styles.slidingMenuNavbar}>
-                <IconContext.Provider
-                  value={{
-                    color: 'black',
-                    size: '1.5rem',
-                    weight: 'bold',
-                    mirrored: true,
-                  }}
-                >
-                  <div>
-                    <button onClick={close}>{axis === 'y' ? <CaretDown/> : <CaretLeft/>}</button>
-                  </div>
-                  <div>
-                    <h1>{title}</h1>
-                  </div>
-                  <div>
-                    <button style={{opacity: 0}}><CaretLeft/></button>
-                  </div>
-                </IconContext.Provider>
-              </div>
-              <div>
-                {children}
-              </div>
+              {children}
             </div>
-          </SwipeableViews>
-        </div>
+          </div>
+        </SwipeableViews>
       }
     </>
   );
@@ -100,6 +108,7 @@ const SlidingMenu = forwardRef((props, ref) => {
 SlidingMenu.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
+  backgroundColor: PropTypes.string,
   axis: PropTypes.string,
   title: PropTypes.string,
   toggleSlide: PropTypes.func,
@@ -108,9 +117,33 @@ SlidingMenu.propTypes = {
 SlidingMenu.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  backgroundColor: 'white',
   axis: 'y',
-  title: 'Error',
+  title: '',
   toggleSlide: () => { },
 };
 
-export default SlidingMenu;
+/**
+ *
+ *
+ * @param {*} state
+ * @return {*}
+ */
+ function mapStateToProps(state) {
+  return {
+    height: state.global.height,
+    width: state.global.width,
+  };
+}
+
+const mapDispatchToProps = {
+  // setCameraPermissions,
+  // toggleFacingMode,
+  // toggleSlide,
+  // toggleNavFoot,
+  // setScreen,
+  // captureImage,
+  // updateSendList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps, null, {forwardRef: true})(SlidingMenu);

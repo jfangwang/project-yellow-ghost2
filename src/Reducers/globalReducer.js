@@ -3,6 +3,8 @@ import {
   CHANGE_TO_INDEX,
   UPDATE_DEC_INDEX,
   TOGGLE_SLIDE,
+  SET_ORIENTATION,
+  TOGGLE_NAV_FOOT,
 } from '../Actions/globalActions';
 export const initialState = {
   height: window.innerHeight,
@@ -10,6 +12,8 @@ export const initialState = {
   index: 1,
   decIndex: 1,
   slideDisabled: false,
+  orientation: null,
+  hideNavFoot: false,
 };
 
 /**
@@ -21,11 +25,21 @@ export const initialState = {
 export function globalReducer(state = initialState, action) {
   switch (action.type) {
     case RESIZE:
-      return {
-        ...state,
-        height: window.innerHeight,
-        width: window.innerWidth,
-      };
+      if (window.innerHeight >= window.innerWidth) {
+        return {
+          ...state,
+          height: window.innerHeight,
+          width: window.innerWidth,
+          orientation: 'portrait',
+        };
+      } else {
+        return {
+          ...state,
+          height: window.innerHeight,
+          width: window.innerWidth,
+          orientation: 'landscape',
+        };
+      }
     case CHANGE_TO_INDEX:
       return {
         ...state,
@@ -49,6 +63,23 @@ export function globalReducer(state = initialState, action) {
         return {
           ...state,
           slideDisabled: !state.slideDisabled,
+        };
+      }
+    case SET_ORIENTATION:
+      return {
+        ...state,
+        orientation: action.orientation,
+      };
+    case TOGGLE_NAV_FOOT:
+      if (action.state) {
+        return {
+          ...state,
+          hideNavFoot: action.state,
+        };
+      } else {
+        return {
+          ...state,
+          hideNavFoot: !state.hideNavFoot,
         };
       }
     default:

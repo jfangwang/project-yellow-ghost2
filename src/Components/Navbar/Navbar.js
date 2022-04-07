@@ -4,6 +4,7 @@ import SlidingMenuRouting from '../SlidingMenu/SlidingMenuRouting';
 import styles from './Navbar.module.css';
 import {connect} from 'react-redux';
 import {toggleSlide} from '../../Actions/globalActions';
+import {toggleFacingMode} from '../../Actions/cameraActions';
 import Account from '../../Screens/Account/Account';
 import Search from '../../Screens/Search/Search';
 import AddFriends from '../../Screens/AddFriends/AddFriends';
@@ -28,12 +29,12 @@ export function Navbar(props) {
   const {
     index,
     decIndex,
-    height,
-    width,
     toggleSlide,
     position,
     opacity,
     placeHolder,
+    toggleFacingMode,
+    hideNavFoot,
   } = props;
   const accountMenu = useRef();
   const searchMenu = useRef();
@@ -41,63 +42,63 @@ export function Navbar(props) {
   const extraMenu = useRef();
 
   return (
-    <div
-      className={styles.mainNavbar}
-      // style={{
-      //   backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - decIndex)})`
-      // }}
-      style={{
-        backgroundColor: placeHolder ?
-        `rgba(255, 255, 255, 1)` :
-        `rgba(255, 255, 255, 0)`,
-        position: position,
-      }}
-    >
-      <IconContext.Provider
-        value={{
-          color: `rgb(
+    <>
+      <div
+        className={styles.mainNavbar}
+        // style={{
+        //   backgroundColor: `rgba(255, 255, 255, ${Math.abs(1 - decIndex)})`
+        // }}
+        style={{
+          backgroundColor: `rgba(255, 255, 255, 0)`,
+          position: position,
+          zIndex: hideNavFoot ? -1 : 1,
+        }}
+      >
+        <IconContext.Provider
+          value={{
+            color: `rgb(
             ${255 - (Math.abs(1 - decIndex) * 255)},
             ${255 - (Math.abs(1 - decIndex) * 255)},
             ${255 - (Math.abs(1 - decIndex) * 255)}
           )`,
-          size: 32,
-          weight: 'bold',
-          mirrored: true,
-        }}
-      >
-        <div style={{opacity: opacity}}>
-          <button onClick={
+            size: 32,
+            weight: 'bold',
+            mirrored: true,
+          }}
+        >
+          <div style={{opacity: opacity}}>
+            <button onClick={
             !placeHolder ? () => accountMenu.current.toggle() : () => { }
-          }>
-            <User />
-          </button>
-          <button onClick={
+            }>
+              <User />
+            </button>
+            <button onClick={
             !placeHolder ? () => searchMenu.current.toggle() : () => { }
-          }>
-            <MagnifyingGlass />
-          </button>
-        </div>
-        <div style={{opacity: opacity}}>
-          <h1
-            style={{
-              color: `rgba(${255 - (Math.abs(1 - decIndex) * 255)},` +
+            }>
+              <MagnifyingGlass />
+            </button>
+          </div>
+          <div style={{opacity: opacity}}>
+            <h1
+              style={{
+                color: `rgba(${255 - (Math.abs(1 - decIndex) * 255)},` +
                 `${255 - (Math.abs(1 - decIndex) * 255)},` +
                 `${255 - (Math.abs(1 - decIndex) * 255)},` +
                 `${(Math.abs(1 - decIndex))})`,
-            }}>
-            {decIndex < 1 && 'Chat'}
-            {decIndex === 1 && 'Chat'}
-            {decIndex > 1 && 'Discover'}
-          </h1>
-        </div>
-        <div style={{opacity: opacity}}>
-          <button onClick={
+              }}>
+              {decIndex < 1 && 'Chat'}
+              {decIndex === 1 && 'Chat'}
+              {decIndex > 1 && 'Discover'}
+            </h1>
+          </div>
+          <div style={{opacity: opacity}}>
+            <button onClick={
             !placeHolder ? () => addFriendMenu.current.toggle() : () => { }
-          }>
-            <UserPlus />
-          </button>
-          {index === 1 ?
-            <button>
+            }>
+              <UserPlus />
+            </button>
+            {index === 1 ?
+            <button onClick={() => toggleFacingMode()}>
               <ArrowsClockwise />
             </button> :
             <button
@@ -106,15 +107,13 @@ export function Navbar(props) {
               }>
               <DotsThree />
             </button>
-          }
-        </div>
-        {!placeHolder &&
+            }
+          </div>
+          {!placeHolder &&
           <>
             <SlidingMenuRouting
               axis='x'
               ref={accountMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Account"
               path="/account"
@@ -123,8 +122,6 @@ export function Navbar(props) {
             </SlidingMenuRouting>
             <SlidingMenuRouting
               ref={searchMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Search"
               path="/search"
@@ -133,8 +130,6 @@ export function Navbar(props) {
             </SlidingMenuRouting>
             <SlidingMenuRouting
               ref={addFriendMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Add Friends"
               path="/add_friends"
@@ -143,8 +138,6 @@ export function Navbar(props) {
             </SlidingMenuRouting>
             <SlidingMenuRouting
               ref={extraMenu}
-              height={height}
-              width={width}
               toggleSlide={toggleSlide}
               title="Extra"
               path="/extra"
@@ -152,9 +145,10 @@ export function Navbar(props) {
               <Extra />
             </SlidingMenuRouting>
           </>
-        }
-      </IconContext.Provider>
-    </div>
+          }
+        </IconContext.Provider>
+      </div>
+    </>
   );
 }
 
@@ -167,6 +161,8 @@ Navbar.propTypes = {
   opacity: PropTypes.number,
   toggleSlide: PropTypes.func,
   placeHolder: PropTypes.bool,
+  toggleFacingMode: PropTypes.func,
+  hideNavFoot: PropTypes.bool,
 };
 
 Navbar.defaultProps = {
@@ -177,7 +173,9 @@ Navbar.defaultProps = {
   position: 'absolute',
   opacity: 1,
   toggleSlide: () => { },
+  toggleFacingMode: () => { },
   placeHolder: true,
+  hideNavFoot: false,
 };
 
 /**
@@ -192,11 +190,13 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     decIndex: state.global.decIndex,
+    hideNavFoot: state.global.hideNavFoot,
   };
 }
 
 const mapDispatchToProps = {
   toggleSlide,
+  toggleFacingMode,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

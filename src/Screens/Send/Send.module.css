@@ -1,6 +1,7 @@
 .background {
     height: 100%;
     width: 100%;
+    background-color: rgb(233, 233, 233);
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -23,7 +24,6 @@
     margin: 0.5rem;
     border-radius: 100%;
     padding: 0.5rem;
-    border: none;
 }
 
 .background header input {
@@ -74,4 +74,24 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.sendButton {
+    background-color: yellow;
+}
+
+.friendsList {
+    width: 90%;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.friendsList li:first-child {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.friendsList li:last-child {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 }

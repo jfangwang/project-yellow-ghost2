@@ -8,6 +8,7 @@ import Messages from '../Screens/Messages/Messages';
 import Discover from '../Screens/Discover/Discover';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
+import {MetaTags} from 'react-meta-tags';
 import {
   resize,
   changeToIndex,
@@ -32,6 +33,7 @@ export class App extends Component {
    * Runs when component is mounted
    */
   componentDidMount() {
+    this.props.resize();
     window.addEventListener('resize', this.props.resize);
     window.addEventListener('keydown', this.logKey);
   }
@@ -63,6 +65,13 @@ export class App extends Component {
     } = this.props;
     return (
       <>
+        <MetaTags>
+          <meta
+            name = "viewport"
+            content = "width=device-width, \
+            minimum-scale=1.0, maximum-scale = 1.0, user-scalable = no"
+          />
+        </MetaTags>
         <BrowserRouter>
           <Router>
             <SwipeableRoutes
@@ -102,6 +111,7 @@ App.propTypes = {
   changeToIndex: PropTypes.func,
   updateDecimalIndex: PropTypes.func,
   toggleSlide: PropTypes.func,
+  orientation: PropTypes.string,
 };
 
 App.defaultProps = {
@@ -109,6 +119,8 @@ App.defaultProps = {
   width: window.innerWidth,
   index: 1,
   slideDisabled: false,
+  orientation: window.innerHeight >= window.innerWidth ?
+  'portrait' : 'landscape',
   resize: () => {},
   changeToIndex: () => {},
   updateDecimalIndex: () => {},
@@ -125,6 +137,7 @@ function mapStateToProps(state) {
     width: state.global.width,
     index: state.global.index,
     slideDisabled: state.global.slideDisabled,
+    orientation: state.global.orientation,
   };
 }
 
