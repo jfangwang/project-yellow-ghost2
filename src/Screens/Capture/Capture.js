@@ -288,10 +288,15 @@ function Capture(props) {
                           <button onClick={redo}>
                             <ArrowClockwise />
                           </button>
-                          <HueSlider
-                            handleChangeColor={handleChangeColor}
-                            color={color}
-                          />
+                          <div className={styles.slider}>
+                            <HueSlider
+                              handleChangeColor={handleChangeColor}
+                              color={color}
+                              style={{
+                                backgroundColor: 'transparent',
+                              }}
+                            />
+                          </div>
                         </>
                       }
                       <button onClick={toggleDraw}>

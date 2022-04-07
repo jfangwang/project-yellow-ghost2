@@ -51,6 +51,14 @@
     flex-direction: row;
 }
 
+.drawToolContainer .slider {
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .background footer button {
     padding: 0.5rem 1.5rem 0.5rem 1.5rem;
     border-radius: 5rem;
