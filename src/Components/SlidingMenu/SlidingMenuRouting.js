@@ -59,7 +59,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
     changeToIndex(0);
   };
   const handleScroll = (e) => {
-    console.log(e.currentTarget.scrollTop)
+    // console.log(e.currentTarget.scrollTop)
     if (e.currentTarget.scrollTop > 0 && axis === 'y') {
       setDisabled(true);
     } else {

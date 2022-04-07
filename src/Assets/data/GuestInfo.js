@@ -1,6 +1,16 @@
 import GuestPic from '../images/guest-profile-pic.png';
 import RickPic from '../images/rick-profile-pic.jpg';
 import MortyPic from '../images/morty-profile-pic.jpg';
+import mem1 from '../images/memories/rickAndMortyMem1.jpg';
+import mem2 from '../images/memories/rickAndMortyMem2.jpg';
+import mem3 from '../images/memories/rickAndMortyMem3.jpg';
+import mem4 from '../images/memories/rickAndMortyMem4.jpg';
+import mem5 from '../images/memories/rickAndMortyMem5.jpg';
+import mem6 from '../images/memories/rickAndMortyMem6.jpg';
+import mem7 from '../images/memories/rickAndMortyMem7.png';
+import mem8 from '../images/memories/rickAndMortyMem8.jpg';
+import mem9 from '../images/memories/rickAndMortyMem9.png';
+import mem10 from '../images/memories/rickAndMortyMem10.jpg';
 import {v4 as uuidv4} from 'uuid';
 
 const newDate = new Date().toLocaleString();
@@ -68,7 +78,58 @@ export const Guest = {
   id: guestID,
   lastName: 'Appleseed',
   loggedOffTimeStamp: null,
-  memories: {},
+  memories: {
+    ['4/7/2022, 3:08:22 PM']: {
+      date: '4/7/2022, 3:08:22 PM',
+      type: 'image',
+      url: mem1,
+    },
+    ['4/7/2022, 3:10:44 PM']: {
+      date: '4/7/2022, 3:10:44 PM',
+      type: 'image',
+      url: mem2,
+    },
+    ['4/7/2022, 3:11:17 PM']: {
+      date: '4/7/2022, 3:11:17 PM',
+      type: 'image',
+      url: mem3,
+    },
+    ['4/7/2022, 3:13:12 PM']: {
+      date: '4/7/2022, 3:13:12 PM',
+      type: 'image',
+      url: mem4,
+    },
+    ['4/7/2022, 3:13:20 PM']: {
+      date: '4/7/2022, 3:13:20 PM',
+      type: 'image',
+      url: mem5,
+    },
+    ['4/7/2022, 3:13:50 PM']: {
+      date: '4/7/2022, 3:13:50 PM',
+      type: 'image',
+      url: mem6,
+    },
+    ['4/7/2022, 3:14:40 PM']: {
+      date: '4/7/2022, 3:14:40 PM',
+      type: 'image',
+      url: mem7,
+    },
+    ['4/7/2022, 3:14:57 PM']: {
+      date: '4/7/2022, 3:14:57 PM',
+      type: 'image',
+      url: mem8,
+    },
+    ['4/7/2022, 3:15:11 PM']: {
+      date: '4/7/2022, 3:15:11 PM',
+      type: 'image',
+      url: mem9,
+    },
+    ['4/7/2022, 3:15:37 PM']: {
+      date: '4/7/2022, 3:15:37 PM',
+      type: 'image',
+      url: mem10,
+    },
+  },
   pending: {},
   phoneNumber: null,
   profilePicUrl: GuestPic,

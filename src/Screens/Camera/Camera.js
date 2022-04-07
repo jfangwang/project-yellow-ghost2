@@ -20,6 +20,7 @@ import {
   captureImage,
 } from '../../Actions/cameraActions';
 import Send from '../Send/Send';
+import Memories from '../Memories/Memories';
 
 /**
  *
@@ -294,7 +295,7 @@ function Camera(props) {
             title="Memories"
             path="/memories"
           >
-            <h1>Memories</h1>
+            <Memories />
           </SlidingMenuRouting>
         </IconContext.Provider>
         { screen === 'capture' &&
