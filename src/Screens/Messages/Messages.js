@@ -5,7 +5,6 @@ import Footer from '../../Components/Footer/Footer';
 import Message from './Message';
 import styles from './Messages.module.css';
 import {connect} from 'react-redux';
-import {Guest} from '../../Assets/data/GuestInfo';
 import {MetaTags} from 'react-meta-tags';
 
 const list = [];
@@ -47,6 +46,9 @@ class Messages extends Component {
           {Object.keys(friends).map((id) => (
             <Message key={id} friend={friends[id]} user={user}/>
           ))}
+          {Object.keys(user.pending).map((id) => (
+            <Message key={id} friend={user.pending[id]} user={user}/>
+          ))}
           <Footer position="relative" opacity={0} />
         </div>
       </>
@@ -64,8 +66,8 @@ Messages.propTypes = {
 Messages.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
-  friends: Guest.friends,
-  user: Guest,
+  friends: {},
+  user: {},
 };
 
 

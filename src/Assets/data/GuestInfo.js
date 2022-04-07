@@ -9,7 +9,19 @@ const rickID = uuidv4();
 const mortyID = uuidv4();
 
 export const Guest = {
-  addedMe: {},
+  addedMe: {
+    [mortyID]: {
+      created: newDate,
+      email: 'Morty@Guest.com',
+      firstName: 'Morty',
+      id: mortyID,
+      lastName: 'Smith',
+      lastTimeStamp: null,
+      phoneNumber: null,
+      profilePicUrl: MortyPic,
+      username: 'aw-jeez123',
+    },
+  },
   brokeup: {},
   created: newDate,
   deleteSnaps: {},
@@ -20,10 +32,13 @@ export const Guest = {
     [guestID]: {
       created: newDate,
       email: 'jonnyAppleseed@Guest.com',
-      friendship: newDate,
       firstName: 'Jonny',
       id: guestID,
       lastName: 'Appleseed',
+      phoneNumber: null,
+      profilePicUrl: GuestPic,
+      username: 'jonny_appleseed123',
+      friendship: newDate,
       lastTimeStamp: null,
       messages: {},
       newSnaps: {},
@@ -36,8 +51,6 @@ export const Guest = {
         lastTimeStamp: null,
         opened: 0,
       },
-      phoneNumber: null,
-      profilePicUrl: GuestPic,
       readSnaps: [],
       received: {
         lastTimeStamp: null,
@@ -50,7 +63,6 @@ export const Guest = {
       status: 'new-friend',
       streak: 0,
       streakRef: null,
-      username: 'jonny_appleseed123',
     },
   },
   id: guestID,
@@ -75,7 +87,19 @@ export const Morty = {
   email: 'Morty@Guest.com',
   faceIDURL: null,
   firstName: 'Morty',
-  friends: {},
+  friends: {
+    [guestID]: {
+      created: Guest['created'],
+      email: Guest['email'],
+      firstName: Guest['firstName'],
+      id: Guest['id'],
+      lastName: Guest['lastName'],
+      lastTimeStamp: Guest['lastTimeStamp'],
+      phoneNumber: Guest['phoneNumber'],
+      profilePicUrl: Guest['profilePicUrl'],
+      username: Guest['username'],
+    },
+  },
   id: mortyID,
   lastName: 'Smith',
   loggedOffTimeStamp: null,
@@ -121,7 +145,6 @@ export const Everyone = {
     id: Guest['id'],
     lastName: Guest['lastName'],
     lastTimeStamp: Guest['lastTimeStamp'],
-    messages: Guest['messages'],
     phoneNumber: Guest['phoneNumber'],
     profilePicUrl: Guest['profilePicUrl'],
     username: Guest['username'],
@@ -133,7 +156,6 @@ export const Everyone = {
     id: Morty['id'],
     lastName: Morty['lastName'],
     lastTimeStamp: Morty['lastTimeStamp'],
-    messages: Morty['messages'],
     phoneNumber: Morty['phoneNumber'],
     profilePicUrl: Morty['profilePicUrl'],
     username: Morty['username'],
@@ -145,7 +167,6 @@ export const Everyone = {
     id: Rick['id'],
     lastName: Morty['lastName'],
     lastTimeStamp: Rick['lastTimeStamp'],
-    messages: Rick['messages'],
     phoneNumber: Rick['phoneNumber'],
     profilePicUrl: Rick['profilePicUrl'],
     username: Rick['username'],
@@ -154,4 +175,6 @@ export const Everyone = {
 
 export const FakeDB = {
   [guestID]: Guest,
+  [rickID]: Rick,
+  [mortyID]: Morty,
 };

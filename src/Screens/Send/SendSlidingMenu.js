@@ -5,11 +5,8 @@ import {forwardRef, useImperativeHandle} from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import styles from './Send.module.css';
 import SendItem from './SendItem';
-import {Guest, FakeDB} from '../../Assets/data/GuestInfo';
 import {connect} from 'react-redux';
-import {
-  editUser
-} from '../../Actions/userActions';
+import {editUser, editFakeDB} from '../../Actions/userActions';
 import {
   IconContext,
   CaretLeft,
@@ -26,11 +23,13 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     toggleSlide,
     setScreen,
     toggleNavFoot,
+    editUser,
+    editFakeDB,
     user,
+    fakeDB,
     sendList,
     aspectRatio,
     isUserLoggedIn,
-    editUser,
     snapTime,
   } = props;
   const [show, setShow] = useState(false);
@@ -99,8 +98,9 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     final.drawImage(drawing, 0, 0, drawing.width, drawing.height, 0, 0, img.width, img.height);
     const dataURL = document.getElementById('finalImage').toDataURL();
     const date = new Date();
-    const updated = {...user}
-    const friends = updated.friends
+    const updated = {...user};
+    const updateFake = {...fakeDB};
+    const friends = updated.friends;
 
     if (!isUserLoggedIn) {
       sendList.forEach((id) => {
@@ -110,16 +110,17 @@ const SendSlidingMenu = forwardRef((props, ref) => {
         friends[id]['lastTimeStamp'] = date.toISOString();
         friends[id]['sent']['sentSnaps'] += 1
         // Update Friend's Fields in FakeDB
-        FakeDB[id]['friends'][id]['received']['lastTimeStamp'] = date.toISOString();
-        FakeDB[id]['friends'][id]['received']['receivedSnaps'] += 1;
-        FakeDB[id]['friends'][id]['status'] = 'new';
-        FakeDB[id]['friends'][id]['newSnaps'][date.toISOString()] = {
+        updateFake[id]['friends'][user.id]['received']['lastTimeStamp'] = date.toISOString();
+        updateFake[id]['friends'][user.id]['received']['receivedSnaps'] += 1;
+        updateFake[id]['friends'][user.id]['status'] = 'new';
+        updateFake[id]['friends'][user.id]['newSnaps'][date.toISOString()] = {
           'imgURL': dataURL,
           'snapTime': snapTime,
           'type': 'image',
         };
       })
       editUser(updated);
+      editFakeDB(updateFake);
     }
 
     setScreen('camera');
@@ -223,6 +224,8 @@ SendSlidingMenu.propTypes = {
   setScreen: PropTypes.func,
   toggleSlide: PropTypes.func,
   toggleNavFoot: PropTypes.func,
+  editUser: PropTypes.func,
+  editFakeDB: PropTypes.func,
   user: PropTypes.object,
   sendList: PropTypes.array,
   aspectRatio: PropTypes.number,
@@ -232,10 +235,12 @@ SendSlidingMenu.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
   axis: 'y',
-  setScreen: () => { },
-  toggleSlide: () => { },
-  toggleNavFoot: () => { },
-  user: Guest,
+  setScreen: () => {},
+  toggleSlide: () => {},
+  toggleNavFoot: () => {},
+  editUser: () => {},
+  editFakeDB: () => {},
+  user: {},
   sendList: [],
   isUserLoggedIn: false,
 };
@@ -251,6 +256,7 @@ SendSlidingMenu.defaultProps = {
     height: state.global.height,
     width: state.global.width,
     user: state.user.user,
+    fakeDB: state.user.fakeDB,
     isUserLoggedIn: state.user.isUserLoggedIn,
     snapTime: state.camera.snapTime,
   };
@@ -258,6 +264,7 @@ SendSlidingMenu.defaultProps = {
 
 const mapDispatchToProps = {
   editUser,
+  editFakeDB,
   // setCameraPermissions,
   // toggleFacingMode,
   // toggleSlide,

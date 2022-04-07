@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import styles from './Account.module.css';
+import {editFakeDB} from '../../Actions/userActions';
 
 /**
  *
@@ -41,6 +42,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
+  editFakeDB,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Account);

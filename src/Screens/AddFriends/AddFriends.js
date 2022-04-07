@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import styles from './AddFriends.module.css';
 import AddFriendItem from './AddFriendItem';
-import {Everyone, Guest} from '../../Assets/data/GuestInfo';
+import {editFakeDB} from '../../Actions/userActions';
 
 const list = [];
 for (let i=0; i<100; i+=1) {
@@ -24,22 +24,32 @@ function AddFriends(props) {
   } = props;
   return (
     <div className={styles.background} onScroll={handleScroll}>
-      { Object.keys(user.pending) > 0 &&
+      { Object.keys(user.pending).length > 0 &&
         <>
           <h2>Pending</h2>
           <ul className={styles.peopleList}>
             { Object.keys(user.pending).map((id) => (
-              <AddFriendItem key={id} type='pending' friend={user.pending[id]}/>
+              <AddFriendItem
+                key={id} user={user} type='pending' friend={user.pending[id]}
+              />
             ))}
           </ul>
         </>
       }
-      { Object.keys(user.addedMe) > 0 &&
+      { (Object.keys(user.addedMe).length > 0 ||
+        Object.keys(user.brokeup).length > 0) &&
         <>
           <h2>Added Me</h2>
           <ul className={styles.peopleList}>
             { Object.keys(user.addedMe).map((id) => (
-              <AddFriendItem key={id} type='addedMe' friend={user.addedMe[id]}/>
+              <AddFriendItem
+                key={id} user={user} type='addedMe' friend={user.addedMe[id]}
+              />
+            ))}
+            { Object.keys(user.brokeup).map((id) => (
+              <AddFriendItem
+                key={id} user={user} type='addedMe' friend={user.brokeup[id]}
+              />
             ))}
           </ul>
         </>
@@ -47,15 +57,22 @@ function AddFriends(props) {
       <h2>Quick Add</h2>
       <ul className={styles.peopleList}>
         { Object.keys(everyone)
-            .filter((x) => !Object.keys(user.friends).includes(x)).map((id) => (
-              <AddFriendItem key={id} type='quickAdd' friend={everyone[id]}/>
+            .filter((x) => !Object.keys(user.friends).includes(x) &&
+                          !Object.keys(user.pending).includes(x) &&
+                          !Object.keys(user.addedMe).includes(x) &&
+                          !Object.keys(user.brokeup).includes(x)).map((id) => (
+              <AddFriendItem
+                key={id} user={user} type='quickAdd' friend={everyone[id]}
+              />
             ))
         }
       </ul>
       <h2>Friends</h2>
       <ul className={styles.peopleList}>
         { Object.keys(user.friends).map((id) => (
-          <AddFriendItem key={id} type='friends' friend={user.friends[id]} />
+          <AddFriendItem
+            key={id} user={user} type='friends' friend={user.friends[id]}
+          />
         ))}
         { Object.keys(user.friends) <= 0 &&
           <li><h1>Add some friends</h1></li>
@@ -86,8 +103,8 @@ AddFriends.defaultProps = {
   width: window.innerWidth,
   test: () => {},
   handleScroll: () => {},
-  user: Guest,
-  everyone: Everyone,
+  user: {},
+  everyone: {},
   isUserLoggedIn: 'false',
 };
 
@@ -102,10 +119,14 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     isUserLoggedIn: state.user.isUserLoggedIn,
+    user: state.user.user,
+    fakeDB: state.user.fakeDB,
+    everyone: state.user.everyone,
   };
 }
 
 const mapDispatchToProps = {
+  editFakeDB,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddFriends);
