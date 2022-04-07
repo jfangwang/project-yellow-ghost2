@@ -5,6 +5,7 @@ import {
   SET_SCREEN,
   CAPTURED_IMAGE,
   UPDATE_SEND_LIST,
+  UPDATE_SNAP_TIME,
 } from '../Actions/cameraActions';
 
 let expectedState = {};
@@ -68,6 +69,16 @@ describe('cameraReducer Test Suite', () => {
     expectedState.sendList = ['test'];
     expect(cameraReducer(
         initialState, {type: UPDATE_SEND_LIST, sendList: ['test']}))
+        .toEqual(expectedState);
+  });
+  it('UPDATE_SNAP_TIME works', () => {
+    expectedState.snapTime = -1;
+    expect(cameraReducer(
+        initialState, {type: UPDATE_SNAP_TIME}))
+        .toEqual(expectedState);
+    expectedState.snapTime = 7;
+    expect(cameraReducer(
+        initialState, {type: UPDATE_SNAP_TIME, snapTime: 7}))
         .toEqual(expectedState);
   });
 });
