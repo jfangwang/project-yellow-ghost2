@@ -13,6 +13,11 @@ export const initialState = {
   capturedImage: null,
   sendList: [],
   snapTime: -1,
+  cameraResolution: 5000,
+  cameraVideoOutput: null,
+  cameraAudioInput: null,
+  showStats: false,
+  cameraButton: 'bottom',
 };
 
 
