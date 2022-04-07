@@ -137,7 +137,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
             weight: 'bold',
           }}
         >
-          <div style={{overflow: 'hidden'}}>
+          <div style={{overflow: 'hidden', zIndex: 5,}}>
             <SwipeableViews
               disabled={disabled}
               index={index}

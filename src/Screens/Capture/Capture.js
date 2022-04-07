@@ -28,7 +28,7 @@ import Timer from '../Timer/Timer';
 import {HueSlider} from 'react-slider-color-picker';
 // import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
-let sdb;
+let sdb = null;
 
 /**
  * @param {*} props
@@ -47,6 +47,7 @@ function Capture(props) {
     user,
     sendList,
     orientation,
+    screen,
   } = props;
   const sendMenu = useRef();
   const toolTime = useRef();
@@ -68,15 +69,20 @@ function Capture(props) {
    */
   function updateDrawingCanvas() {
     const vec = document.getElementById('drawingCanvas');
+    const dc = document.getElementById('defaultCanvas');
     const cw = (width/height) > aspectRatio ? height * aspectRatio : width;
     const ch = (width/height) >
     aspectRatio ? height : width * (aspectRatio ** -1);
     if (camH != null && camW != null) {
       vec.width = Math.min(cw, camW);
       vec.height = Math.min(ch, camH);
+      dc.width = Math.min(cw, camW);
+      dc.height = Math.min(ch, camH);
     } else {
       vec.width = cw;
       vec.height = ch;
+      dc.width = cw;
+      dc.height = ch;
     }
   }
 
@@ -98,7 +104,9 @@ function Capture(props) {
     if (activeTool == null) {
       console.log('asdf');
       setActiveTool('draw');
-      sdb = create(document.getElementById('drawingCanvas'));
+      if (sdb == null) {
+        sdb = create(document.getElementById('drawingCanvas'));
+      }
       sdb.setLineSize(5);
       sdb.setLineColor(hslToHex(color['h'], color['s'], color['l']));
       sdb.observer.on('drawBegin', (coords) => {
@@ -109,7 +117,7 @@ function Capture(props) {
       });
     } else {
       setActiveTool(null);
-      sdb.destroy();
+      // sdb.destroy();
     }
   }
 
@@ -201,6 +209,11 @@ function Capture(props) {
   useEffect(() => {
     updateDrawingCanvas();
   }, [height, width]);
+  useEffect(() => {
+    if (screen === 'capture' || screen === 'camera') {
+      sdb = null;
+    }
+  }, [screen]);
   return (
     <>
       <MetaTags>
@@ -213,12 +226,28 @@ function Capture(props) {
       <div
         className={styles.background}
       >
+        {/* Canvas for drawing with marker tool */}
         <canvas
           id='drawingCanvas'
           className={styles.drawingCanvas}
           style={{
             width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
             height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            zIndex: activeTool === 'draw' ? 1 : 0,
+            // border: '4px blue solid',
+            position: 'absolute',
+          }}
+        />
+        {/* Default canvas */}
+        <canvas
+          id='defaultCanvas'
+          className={styles.defaultCanvas}
+          style={{
+            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            zIndex: activeTool === null ? 1 : 0,
+            // border: '2px red solid',
+            position: 'absolute',
           }}
         />
         {/* <SwipeableViews
@@ -244,7 +273,11 @@ function Capture(props) {
         </SwipeableViews> */}
         { !hideUI &&
           <>
-            <header>
+            <header
+              style={{
+                zIndex: 1,
+              }}
+            >
               <IconContext.Provider
                 value={{
                   color: 'white',
@@ -320,7 +353,12 @@ function Capture(props) {
               </IconContext.Provider>
             </header>
 
-            <footer className={styles.captureFooter}>
+            <footer
+              style={{
+                zIndex: 1,
+              }}
+              className={styles.captureFooter}
+            >
               <IconContext.Provider
                 value={{
                   color: 'black',
@@ -381,6 +419,7 @@ Capture.propTypes = {
   user: PropTypes.object,
   sendList: PropTypes.array,
   orientation: PropTypes.string,
+  screen: PropTypes.string,
 };
 
 Capture.defaultProps = {
@@ -395,6 +434,7 @@ Capture.defaultProps = {
   camW: null,
   user: Guest,
   sendList: [],
+  screen: 'camera',
   orientation: window.innerHeight > window.innerWidth ?
   'portrait':'landscape',
 };
@@ -411,6 +451,7 @@ function mapStateToProps(state) {
     user: state.user.user,
     sendList: state.camera.sendList,
     orientation: state.global.orientation,
+    screen: state.camera.screen,
   };
 }
 

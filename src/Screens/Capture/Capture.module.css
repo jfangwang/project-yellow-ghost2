@@ -74,6 +74,10 @@
     /* border: 2px rgb(0, 255, 0) solid; */
 }
 
+.defaultCanvas {
+
+}
+
 .captureFooter {
     display: flex;
     flex-direction: row;
