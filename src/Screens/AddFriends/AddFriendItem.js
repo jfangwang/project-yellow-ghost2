@@ -18,11 +18,8 @@ import {
  */
 function AddFriendItem(props) {
   const {
-    profileURL,
-    firstName,
-    lastName,
-    username,
     type,
+    friend,
   } = props;
 
   let buttonType;
@@ -47,10 +44,10 @@ function AddFriendItem(props) {
       }}
     >
       <div className={styles.row}>
-        <img src={profileURL} className={styles.profilePic}/>
+        <img src={friend['profilePicUrl']} className={styles.profilePic}/>
         <div className={styles.info}>
-          <p>{firstName} {lastName[0]}</p>
-          <p>{username}</p>
+          <p>{friend['firstName']} {friend['lastName'][0]}</p>
+          <p>{friend['username']}</p>
         </div>
       </div>
       <div className={styles.row}>
@@ -76,19 +73,18 @@ function AddFriendItem(props) {
 }
 
 AddFriendItem.propTypes = {
-  profileURL: PropTypes.string,
-  firstName: PropTypes.string,
-  lastName: PropTypes.string,
-  username: PropTypes.string,
   type: PropTypes.string,
+  friend: PropTypes.object,
 };
 
 AddFriendItem.defaultProps = {
-  profileURL: Guest.profilePicUrl,
-  firstName: Guest.firstName,
-  lastName: Guest.lastName,
-  username: Guest.username,
   type: null,
+  friend: {
+    profileURL: Guest.profilePicUrl,
+    firstName: Guest.firstName,
+    lastName: Guest.lastName,
+    username: Guest.username,
+  },
 };
 
 /**
