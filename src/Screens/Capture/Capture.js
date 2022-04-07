@@ -25,6 +25,7 @@ import {
 } from 'phosphor-react';
 import {MetaTags} from 'react-meta-tags';
 import Timer from '../Timer/Timer';
+import {HueSlider} from 'react-slider-color-picker';
 // import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 
 let sdb;
@@ -51,6 +52,7 @@ function Capture(props) {
   const toolTime = useRef();
   const [activeTool, setActiveTool] = useState(null);
   const [hideUI, setHideUI] = useState(false);
+  const [color, setColor] = useState({h: 56, s: 100, l: 50, a: 1});
 
   /**
    * Close
@@ -97,8 +99,8 @@ function Capture(props) {
       console.log('asdf');
       setActiveTool('draw');
       sdb = create(document.getElementById('drawingCanvas'));
-      sdb.setLineSize(10);
-      sdb.setLineColor('red');
+      sdb.setLineSize(5);
+      sdb.setLineColor(hslToHex(color['h'], color['s'], color['l']));
       sdb.observer.on('drawBegin', (coords) => {
         setHideUI(true);
       });
@@ -168,6 +170,32 @@ function Capture(props) {
     activeTool === 'crop' && toggleCrop();
     activeTool === 'link' && toggleLink();
     setActiveTool(null);
+  }
+
+  /**
+   * Handle Change Color
+   * @param {*} newColor
+   */
+  function handleChangeColor(newColor) {
+    setColor(newColor);
+    sdb.setLineColor(hslToHex(newColor['h'], newColor['s'], newColor['l']));
+  }
+
+  /**
+   * @param {*} h
+   * @param {*} s
+   * @param {*} l
+   * @return {*}
+   */
+  function hslToHex(h, s, l) {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = (n) => {
+      const k = (n + h / 30) % 12;
+      const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+      return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
   }
 
   useEffect(() => {
@@ -260,6 +288,10 @@ function Capture(props) {
                           <button onClick={redo}>
                             <ArrowClockwise />
                           </button>
+                          <HueSlider
+                            handleChangeColor={handleChangeColor}
+                            color={color}
+                          />
                         </>
                       }
                       <button onClick={toggleDraw}>

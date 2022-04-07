@@ -96,7 +96,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     final = document.getElementById('finalImage').getContext('2d');
     final.clearRect(0, 0, final.width, final.height);
     final.drawImage(img, 0, 0, img.width, img.height);
-    final.drawImage(drawing, 0, 0, drawing.width, drawing.height);
+    final.drawImage(drawing, 0, 0, drawing.width, drawing.height, 0, 0, img.width, img.height);
     const dataURL = document.getElementById('finalImage').toDataURL();
     const date = new Date();
     const updated = {...user}
