@@ -15,7 +15,7 @@ export const Guest = {
   deleteSnaps: {},
   email: 'jonnyAppleseed@Guest.com',
   faceIDURL: null,
-  firstName: '',
+  firstName: 'Jonny',
   friends: {
     [guestID]: {
       created: newDate,
@@ -54,7 +54,7 @@ export const Guest = {
     },
   },
   id: guestID,
-  lastName: '',
+  lastName: 'Appleseed',
   loggedOffTimeStamp: null,
   memories: {},
   pending: {},

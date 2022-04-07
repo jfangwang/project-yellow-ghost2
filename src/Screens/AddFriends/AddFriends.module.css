@@ -1,3 +1,30 @@
 .background {
-    background-color: white;
+    border: 2px solid red;
+    height: 100%;
+    width: 92%;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.background h2 {
+    padding: 0.5rem 0 0.5rem 0;
+}
+
+.peopleList {
+    width: 99%;
+    margin-bottom: 2rem;
+    border: 2px blue dotted;
+    border-radius: 0.8rem;
+}
+
+.peopleList li:first-child {
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.peopleList li:last-child {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
 }

@@ -117,7 +117,8 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                   }}
                   className={styles.body}
                 >
-                  <h2>{title}</h2>
+                  {/* <h2>{title}</h2> */}
+                  {children}
                 </div>
               </div> : <></>}
           </Route>

@@ -2,6 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import styles from './AddFriends.module.css';
+import AddFriendItem from './AddFriendItem';
+
+const list = [];
+for (let i=0; i<100; i+=1) {
+  list.push(<h1>asdf</h1>);
+}
 
 /**
  *
@@ -11,12 +17,29 @@ import styles from './AddFriends.module.css';
  */
 function AddFriends(props) {
   const {
-    test,
   } = props;
   return (
     <div className={styles.background}>
-      <h1>Add Friends</h1>
-      <button onClick={test}>Test</button>
+      <h2>Pending</h2>
+      <ul className={styles.peopleList}>
+        <AddFriendItem />
+      </ul>
+      <h2>Added Me</h2>
+      <ul className={styles.peopleList}>
+        <AddFriendItem />
+      </ul>
+      <h2>Quick Add</h2>
+      <ul className={styles.peopleList}>
+        <AddFriendItem />
+      </ul>
+      <h2>Friends</h2>
+      <ul className={styles.peopleList}>
+        <AddFriendItem />
+      </ul>
+      <h2>Everyone</h2>
+      <ul className={styles.peopleList}>
+        <AddFriendItem />
+      </ul>
     </div>
   );
 }
