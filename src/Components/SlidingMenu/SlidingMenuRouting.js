@@ -4,6 +4,7 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  cloneElement,
 } from 'react';
 import PropTypes from 'prop-types';
 import {BrowserRouter as Route, useLocation} from 'react-router-dom';
@@ -58,6 +59,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
     changeToIndex(0);
   };
   const handleScroll = (e) => {
+    console.log(e.currentTarget.scrollTop)
     if (e.currentTarget.scrollTop > 0 && axis === 'y') {
       setDisabled(true);
     } else {
@@ -109,7 +111,6 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                   </IconContext.Provider>
                 </header>
                 <div
-                  onScroll={handleScroll}
                   style={{
                     height: height,
                     width: width,
@@ -118,7 +119,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                   className={styles.body}
                 >
                   {/* <h2>{title}</h2> */}
-                  {children}
+                  {cloneElement(children, {handleScroll: handleScroll})}
                 </div>
               </div> : <></>}
           </Route>

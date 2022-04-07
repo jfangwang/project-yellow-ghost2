@@ -17,9 +17,10 @@ for (let i=0; i<100; i+=1) {
  */
 function AddFriends(props) {
   const {
+    handleScroll,
   } = props;
   return (
-    <div className={styles.background}>
+    <div className={styles.background} onScroll={handleScroll}>
       <h2>Pending</h2>
       <ul className={styles.peopleList}>
         <AddFriendItem />
@@ -48,12 +49,14 @@ AddFriends.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   test: PropTypes.func,
+  handleScroll: PropTypes.func,
 };
 
 AddFriends.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
   test: () => {},
+  handleScroll: () => {},
 };
 
 /**
