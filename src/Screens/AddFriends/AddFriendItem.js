@@ -5,7 +5,9 @@ import {connect} from 'react-redux';
 import {Guest} from '../../Assets/data/GuestInfo';
 import {
   IconContext,
+  UserMinus,
   UserPlus,
+  HourglassMedium,
   X,
 } from 'phosphor-react';
 
@@ -20,7 +22,23 @@ function AddFriendItem(props) {
     firstName,
     lastName,
     username,
+    type,
   } = props;
+
+  let buttonType;
+
+  if (type === 'pending') {
+    buttonType = (<><HourglassMedium /><p><b>Pending</b></p></>);
+  } else if (type === 'addedMe') {
+    buttonType = (<><UserPlus /><p><b>Add</b></p></>);
+  } else if (type === 'quickAdd') {
+    buttonType = (<><UserPlus /><p><b>Accept</b></p></>);
+  } else if (type === 'friends') {
+    buttonType = (<><UserMinus /><p><b>Remove</b></p></>);
+  } else {
+    buttonType = (<></>);
+  }
+
   return (
     <li
       className={styles.row}
@@ -43,13 +61,14 @@ function AddFriendItem(props) {
             weight: 'bold',
           }}
         >
-          <button>
-            <div className={styles.row}>
-              <UserPlus />
-              <p><b>Accept</b></p>
-            </div>
-          </button>
-          <button><X /></button>
+          { type !== null &&
+            <button>
+              <div className={styles.row}>
+                {buttonType}
+              </div>
+            </button>
+          }
+          { type === 'pending' && <button><X /></button>}
         </IconContext.Provider>
       </div>
     </li>
@@ -61,6 +80,7 @@ AddFriendItem.propTypes = {
   firstName: PropTypes.string,
   lastName: PropTypes.string,
   username: PropTypes.string,
+  type: PropTypes.string,
 };
 
 AddFriendItem.defaultProps = {
@@ -68,6 +88,7 @@ AddFriendItem.defaultProps = {
   firstName: Guest.firstName,
   lastName: Guest.lastName,
   username: Guest.username,
+  type: null,
 };
 
 /**

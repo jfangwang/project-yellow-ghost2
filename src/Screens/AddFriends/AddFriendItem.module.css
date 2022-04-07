@@ -15,6 +15,7 @@
 .row > button {
     height: 50%;
     margin: 0 0.2rem 0 0.2rem;
+    padding: 0.3rem;
     background-color: transparent;
     border: none;
     border-radius: 10rem;
@@ -22,6 +23,7 @@
 }
 li {
     width: 100%;
+    border-bottom: 1px lightgray solid;
 }
 .profilePic {
     height: 3rem;

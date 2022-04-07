@@ -23,22 +23,23 @@ function AddFriends(props) {
     <div className={styles.background} onScroll={handleScroll}>
       <h2>Pending</h2>
       <ul className={styles.peopleList}>
-        <AddFriendItem />
+        <AddFriendItem type='pending'/>
       </ul>
       <h2>Added Me</h2>
       <ul className={styles.peopleList}>
-        <AddFriendItem />
+        <AddFriendItem type='addedMe'/>
       </ul>
       <h2>Quick Add</h2>
       <ul className={styles.peopleList}>
-        <AddFriendItem />
+        <AddFriendItem type='quickAdd'/>
       </ul>
       <h2>Friends</h2>
       <ul className={styles.peopleList}>
-        <AddFriendItem />
+        <AddFriendItem type='friends'/>
       </ul>
       <h2>Everyone</h2>
       <ul className={styles.peopleList}>
+        <AddFriendItem />
         <AddFriendItem />
       </ul>
     </div>
