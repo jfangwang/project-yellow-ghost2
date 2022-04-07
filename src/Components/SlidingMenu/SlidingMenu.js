@@ -63,6 +63,7 @@ const SlidingMenu = forwardRef((props, ref) => {
           enableMouseEvents
           axis={axis}
           containerStyle={{height: height, width: width}}
+          style={{zIndex: 5,}}
         >
           <div style={{height: height, width: width}}></div>
           <div
