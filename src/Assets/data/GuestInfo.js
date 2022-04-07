@@ -11,6 +11,11 @@ import mem7 from '../images/memories/rickAndMortyMem7.png';
 import mem8 from '../images/memories/rickAndMortyMem8.jpg';
 import mem9 from '../images/memories/rickAndMortyMem9.png';
 import mem10 from '../images/memories/rickAndMortyMem10.jpg';
+import mem11 from '../images/memories/rickAndMortyMem11.jpg';
+import mem12 from '../images/memories/rickAndMortyMem12.jpg';
+import mem13 from '../images/memories/rickAndMortyMem13.png';
+import mem14 from '../images/memories/rickAndMortyMem14.jpg';
+import mem15 from '../images/memories/rickAndMortyMem15.jpg';
 import {v4 as uuidv4} from 'uuid';
 
 const newDate = new Date().toLocaleString();
@@ -129,6 +134,31 @@ export const Guest = {
       type: 'image',
       url: mem10,
     },
+    ['4/7/2022, 3:15:37 PM']: {
+      date: '4/7/2022, 3:15:37 PM',
+      type: 'image',
+      url: mem11,
+    },
+    ['4/7/2022, 3:15:38 PM']: {
+      date: '4/7/2022, 3:15:38 PM',
+      type: 'image',
+      url: mem12,
+    },
+    ['4/7/2022, 3:15:40 PM']: {
+      date: '4/7/2022, 3:15:40 PM',
+      type: 'image',
+      url: mem13,
+    },
+    ['4/7/2022, 3:16:37 PM']: {
+      date: '4/7/2022, 3:16:37 PM',
+      type: 'image',
+      url: mem14,
+    },
+    ['4/7/2022, 3:17:37 PM']: {
+      date: '4/7/2022, 3:17:37 PM',
+      type: 'image',
+      url: mem15,
+    },
   },
   pending: {},
   phoneNumber: null,
@@ -136,6 +166,7 @@ export const Guest = {
   received: 0,
   story: {},
   sent: 0,
+  snapTime: -1,
   streakEmoji: '\u{1F525}',
   username: 'jonny_appleseed123',
 };

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import styles from './Account.module.css';
 import {editFakeDB} from '../../Actions/userActions';
+import AccountItem from './AccountItem';
 
 /**
  *
@@ -33,37 +34,40 @@ function Account(props) {
       <div className={styles.acountSettings}>
         <h1>Account Settings</h1>
         <ul>
-          <li><h3>Change Username</h3></li>
-          <li><h3>Change Profile Pic</h3></li>
-          <li><h3>Change Streak Emoji</h3></li>
-          <li><h3>Add Phone Number</h3></li>
-          <li><h3>Add Face ID</h3></li>
+          <AccountItem title='Change Username'>
+            <input type='text' id='username' placeholder={user.username}>
+            </input>
+          </AccountItem>
+          <AccountItem title='Change Profile Pic'></AccountItem>
+          <AccountItem title='Manage Streak Emoji'></AccountItem>
+          <AccountItem title='Manage Phone Number'></AccountItem>
+          <AccountItem title='Manage Face ID'></AccountItem>
         </ul>
       </div>
 
       <div className={styles.uiSettings}>
         <h1>UI Settings</h1>
         <ul>
-          <li><h3>Change Theme</h3></li>
+          <AccountItem title='Set Theme'></AccountItem>
         </ul>
       </div>
 
       <div className={styles.messagesSettings}>
         <h1>Messages Settings</h1>
         <ul>
-          <li><h3>Change Default Snap Timer</h3></li>
+          <AccountItem title='Manage Snap Timer'></AccountItem>
         </ul>
       </div>
 
       <div className={styles.cameraSettings}>
         <h1>Camera Settings</h1>
         <ul>
-          <li><h3>Change Camera Resolution</h3></li>
-          <li><h3>Change Capture Button Location</h3></li>
-          <li><h3>Camera Video</h3></li>
-          <li><h3>Camera Mic</h3></li>
-          <li><h3>Change Audio</h3></li>
-          <li><h3>Toggle Camera Stats</h3></li>
+          <AccountItem title='Set Camera Resolution'></AccountItem>
+          <AccountItem title='Change Capture Button Location'></AccountItem>
+          <AccountItem title='Set Camera Video'></AccountItem>
+          <AccountItem title='Set Camera Mic'></AccountItem>
+          <AccountItem title='Set Audio'></AccountItem>
+          <AccountItem title='Toggle Camera Stats'></AccountItem>
         </ul>
       </div>
     </div>

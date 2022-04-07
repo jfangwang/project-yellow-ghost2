@@ -47,8 +47,6 @@
 .background ul li {
     list-style: none;
     background-color: white;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
 }
 .background ul li:first-child {
     border-top-left-radius: 1rem;

@@ -29,7 +29,6 @@ export function Footer(props) {
           value={{
             size: '1.8rem',
             weight: 'bold',
-            mirrored: true,
           }}
         >
           <Link to="/messages" replace>

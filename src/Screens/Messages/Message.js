@@ -171,6 +171,7 @@ export function Message(props) {
       <button
         className={styles.background}
         onClick={() => openSnap()}
+        disabled={friend['status'] !== 'new'}
       >
         <div className={styles.row}>
           <div
