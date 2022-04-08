@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import './App.css';
-import {BrowserRouter as Router, Route, BrowserRouter} from 'react-router-dom';
+import {BrowserRouter as Route, BrowserRouter} from 'react-router-dom';
 import SwipeableRoutes from 'react-swipeable-routes';
 import Camera from '../Screens/Camera/Camera';
 import Messages from '../Screens/Messages/Messages';
@@ -9,6 +9,7 @@ import Discover from '../Screens/Discover/Discover';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
 import {MetaTags} from 'react-meta-tags';
+import Signup from '../Screens/Signup/Signup';
 import {
   resize,
   changeToIndex,
@@ -73,28 +74,27 @@ export class App extends Component {
           />
         </MetaTags>
         <BrowserRouter>
-          <Router>
-            <SwipeableRoutes
-              enableMouseEvents
-              onSwitching={updateDecimalIndex}
-              index={index}
-              onChangeIndex={changeToIndex}
-              disabled={slideDisabled}
-              style={{
-                backgroundColor: 'lightCoral',
-                height: height,
-                width: width,
-              }}
-              containerStyle={{height: '100%'}}
-              replace
-            >
-              <Route exact path="/messages" component={Messages} />
-              <Route exact path="/camera" component={Camera} />
-              <Route exact path="/discover" component={Discover} />
-            </SwipeableRoutes>
-            <Footer />
-            <Navbar placeHolder={false}/>
-          </Router>
+          <Route exact path='/signup' component={Signup} />
+          <SwipeableRoutes
+            enableMouseEvents
+            onSwitching={updateDecimalIndex}
+            index={index}
+            onChangeIndex={changeToIndex}
+            disabled={slideDisabled}
+            style={{
+              backgroundColor: 'lightCoral',
+              height: height,
+              width: width,
+            }}
+            containerStyle={{height: '100%'}}
+            replace
+          >
+            <Route exact path="/messages" component={Messages} />
+            <Route exact path="/camera" component={Camera} />
+            <Route exact path="/discover" component={Discover} />
+          </SwipeableRoutes>
+          <Footer />
+          <Navbar placeHolder={false}/>
         </BrowserRouter>
       </>
 

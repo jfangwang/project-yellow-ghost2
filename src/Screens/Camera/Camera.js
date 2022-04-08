@@ -82,20 +82,28 @@ function Camera(props) {
 
     navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
+          const v = document.getElementById('mainCamera');
+          const ol = document.querySelector('#cameraOverlay');
+          ol.classList.remove(styles.fadeIn);
+          ol.classList.add(styles.loading);
           setCameraPermissions(true);
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
+          console.log(document.querySelector('#cameraOverlay'));
+          //     .classList.add(styles.loading);
           document.getElementById('mainCamera').onloadedmetadata = function(e) {
-            const v = document.getElementById('mainCamera');
             v.play();
             setw(v.videoWidth);
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
             updateVECanvas();
             setVidLoaded(true);
+            ol.classList.remove(styles.loading);
+            ol.classList.add(styles.fadeIn);
           };
         })
         .catch(function(err) {
+          ol.classList.remove(styles.loading);
           console.log(err.name + ': ' + err.message);
           setCameraPermissions(false);
           setAspectRatio(isMobile ? (width/height) : 9.5/16);
@@ -260,8 +268,7 @@ function Camera(props) {
               </button>
             </>
           }
-          { screen === 'camera' && vidLoaded && cameraPermissions &&
-          <div className={styles.cameraOverlay}>
+          <div id='cameraOverlay' className={styles.cameraOverlay}>
             <div className={styles.cameraHeader}>
               <Navbar opacity={0} position="relative" />
               <div className={styles.cameraStats}>
@@ -280,13 +287,14 @@ function Camera(props) {
                 <button onClick={() => memoriesMenu.current.toggle()}>
                   <Image />
                 </button>
-                <button className={styles.captureButton} onClick={capture}/>
+                { screen === 'camera' && vidLoaded && cameraPermissions &&
+                  <button className={styles.captureButton} onClick={capture}/>
+                }
                 <button><MaskHappy /></button>
               </div>
               <Footer position="relative" opacity={0} />
             </div>
           </div>
-          }
           <SlidingMenuRouting
             ref={memoriesMenu}
             height={height}

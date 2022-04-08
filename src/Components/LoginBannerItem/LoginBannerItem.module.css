@@ -33,6 +33,7 @@
     align-items: center;
     padding: 1rem;
     flex-direction: column;
+    z-index: 2;
 }
 
 .modalBackground > * {
