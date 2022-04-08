@@ -17,7 +17,7 @@ function AccountItem(props) {
   return (
     <>
       <li onClick={() => {
-        setShowChildren(true);
+        setShowChildren(!showChildren);
         console.log('asdf');
       }}>
         <IconContext.Provider
@@ -37,10 +37,8 @@ function AccountItem(props) {
         <div
           className={styles.accountModal}
         >
-          <div>
-            {children}
-            <button onClick={() => setShowChildren(false)}>Close</button>
-          </div>
+          {children}
+          <button onClick={() => setShowChildren(false)}>Close</button>
         </div>
       }
     </>

@@ -14,6 +14,9 @@ import AccountItem from './AccountItem';
 function Account(props) {
   const {
     user,
+    camRes,
+    camVideo,
+    camMic,
   } = props;
 
   return (
@@ -39,9 +42,18 @@ function Account(props) {
             </input>
           </AccountItem>
           <AccountItem title='Change Profile Pic'></AccountItem>
-          <AccountItem title='Manage Streak Emoji'></AccountItem>
-          <AccountItem title='Manage Phone Number'></AccountItem>
-          <AccountItem title='Manage Face ID'></AccountItem>
+          <AccountItem title='Manage Streak Emoji'>
+            <p>Current Emoji: {user.streakEmoji}</p>
+            <button>Change</button>
+          </AccountItem>
+          <AccountItem title='Manage Phone Number'>
+            <p>Current Number: {!user.phoneNumber ? 'None' : user.phoneNumber}
+            </p>
+          </AccountItem>
+          <AccountItem title='Manage Face ID'>
+            <p>Current Face ID: {!user.faceID ? 'None' : user.faceID}
+            </p>
+          </AccountItem>
         </ul>
       </div>
 
@@ -62,11 +74,17 @@ function Account(props) {
       <div className={styles.cameraSettings}>
         <h1>Camera Settings</h1>
         <ul>
-          <AccountItem title='Set Camera Resolution'></AccountItem>
-          <AccountItem title='Change Capture Button Location'></AccountItem>
-          <AccountItem title='Set Camera Video'></AccountItem>
-          <AccountItem title='Set Camera Mic'></AccountItem>
-          <AccountItem title='Set Audio'></AccountItem>
+          <AccountItem title='Set Camera Resolution'>
+            <p>Resolution: {camRes}</p>
+          </AccountItem>
+          <AccountItem title='Change Capture Button Location'>
+
+          </AccountItem>
+          <AccountItem title='Set Camera Video'>
+            <p>Video: {camVideo}</p>
+          </AccountItem>
+          <AccountItem title='Set Camera Mic'><p>Mic: {camMic}</p></AccountItem>
+          <AccountItem title='Set Audio'><p>Audio:</p></AccountItem>
           <AccountItem title='Toggle Camera Stats'></AccountItem>
         </ul>
       </div>
@@ -78,12 +96,22 @@ Account.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   user: PropTypes.object,
+  camRes: PropTypes.number,
+  camVideo: PropTypes.string,
+  camMic: PropTypes.string,
+  showStats: PropTypes.bool,
+  cameraButton: PropTypes.string,
 };
 
 Account.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
   user: {},
+  camRes: null,
+  camVideo: null,
+  camMic: null,
+  showStats: false,
+  cameraButton: 'bottom',
 };
 
 /**
@@ -97,6 +125,11 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     user: state.user.user,
+    camRes: state.camera.cameraResolution,
+    camVideo: state.camera.cameraVideoOutput,
+    camMic: state.camera.cameraAudioInput,
+    showStats: state.camera.showStats,
+    cameraButton: state.camera.cameraButton,
   };
 }
 
