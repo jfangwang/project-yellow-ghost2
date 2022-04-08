@@ -88,9 +88,9 @@ export class App extends Component {
               containerStyle={{height: '100%'}}
               replace
             >
-              <Route path="/messages" component={Messages} />
-              <Route path="/camera" component={Camera} />
-              <Route path="/discover" component={Discover} />
+              <Route exact path="/messages" component={Messages} />
+              <Route exact path="/camera" component={Camera} />
+              <Route exact path="/discover" component={Discover} />
             </SwipeableRoutes>
             <Footer />
             <Navbar placeHolder={false}/>

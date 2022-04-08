@@ -6,6 +6,7 @@ import Message from './Message';
 import styles from './Messages.module.css';
 import {connect} from 'react-redux';
 import {MetaTags} from 'react-meta-tags';
+import LoginBannerItem from '../../Components/LoginBannerItem/LoginBannerItem';
 
 const list = [];
 for (let i = 0; i < 200; i++) {
@@ -43,6 +44,7 @@ class Messages extends Component {
         </MetaTags>
         <div className={styles.backgrounds}>
           <Navbar opacity={0} position="relative" />
+          <LoginBannerItem />
           {Object.keys(friends).map((id) => (
             <Message key={id} friend={friends[id]} user={user}/>
           ))}

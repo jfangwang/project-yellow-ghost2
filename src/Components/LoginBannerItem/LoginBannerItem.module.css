@@ -1,0 +1,16 @@
+.background {
+    background-color: lightgray;
+    padding: 0.6rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.background button {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    color: black;
+    margin: 1rem;
+}
