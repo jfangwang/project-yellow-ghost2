@@ -266,22 +266,22 @@ function Camera(props) {
               </button>
             </>
           }
-          <div id='cameraOverlay' className={styles.cameraOverlay}>
-            <div className={styles.cameraHeader}>
-              <Navbar opacity={0} position="relative" />
-              <div className={styles.cameraStats}>
-                <p>Device AR: {width/height}</p>
-                <p>Height: {height}</p>
-                <p>Width: {width}</p>
-                <p>Cam AR: {w/h}</p>
-                <p>Cam H: {h}</p>
-                <p>Cam W: {w}</p>
-                <p>orientation: {orientation}</p>
-                <p>aspectRatio: {aspectRatio}</p>
+          { (screen === 'camera') &&
+            <div id='cameraOverlay' className={styles.cameraOverlay}>
+              <div className={styles.cameraHeader}>
+                <Navbar opacity={0} position="relative" />
+                <div className={styles.cameraStats}>
+                  <p>Device AR: {width/height}</p>
+                  <p>Height: {height}</p>
+                  <p>Width: {width}</p>
+                  <p>Cam AR: {w/h}</p>
+                  <p>Cam H: {h}</p>
+                  <p>Cam W: {w}</p>
+                  <p>orientation: {orientation}</p>
+                  <p>aspectRatio: {aspectRatio}</p>
+                </div>
               </div>
-            </div>
-            <div className={styles.cameraFooter}>
-              { (screen === 'camera') &&
+              <div className={styles.cameraFooter}>
                 <div className={styles.cameraButtons}>
                   <button onClick={() => memoriesMenu.current.toggle()}>
                     <Image />
@@ -300,10 +300,10 @@ function Camera(props) {
                     }
                   ><MaskHappy /></button>
                 </div>
-              }
-              <Footer position="relative" opacity={0} />
+                <Footer position="relative" opacity={0} />
+              </div>
             </div>
-          </div>
+          }
           <SlidingMenuRouting
             ref={memoriesMenu}
             height={height}
