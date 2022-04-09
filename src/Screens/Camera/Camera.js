@@ -165,9 +165,10 @@ function Camera(props) {
    */
   function updateVECanvas() {
     const vec = document.getElementById('visualEffectsCanvas');
-    const cw = (width/height) > aspectRatio ? height * aspectRatio : width;
-    const ch = (width/height) >
-    aspectRatio ? height : width * (aspectRatio ** -1);
+    const cw = isMobile ?
+      width : (width/height) > aspectRatio ? height * aspectRatio : width;
+    const ch = isMobile ?
+      height : (width/height) > aspectRatio ? height : width*(aspectRatio**-1);
     if (h != null && w != null) {
       vec.width = Math.min(cw, w);
       vec.height = Math.min(ch, h);
@@ -201,6 +202,8 @@ function Camera(props) {
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+        canvas.width = 0;
+        canvas.height = 0;
       } else {
         stopCamera();
       }
@@ -250,16 +253,16 @@ function Camera(props) {
             id="imageCanvas"
             className={styles.imageCanvas}
             style={{
-              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
           <canvas
             id="visualEffectsCanvas"
             className={styles.visualEffectsCanvas}
             style={{
-              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
           { (screen === 'camera') &&
@@ -268,13 +271,10 @@ function Camera(props) {
                 <Navbar opacity={0} position="relative" />
                 <div className={styles.cameraStats}>
                   <p>Device AR: {width/height}</p>
-                  <p>Height: {height}</p>
-                  <p>Width: {width}</p>
+                  <p>Height: {height} Width: {width}</p>
                   <p>Cam AR: {w/h}</p>
-                  <p>Cam H: {h}</p>
-                  <p>Cam W: {w}</p>
+                  <p>Cam H: {h} Cam W: {w}</p>
                   <p>orientation: {orientation}</p>
-                  <p>aspectRatio: {aspectRatio}</p>
                 </div>
               </div>
               <div className={styles.cameraFooter}>
