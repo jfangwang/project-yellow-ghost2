@@ -54,6 +54,11 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
       setShow(false);
       toggleSlide(false);
     }
+    if (index === 1 && title === 'Search') {
+      var input = document.getElementById('searchbar');
+      input.focus();
+      // input.select();
+    }
   }
   const close = () => {
     changeToIndex(0);
@@ -104,6 +109,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                       {axis === 'y' ? <CaretDown/> : <CaretLeft/>}
                     </button>
                     <input
+                      id='searchbar'
                       type='search'
                       autoComplete='on'
                       placeholder={title + '...'}

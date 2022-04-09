@@ -89,8 +89,6 @@ function Camera(props) {
           setCameraPermissions(true);
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
-          console.log(document.querySelector('#cameraOverlay'));
-          //     .classList.add(styles.loading);
           document.getElementById('mainCamera').onloadedmetadata = function(e) {
             v.play();
             setw(v.videoWidth);
