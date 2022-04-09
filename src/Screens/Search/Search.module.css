@@ -1,7 +1,7 @@
 .background {
     height: 100%;
     width: 92%;
-    overflow: scroll;
+    overflow: auto;
 }
 .background ul {
     margin-top: 1rem;
