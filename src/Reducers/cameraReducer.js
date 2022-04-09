@@ -8,7 +8,7 @@ import {
 } from '../Actions/cameraActions';
 export const initialState = {
   facingMode: 'user',
-  cameraPermissions: true,
+  cameraPermissions: null,
   screen: 'camera',
   capturedImage: null,
   sendList: [],

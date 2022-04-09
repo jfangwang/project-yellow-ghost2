@@ -84,11 +84,11 @@ function Camera(props) {
         .then(function(mediaStream) {
           const v = document.getElementById('mainCamera');
           const ol = document.querySelector('#cameraOverlay');
-          ol.classList.remove(styles.fadeIn);
+          ol.classList.remove(styles.fadeOut);
           ol.classList.add(styles.loading);
-          setCameraPermissions(true);
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
+          setCameraPermissions(true);
           document.getElementById('mainCamera').onloadedmetadata = function(e) {
             v.play();
             setw(v.videoWidth);
@@ -97,11 +97,14 @@ function Camera(props) {
             updateVECanvas();
             setVidLoaded(true);
             ol.classList.remove(styles.loading);
-            ol.classList.add(styles.fadeIn);
+            ol.classList.add(styles.fadeOut);
           };
         })
         .catch(function(err) {
-          ol.classList.remove(styles.loading);
+          const ol = document.querySelector('#cameraOverlay');
+          if (ol) {
+            ol.classList.remove(styles.loading);
+          }
           console.log(err.name + ': ' + err.message);
           setCameraPermissions(false);
           setAspectRatio(isMobile ? (width/height) : 9.5/16);
@@ -183,7 +186,7 @@ function Camera(props) {
   }, [height, width]);
 
   useEffect(() => {
-    if (cameraPermissions === true) {
+    if (cameraPermissions === true || cameraPermissions === null) {
       if (index === 1 && screen === 'camera') {
         stopCamera();
         startCamera();
@@ -198,6 +201,9 @@ function Camera(props) {
       } else {
         stopCamera();
       }
+    } else {
+      const ol = document.querySelector('#cameraOverlay');
+      ol.classList.remove(styles.loading);
     }
   }, [index, facingMode, orientation, screen]);
 
@@ -253,19 +259,6 @@ function Camera(props) {
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
-          { !cameraPermissions &&
-            <>
-              <h1>Camera Disabled</h1>
-              <button
-                style={{
-                  zIndex: 0,
-                }}
-                onClick={() => startCamera()}
-              >
-                <h1>Allow</h1>
-              </button>
-            </>
-          }
           { (screen === 'camera') &&
             <div id='cameraOverlay' className={styles.cameraOverlay}>
               <div className={styles.cameraHeader}>
@@ -303,6 +296,19 @@ function Camera(props) {
                 <Footer position="relative" opacity={0} />
               </div>
             </div>
+          }
+          { cameraPermissions === false &&
+            <>
+              <h1>Camera Disabled</h1>
+              <button
+                style={{
+                  zIndex: 0,
+                }}
+                onClick={() => startCamera()}
+              >
+                <h1>Allow</h1>
+              </button>
+            </>
           }
           <SlidingMenuRouting
             ref={memoriesMenu}
