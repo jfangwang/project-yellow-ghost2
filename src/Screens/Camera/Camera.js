@@ -105,6 +105,9 @@ function Camera(props) {
           if (ol) {
             ol.classList.remove(styles.loading);
           }
+          if (cameraPermissions === false) {
+            alert('Enable camera in browser settings or refresh the page.');
+          }
           console.log(err.name + ': ' + err.message);
           setCameraPermissions(false);
           setAspectRatio(isMobile ? (width/height) : 9.5/16);
