@@ -6,7 +6,6 @@ import {toggleSlide, toggleNavFoot} from '../../Actions/globalActions';
 import {setScreen} from '../../Actions/cameraActions';
 import SendSlidingMenu from '../Send/SendSlidingMenu';
 import SlidingMenu from '../../Components/SlidingMenu/SlidingMenu';
-import {Guest} from '../../Assets/data/GuestInfo';
 import {create} from 'simple-drawing-board';
 import {
   IconContext,
@@ -432,7 +431,7 @@ Capture.defaultProps = {
   aspectRatio: 9.5/16,
   camH: null,
   camW: null,
-  user: Guest,
+  user: {},
   sendList: [],
   screen: 'camera',
   orientation: window.innerHeight > window.innerWidth ?

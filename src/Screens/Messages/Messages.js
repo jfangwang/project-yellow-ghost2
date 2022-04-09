@@ -5,8 +5,8 @@ import Footer from '../../Components/Footer/Footer';
 import Message from './Message';
 import styles from './Messages.module.css';
 import {connect} from 'react-redux';
-import {Guest} from '../../Assets/data/GuestInfo';
 import {MetaTags} from 'react-meta-tags';
+import LoginBannerItem from '../../Components/LoginBannerItem/LoginBannerItem';
 
 const list = [];
 for (let i = 0; i < 200; i++) {
@@ -44,8 +44,12 @@ class Messages extends Component {
         </MetaTags>
         <div className={styles.backgrounds}>
           <Navbar opacity={0} position="relative" />
+          <LoginBannerItem />
           {Object.keys(friends).map((id) => (
             <Message key={id} friend={friends[id]} user={user}/>
+          ))}
+          {Object.keys(user.pending).map((id) => (
+            <Message key={id} friend={user.pending[id]} user={user}/>
           ))}
           <Footer position="relative" opacity={0} />
         </div>
@@ -64,8 +68,8 @@ Messages.propTypes = {
 Messages.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
-  friends: Guest.friends,
-  user: Guest,
+  friends: {},
+  user: {},
 };
 
 

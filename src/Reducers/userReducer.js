@@ -1,11 +1,13 @@
-import {Guest, Everyone} from '../Assets/data/GuestInfo';
+import {Guest, Everyone, FakeDB} from '../Assets/data/GuestInfo';
 import {
   EDIT_USER,
+  EDIT_FAKE_DB,
 } from '../Actions/userActions';
 export const initialState = {
   user: Guest,
   everyone: Everyone,
   isUserLoggedIn: false,
+  fakeDB: FakeDB,
 };
 
 /**
@@ -27,6 +29,11 @@ export function userReducer(state = initialState, action) {
       return {
         ...state,
         user: action.user,
+      };
+    case EDIT_FAKE_DB:
+      return {
+        ...state,
+        fakeDB: action.fakeDB,
       };
     default:
       return state;

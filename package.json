@@ -27,6 +27,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "mac": "HTTPS=true npm start",
     "build": "react-scripts build",
     "test": "jest --env=jsdom",
     "test-watch": "jest --watch --env=jsdom",

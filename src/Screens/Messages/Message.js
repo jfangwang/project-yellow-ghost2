@@ -7,8 +7,7 @@ import TimeAgo from 'react-timeago';
 import GuestPic from '../../Assets/images/guest-profile-pic.png';
 import enShort from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
-import {FakeDB} from '../../Assets/data/GuestInfo';
-import {editUser} from '../../Actions/userActions';
+import {editUser, editFakeDB} from '../../Actions/userActions';
 import {toggleNavFoot} from '../../Actions/globalActions';
 
 const formatter = buildFormatter(enShort);
@@ -37,7 +36,7 @@ const emojiDict = {
  */
 export function Message(props) {
   const {friend, user, isUserLoggedIn, height, width, editUser,
-    toggleNavFoot,
+    toggleNavFoot, fakeDB, editFakeDB,
   } = props;
   const [showSnaps, setShowSnaps] = useState(false);
   const messageNewFriend = <div className={styles.messageNewFriend}></div>;
@@ -134,9 +133,10 @@ export function Message(props) {
       console.log('not updating db');
     } else {
       const update = {...user};
+      const updateFake = {...fakeDB};
       if (id === null) {
         // Viewed all snaps
-        FakeDB[friend.id]['friends'][user.id]['status'] = 'opened';
+        updateFake[friend.id]['friends'][user.id]['status'] = 'opened';
         update['friends'][friend.id]['status'] = 'received';
       } else {
         delete update['friends'][friend['id']]['newSnaps'][id];
@@ -148,12 +148,13 @@ export function Message(props) {
           opened: update['friends'][fi]['openedByMe']['opened'] + 1,
         };
         // Friend
-        FakeDB[ui]['friends'][ui]['openedByFriend'] = {
+        updateFake[ui]['friends'][ui]['openedByFriend'] = {
           lastTimeStamp: date.toISOString(),
-          opened: FakeDB[ui]['friends'][ui]['openedByFriend']['opened'] + 1,
+          opened: updateFake[ui]['friends'][ui]['openedByFriend']['opened'] + 1,
         };
       }
       editUser(update);
+      editFakeDB(updateFake);
     }
   }
 
@@ -170,6 +171,7 @@ export function Message(props) {
       <button
         className={styles.background}
         onClick={() => openSnap()}
+        disabled={friend['status'] !== 'new'}
       >
         <div className={styles.row}>
           <div
@@ -254,7 +256,9 @@ Message.propTypes = {
   user: PropTypes.object,
   isUserLoggedIn: PropTypes.bool,
   editUser: PropTypes.func,
+  editFakeDB: PropTypes.func,
   toggleNavFoot: PropTypes.func,
+  fakeDB: PropTypes.object,
 };
 
 Message.defaultProps = {
@@ -263,6 +267,7 @@ Message.defaultProps = {
   isUserLoggedIn: false,
   toggleNavFoot: () => {},
   editUser: () => {},
+  editFakeDB: () => {},
   friend: {
     username: 'User',
     profilePicUrl: GuestPic,
@@ -273,6 +278,7 @@ Message.defaultProps = {
   user: {
     streakEmoji: '\u{1F525}',
   },
+  fakeDB: {},
 };
 
 
@@ -287,11 +293,13 @@ function mapStateToProps(state) {
     height: state.global.height,
     width: state.global.width,
     isUserLoggedIn: state.user.isUserLoggedIn,
+    fakeDB: state.user.fakeDB,
   };
 }
 
 const mapDispatchToProps = {
   editUser,
+  editFakeDB,
   toggleNavFoot,
 };
 

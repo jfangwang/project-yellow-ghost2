@@ -9,8 +9,9 @@ import styles from './Extra.module.css';
  * @return {*}
  */
 function Extra(props) {
+  const {handleScroll} = props;
   return (
-    <div className={styles.background}>
+    <div className={styles.background} onScroll={handleScroll}>
       <h1>Extra</h1>
     </div>
   );
@@ -19,11 +20,13 @@ function Extra(props) {
 Extra.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
+  handleScroll: PropTypes.func,
 };
 
 Extra.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  handleScroll: () => {},
 };
 
 

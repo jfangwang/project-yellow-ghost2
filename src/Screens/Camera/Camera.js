@@ -20,6 +20,7 @@ import {
   captureImage,
 } from '../../Actions/cameraActions';
 import Send from '../Send/Send';
+import Memories from '../Memories/Memories';
 
 /**
  *
@@ -81,20 +82,32 @@ function Camera(props) {
 
     navigator.mediaDevices.getUserMedia(constraints)
         .then(function(mediaStream) {
-          setCameraPermissions(true);
+          const v = document.getElementById('mainCamera');
+          const ol = document.querySelector('#cameraOverlay');
+          ol.classList.remove(styles.fadeOut);
+          ol.classList.add(styles.loading);
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
+          setCameraPermissions(true);
           document.getElementById('mainCamera').onloadedmetadata = function(e) {
-            const v = document.getElementById('mainCamera');
             v.play();
             setw(v.videoWidth);
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
             updateVECanvas();
             setVidLoaded(true);
+            ol.classList.remove(styles.loading);
+            ol.classList.add(styles.fadeOut);
           };
         })
         .catch(function(err) {
+          const ol = document.querySelector('#cameraOverlay');
+          if (ol) {
+            ol.classList.remove(styles.loading);
+          }
+          if (cameraPermissions === false) {
+            alert('Enable camera in browser settings or refresh the page.');
+          }
           console.log(err.name + ': ' + err.message);
           setCameraPermissions(false);
           setAspectRatio(isMobile ? (width/height) : 9.5/16);
@@ -152,9 +165,10 @@ function Camera(props) {
    */
   function updateVECanvas() {
     const vec = document.getElementById('visualEffectsCanvas');
-    const cw = (width/height) > aspectRatio ? height * aspectRatio : width;
-    const ch = (width/height) >
-    aspectRatio ? height : width * (aspectRatio ** -1);
+    const cw = isMobile ?
+      width : (width/height) > aspectRatio ? height * aspectRatio : width;
+    const ch = isMobile ?
+      height : (width/height) > aspectRatio ? height : width*(aspectRatio**-1);
     if (h != null && w != null) {
       vec.width = Math.min(cw, w);
       vec.height = Math.min(ch, h);
@@ -176,7 +190,7 @@ function Camera(props) {
   }, [height, width]);
 
   useEffect(() => {
-    if (cameraPermissions === true) {
+    if (cameraPermissions === true || cameraPermissions === null) {
       if (index === 1 && screen === 'camera') {
         stopCamera();
         startCamera();
@@ -188,9 +202,14 @@ function Camera(props) {
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
+        canvas.width = 0;
+        canvas.height = 0;
       } else {
         stopCamera();
       }
+    } else {
+      const ol = document.querySelector('#cameraOverlay');
+      ol.classList.remove(styles.loading);
     }
   }, [index, facingMode, orientation, screen]);
 
@@ -234,19 +253,54 @@ function Camera(props) {
             id="imageCanvas"
             className={styles.imageCanvas}
             style={{
-              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
           <canvas
             id="visualEffectsCanvas"
             className={styles.visualEffectsCanvas}
             style={{
-              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
-          { !cameraPermissions &&
+          { (screen === 'camera') &&
+            <div id='cameraOverlay' className={styles.cameraOverlay}>
+              <div className={styles.cameraHeader}>
+                <Navbar opacity={0} position="relative" />
+                <div className={styles.cameraStats}>
+                  <p>Device AR: {width/height}</p>
+                  <p>Height: {height} Width: {width}</p>
+                  <p>Cam AR: {w/h}</p>
+                  <p>Cam H: {h} Cam W: {w}</p>
+                  <p>orientation: {orientation}</p>
+                </div>
+              </div>
+              <div className={styles.cameraFooter}>
+                <div className={styles.cameraButtons}>
+                  <button onClick={() => memoriesMenu.current.toggle()}>
+                    <Image />
+                  </button>
+                  <button
+                    className={styles.captureButton}
+                    onClick={
+                      (screen === 'camera' && vidLoaded && cameraPermissions) ?
+                      capture : () => {}
+                    }
+                  />
+                  <button
+                    onClick={
+                      (screen === 'camera' && vidLoaded && cameraPermissions) ?
+                      () => {} : () => {}
+                    }
+                  ><MaskHappy /></button>
+                </div>
+                <Footer position="relative" opacity={0} />
+              </div>
+            </div>
+          }
+          { cameraPermissions === false &&
             <>
               <h1>Camera Disabled</h1>
               <button
@@ -259,33 +313,6 @@ function Camera(props) {
               </button>
             </>
           }
-          { screen === 'camera' && vidLoaded && cameraPermissions &&
-          <div className={styles.cameraOverlay}>
-            <div className={styles.cameraHeader}>
-              <Navbar opacity={0} position="relative" />
-              <div className={styles.cameraStats}>
-                <p>Device AR: {width/height}</p>
-                <p>Height: {height}</p>
-                <p>Width: {width}</p>
-                <p>Cam AR: {w/h}</p>
-                <p>Cam H: {h}</p>
-                <p>Cam W: {w}</p>
-                <p>orientation: {orientation}</p>
-                <p>aspectRatio: {aspectRatio}</p>
-              </div>
-            </div>
-            <div className={styles.cameraFooter}>
-              <div className={styles.cameraButtons}>
-                <button onClick={() => memoriesMenu.current.toggle()}>
-                  <Image />
-                </button>
-                <button className={styles.captureButton} onClick={capture}/>
-                <button><MaskHappy /></button>
-              </div>
-              <Footer position="relative" opacity={0} />
-            </div>
-          </div>
-          }
           <SlidingMenuRouting
             ref={memoriesMenu}
             height={height}
@@ -294,7 +321,7 @@ function Camera(props) {
             title="Memories"
             path="/memories"
           >
-            <h1>Memories</h1>
+            <Memories />
           </SlidingMenuRouting>
         </IconContext.Provider>
         { screen === 'capture' &&

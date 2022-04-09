@@ -4,6 +4,7 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  cloneElement,
 } from 'react';
 import PropTypes from 'prop-types';
 import {BrowserRouter as Route, useLocation} from 'react-router-dom';
@@ -53,6 +54,11 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
       setShow(false);
       toggleSlide(false);
     }
+    if (index === 1 && title === 'Search') {
+      var input = document.getElementById('searchbar');
+      input.focus();
+      // input.select();
+    }
   }
   const close = () => {
     changeToIndex(0);
@@ -62,6 +68,11 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
       setDisabled(true);
     } else {
       setDisabled(false);
+    }
+    if (e.currentTarget.scrollTop > 0) {
+      document.querySelector('#searchHeader').classList.add(styles.shadow);
+    } else {
+      document.querySelector('#searchHeader').classList.remove(styles.shadow);
     }
   };
   return (
@@ -90,7 +101,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                 className={styles.background}
                 style={{height: height, width: width, backgroundColor: backgroundColor}}
               >
-                <header>
+                <header id='searchHeader'>
                   <IconContext.Provider
                     value={{
                       color: 'black',
@@ -102,6 +113,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                       {axis === 'y' ? <CaretDown/> : <CaretLeft/>}
                     </button>
                     <input
+                      id='searchbar'
                       type='search'
                       autoComplete='on'
                       placeholder={title + '...'}
@@ -109,7 +121,6 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                   </IconContext.Provider>
                 </header>
                 <div
-                  onScroll={handleScroll}
                   style={{
                     height: height,
                     width: width,
@@ -117,7 +128,8 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                   }}
                   className={styles.body}
                 >
-                  <h2>{title}</h2>
+                  {/* <h2>{title}</h2> */}
+                  {cloneElement(children, {handleScroll: handleScroll})}
                 </div>
               </div> : <></>}
           </Route>

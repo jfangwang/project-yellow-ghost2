@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import styles from './Search.module.css';
+import {BestFriends, Recent} from './SearchItem';
 
 
 /**
@@ -9,9 +10,21 @@ import styles from './Search.module.css';
  * @return {*}
  */
 function Search(props) {
+  const {user, handleScroll} = props;
   return (
-    <div className={styles.background}>
-      <h1>Search</h1>
+    <div className={styles.background} onScroll={handleScroll}>
+      <h2>Best Friends</h2>
+      <ul className={styles.bestFriendsContainer}>
+        {Object.keys(user.friends).map((id) => (
+          <BestFriends key={id} friend={user.friends[id]}/>
+        ))}
+      </ul>
+      <h2>Recents</h2>
+      <ul className={styles.recentContainer}>
+        {Object.keys(user.friends).map((id) => (
+          <Recent key={id} friend={user.friends[id]}/>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -19,11 +32,15 @@ function Search(props) {
 Search.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
+  user: PropTypes.object,
+  handleScroll: PropTypes.func,
 };
 
 Search.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  user: {},
+  handleScroll: () => {},
 };
 
 
@@ -35,6 +52,7 @@ function mapStateToProps(state) {
   return {
     height: state.global.height,
     width: state.global.width,
+    user: state.user.user,
   };
 }
 

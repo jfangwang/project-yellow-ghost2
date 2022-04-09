@@ -8,11 +8,16 @@ import {
 } from '../Actions/cameraActions';
 export const initialState = {
   facingMode: 'user',
-  cameraPermissions: true,
+  cameraPermissions: null,
   screen: 'camera',
   capturedImage: null,
   sendList: [],
   snapTime: -1,
+  cameraResolution: 5000,
+  cameraVideoOutput: null,
+  cameraAudioInput: null,
+  showStats: false,
+  cameraButton: 'bottom',
 };
 
 

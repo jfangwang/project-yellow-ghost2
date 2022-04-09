@@ -45,6 +45,7 @@ const SlidingMenu = forwardRef((props, ref) => {
     changeToIndex(0);
   };
   const handleScroll = (e) => {
+    console.log('shadow');
     if (e.currentTarget.scrollTop > 0 && axis === 'y') {
       setDisabled(true);
     } else {
