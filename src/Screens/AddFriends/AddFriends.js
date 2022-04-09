@@ -96,6 +96,7 @@ AddFriends.propTypes = {
   user: PropTypes.object,
   everyone: PropTypes.object,
   isUserLoggedIn: PropTypes.bool,
+  handleScroll: PropTypes.func,
 };
 
 AddFriends.defaultProps = {

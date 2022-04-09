@@ -64,11 +64,15 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
     changeToIndex(0);
   };
   const handleScroll = (e) => {
-    // console.log(e.currentTarget.scrollTop)
     if (e.currentTarget.scrollTop > 0 && axis === 'y') {
       setDisabled(true);
     } else {
       setDisabled(false);
+    }
+    if (e.currentTarget.scrollTop > 0) {
+      document.querySelector('#searchHeader').classList.add(styles.shadow);
+    } else {
+      document.querySelector('#searchHeader').classList.remove(styles.shadow);
     }
   };
   return (
@@ -97,7 +101,7 @@ const SlidingMenuRouting = forwardRef((props, ref) => {
                 className={styles.background}
                 style={{height: height, width: width, backgroundColor: backgroundColor}}
               >
-                <header>
+                <header id='searchHeader'>
                   <IconContext.Provider
                     value={{
                       color: 'black',

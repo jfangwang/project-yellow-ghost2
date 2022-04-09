@@ -1,6 +1,7 @@
 .background {
     height: 100%;
     width: 92%;
+    overflow: scroll;
 }
 .background ul {
     margin-top: 1rem;
@@ -30,10 +31,6 @@
     justify-content: space-around;
     border-radius: 0.5rem;
     background-color: white;
-}
-.background ul h3 {
-    width: 100%;
-    overflow: hidden;
 }
 
 .bestFriendsContainer li {

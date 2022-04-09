@@ -18,10 +18,11 @@ function Account(props) {
     camRes,
     camVideo,
     camMic,
+    handleScroll,
   } = props;
 
   return (
-    <div id='background' className={styles.background}>
+    <div id='background' className={styles.background} onScroll={handleScroll}>
       <div className={styles.account}>
         <img src={user.profilePicUrl} alt='img' className={styles.profilePic} />
         <div className={styles.info}>
@@ -104,6 +105,7 @@ Account.propTypes = {
   camMic: PropTypes.string,
   showStats: PropTypes.bool,
   cameraButton: PropTypes.string,
+  handleScroll: PropTypes.func,
 };
 
 Account.defaultProps = {
@@ -115,6 +117,7 @@ Account.defaultProps = {
   camMic: null,
   showStats: false,
   cameraButton: 'bottom',
+  handleScroll: () => {},
 };
 
 /**

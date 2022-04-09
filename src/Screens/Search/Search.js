@@ -10,9 +10,9 @@ import {BestFriends, Recent} from './SearchItem';
  * @return {*}
  */
 function Search(props) {
-  const {user} = props;
+  const {user, handleScroll} = props;
   return (
-    <div className={styles.background}>
+    <div className={styles.background} onScroll={handleScroll}>
       <h2>Best Friends</h2>
       <ul className={styles.bestFriendsContainer}>
         {Object.keys(user.friends).map((id) => (
@@ -33,11 +33,14 @@ Search.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
   user: PropTypes.object,
+  handleScroll: PropTypes.func,
 };
 
 Search.defaultProps = {
   height: window.innerHeight,
   width: window.innerWidth,
+  user: {},
+  handleScroll: () => {},
 };
 
 
