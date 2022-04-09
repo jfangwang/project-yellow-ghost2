@@ -281,24 +281,26 @@ function Camera(props) {
               </div>
             </div>
             <div className={styles.cameraFooter}>
-              <div className={styles.cameraButtons}>
-                <button onClick={() => memoriesMenu.current.toggle()}>
-                  <Image />
-                </button>
-                <button
-                  className={styles.captureButton}
-                  onClick={
-                    (screen === 'camera' && vidLoaded && cameraPermissions) ?
-                    capture : () => {}
-                  }
-                />
-                <button
-                  onClick={
-                    (screen === 'camera' && vidLoaded && cameraPermissions) ?
-                    () => {} : () => {}
-                  }
-                ><MaskHappy /></button>
-              </div>
+              { (screen === 'camera') &&
+                <div className={styles.cameraButtons}>
+                  <button onClick={() => memoriesMenu.current.toggle()}>
+                    <Image />
+                  </button>
+                  <button
+                    className={styles.captureButton}
+                    onClick={
+                      (screen === 'camera' && vidLoaded && cameraPermissions) ?
+                      capture : () => {}
+                    }
+                  />
+                  <button
+                    onClick={
+                      (screen === 'camera' && vidLoaded && cameraPermissions) ?
+                      () => {} : () => {}
+                    }
+                  ><MaskHappy /></button>
+                </div>
+              }
               <Footer position="relative" opacity={0} />
             </div>
           </div>
