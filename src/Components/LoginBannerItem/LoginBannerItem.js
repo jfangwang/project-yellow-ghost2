@@ -6,6 +6,7 @@ SlidingMenuRouting from '../../Components/SlidingMenu/SlidingMenuRouting';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Signup from '../../Screens/Signup/Signup';
+import {auth, provider} from '../../Firebase/Firebase';
 
 /**
  * @param {*} props
@@ -23,10 +24,21 @@ function LoginBannerItem(props) {
     toggleSlide(e);
   }
 
+  /**
+   *
+   */
+  function login() {
+    auth.signInWithPopup(provider).then((result) => {
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      console.log('access token: ', credential.accessToken);
+      console.log('user: ', result.user);
+    });
+  }
+
   return (
     <>
       <div className={styles.background}>
-        <button onClick={() => console.log('login')}><h1>Login</h1></button>
+        <button onClick={() => login()}><h1>Login</h1></button>
         <button onClick={() => signupMenu.current.toggle()}>
           <h1>Sign Up</h1>
         </button>
