@@ -9,7 +9,6 @@ import Discover from '../Screens/Discover/Discover';
 import Navbar from '../Components/Navbar/Navbar';
 import Footer from '../Components/Footer/Footer';
 import {MetaTags} from 'react-meta-tags';
-import Signup from '../Screens/Signup/Signup';
 import {
   resize,
   changeToIndex,
@@ -74,7 +73,6 @@ export class App extends Component {
           />
         </MetaTags>
         <BrowserRouter>
-          <Route exact path='/signup' component={Signup} />
           <SwipeableRoutes
             enableMouseEvents
             onSwitching={updateDecimalIndex}
