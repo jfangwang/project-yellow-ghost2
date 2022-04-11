@@ -9,6 +9,7 @@ import enShort from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import {editUser, editFakeDB} from '../../Actions/userActions';
 import {toggleNavFoot} from '../../Actions/globalActions';
+import {db} from '../../Firebase/Firebase';
 
 const formatter = buildFormatter(enShort);
 export const statusDict = {
@@ -110,16 +111,12 @@ export function Message(props) {
    * @return {*}
    */
   function getSnap() {
-    if (isUserLoggedIn) {
-      console.log('not working yet');
+    const snaps = Object
+        .keys(friend['newSnaps']).sort((date1, date2) => date1 - date2);
+    if (snaps.length > 0) {
+      return (snaps[0]);
     } else {
-      const snaps = Object
-          .keys(friend['newSnaps']).sort((date1, date2) => date1 - date2);
-      if (snaps.length > 0) {
-        return (snaps[0]);
-      } else {
-        return (null);
-      }
+      return (null);
     }
   }
 
@@ -130,7 +127,33 @@ export function Message(props) {
   function updateDB(id) {
     const date = new Date();
     if (isUserLoggedIn) {
-      console.log('not updating db');
+      const userDoc = {...user};
+      const fi = friend['id'];
+      const ui = user.id;
+      if (id === null) {
+        userDoc['friends'][user.id]['status'] = 'opened';
+        db.collection('Users').doc(ui).update(userDoc);
+        db.collection('Users').doc(fi).get().then((doc) => {
+          const friendDoc = doc.data();
+          friendDoc['friends'][friend.id]['status'] = 'received';
+          db.collection('Users').doc(fi).update(friendDoc);
+        });
+      } else {
+        delete userDoc['friends'][friend['id']]['newSnaps'][id];
+        userDoc['friends'][fi]['openedByMe'] = {
+          lastTimeStamp: date.toISOString(),
+          opened: userDoc['friends'][fi]['openedByMe']['opened'] + 1,
+        };
+        db.collection('Users').doc(ui).update(userDoc);
+        db.collection('Users').doc(fi).get().then((doc) => {
+          const friendDoc = doc.data();
+          friendDoc['friends'][ui]['openedByFriend'] = {
+            lastTimeStamp: date.toISOString(),
+            opened: friendDoc['friends'][ui]['openedByFriend']['opened'] + 1,
+          };
+          db.collection('Users').doc(fi).update(friendDoc);
+        });
+      }
     } else {
       const update = {...user};
       const updateFake = {...fakeDB};

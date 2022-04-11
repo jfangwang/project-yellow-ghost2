@@ -11,7 +11,9 @@ import {MetaTags} from 'react-meta-tags';
 
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(rootReducer, composeEnhancers(applyMiddleware()));
+export const store = createStore(
+    rootReducer, composeEnhancers(applyMiddleware()),
+);
 
 
 ReactDOM.render(

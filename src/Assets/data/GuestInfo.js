@@ -270,3 +270,92 @@ export const FakeDB = {
   [rickID]: Rick,
   [mortyID]: Morty,
 };
+
+/**
+ * @export
+ * @param {*} user
+ * @return {*}
+ */
+export function createUserEntry(user) {
+  const date = new Date().toLocaleString();
+  return {
+    addedMe: {},
+    brokeup: {},
+    created: date,
+    deleteSnaps: {},
+    email: user.email,
+    faceIDURL: null,
+    firstName: user.displayName,
+    friends: {
+      [user.uid]: {
+        created: date,
+        email: user.email,
+        firstName: user.displayName,
+        id: user.uid,
+        lastName: null,
+        phoneNumber: null,
+        profilePicUrl: user.photoURL,
+        username: null,
+        friendship: date,
+        lastTimeStamp: null,
+        messages: {},
+        newSnaps: {},
+        nickname: null,
+        openedByMe: {
+          lastTimeStamp: null,
+          opened: 0,
+        },
+        openedByFriend: {
+          lastTimeStamp: null,
+          opened: 0,
+        },
+        readSnaps: [],
+        received: {
+          lastTimeStamp: null,
+          receivedSnaps: 0,
+        },
+        sent: {
+          lastTimeStamp: null,
+          sentSnaps: 0,
+        },
+        status: 'new-friend',
+        streak: 0,
+        streakRef: null,
+      },
+    },
+    id: user.uid,
+    lastName: null,
+    loggedOffTimeStamp: null,
+    memories: {},
+    pending: {},
+    phoneNumber: user.phoneNumber,
+    profilePicUrl: user.photoURL,
+    received: 0,
+    story: {},
+    sent: 0,
+    snapTime: -1,
+    stayLoggedIn: false,
+    streakEmoji: '\u{1F525}',
+    username: null,
+  };
+}
+
+/**
+ * @export
+ * @param {*} user
+ * @return {*}
+ */
+export function createEveryoneEntry(user) {
+  const date = new Date().toLocaleString();
+  return {
+    created: date,
+    email: user.email,
+    firstName: user.displayName,
+    id: user.uid,
+    lastName: null,
+    lastTimeStamp: null,
+    phoneNumber: user.phoneNumber,
+    profilePicUrl: user.photoURL,
+    username: null,
+  };
+}

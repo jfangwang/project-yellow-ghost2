@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import styles from './Account.module.css';
 import {editFakeDB} from '../../Actions/userActions';
 import AccountItem from './AccountItem';
-import LoginBannerItem from '../../Components/LoginBannerItem/LoginBannerItem';
 
 /**
  *
@@ -35,8 +34,6 @@ function Account(props) {
           <h4>Total: {user.sent + user.received}</h4>
         </div>
       </div>
-
-      <LoginBannerItem />
 
       <div className={styles.acountSettings}>
         <h1>Account Settings</h1>

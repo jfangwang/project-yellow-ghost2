@@ -16,6 +16,73 @@ import {
   toggleSlide,
 } from '../Actions/globalActions';
 import {connect} from 'react-redux';
+import {db} from '../Firebase/Firebase';
+import {
+  editUser,
+  editEveryone,
+  loggedIn,
+  loggedOut,
+} from '../Actions/userActions';
+import {store} from '../index';
+import firebase from 'firebase/compat/app';
+
+let userSnapshot;
+let everyoneSnapshot;
+
+
+/**
+ * @export
+ * @param {*} user
+ * @param {*} props
+ */
+export function startUserSS(user) {
+  userSnapshot = db.collection('Users').doc(user.uid).onSnapshot(
+      {includeMetadataChanges: false},
+      (doc) => {
+        console.log('starting User SS: ', doc.data());
+        store.dispatch(editUser(doc.data()));
+        // Delete pending deleted snaps
+        if (doc.data()['deleteSnaps'].length > 0) {
+          doc.data()['deleteSnaps'].forEach((id) => {
+            db.collection('Photos').doc(id).delete();
+            storage.ref(`posts/${id}`).delete();
+          });
+          db.collection('Users').doc(user.uid).update({
+            deleteSnaps: [],
+          });
+        }
+      }, (err) => console.log('error: ', err));
+}
+
+/**
+ * @export
+ */
+export function startEveryoneSS() {
+  everyoneSnapshot = db.collection('Users').doc('Everyone').onSnapshot(
+      {includeMetadataChanges: false},
+      (doc) => {
+        console.log('starting Everyone SS: ', doc.data());
+        store.dispatch(editEveryone(doc.data()['all_users']));
+      }, (err) => console.log('error: ', err));
+}
+
+/**
+ * @export
+ */
+export function endUserSS() {
+  if (userSnapshot !== undefined) {
+    userSnapshot();
+  }
+}
+
+/**
+ * @export
+ */
+export function endEveryoneSS() {
+  if (everyoneSnapshot !== undefined) {
+    everyoneSnapshot();
+  }
+}
 
 /**
  * App Class
@@ -28,6 +95,7 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.logKey = this.logKey.bind(this);
+    this.checkCurrentUser = this.checkCurrentUser.bind(this);
   }
   /**
    * Runs when component is mounted
@@ -36,6 +104,7 @@ export class App extends Component {
     this.props.resize();
     window.addEventListener('resize', this.props.resize);
     window.addEventListener('keydown', this.logKey);
+    this.checkCurrentUser();
   }
   /**
    * tied to event listener, changes index based on given key input.
@@ -50,6 +119,26 @@ export class App extends Component {
       this.props.changeToIndex(this.props.index - 1);
     }
   }
+
+  /**
+   * @memberof App
+   */
+  checkCurrentUser() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        console.log('user logged in');
+        this.props.loggedIn();
+        startUserSS(user);
+        startEveryoneSS();
+      } else {
+        console.log('user logged out');
+        this.props.loggedOut();
+        endUserSS();
+        endEveryoneSS();
+      }
+    });
+  }
+
   /**
    * Renders
    * @return {*}
@@ -100,6 +189,14 @@ export class App extends Component {
   }
 }
 
+startUserSS.propTypes = {
+  editUser: PropTypes.func,
+};
+
+startEveryoneSS.propTypes = {
+  editEveryone: PropTypes.func,
+};
+
 App.propTypes = {
   height: PropTypes.number,
   width: PropTypes.number,
@@ -110,6 +207,11 @@ App.propTypes = {
   updateDecimalIndex: PropTypes.func,
   toggleSlide: PropTypes.func,
   orientation: PropTypes.string,
+  user: PropTypes.object,
+  everyone: PropTypes.object,
+  editUser: PropTypes.func,
+  loggedIn: PropTypes.func,
+  loggedOut: PropTypes.func,
 };
 
 App.defaultProps = {
@@ -123,6 +225,11 @@ App.defaultProps = {
   changeToIndex: () => {},
   updateDecimalIndex: () => {},
   toggleSlide: () => {},
+  user: {},
+  everyone: {},
+  editUser: () => {},
+  loggedIn: () => {},
+  loggedOut: () => {},
 };
 /**
  * mapStateToProps to fetch states from redux store
@@ -136,6 +243,8 @@ function mapStateToProps(state) {
     index: state.global.index,
     slideDisabled: state.global.slideDisabled,
     orientation: state.global.orientation,
+    user: state.user.user,
+    everyone: state.user.everyone,
   };
 }
 
@@ -144,6 +253,10 @@ const mapDispatchToProps = {
   changeToIndex,
   updateDecimalIndex,
   toggleSlide,
+  editUser,
+  editEveryone,
+  loggedIn,
+  loggedOut,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

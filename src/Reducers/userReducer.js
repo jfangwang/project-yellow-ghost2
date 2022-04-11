@@ -2,6 +2,9 @@ import {Guest, Everyone, FakeDB} from '../Assets/data/GuestInfo';
 import {
   EDIT_USER,
   EDIT_FAKE_DB,
+  EDIT_EVERYONE,
+  LOGGED_IN,
+  LOGGED_OUT,
 } from '../Actions/userActions';
 export const initialState = {
   user: Guest,
@@ -18,13 +21,6 @@ export const initialState = {
  */
 export function userReducer(state = initialState, action) {
   switch (action.type) {
-    case 'user/login':
-      return {
-        ...state,
-        isUserLoggedIn: true,
-      };
-    case 'user/logout':
-      return initialState;
     case EDIT_USER:
       return {
         ...state,
@@ -35,6 +31,18 @@ export function userReducer(state = initialState, action) {
         ...state,
         fakeDB: action.fakeDB,
       };
+    case EDIT_EVERYONE:
+      return {
+        ...state,
+        everyone: action.everyone,
+      };
+    case LOGGED_IN:
+      return {
+        ...state,
+        isUserLoggedIn: true,
+      };
+    case LOGGED_OUT:
+      return initialState;
     default:
       return state;
   }

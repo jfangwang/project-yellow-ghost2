@@ -6,7 +6,12 @@ SlidingMenuRouting from '../../Components/SlidingMenu/SlidingMenuRouting';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import Signup from '../../Screens/Signup/Signup';
-import {auth, provider} from '../../Firebase/Firebase';
+import {auth, GoogleAuthProvider, db} from '../../Firebase/Firebase';
+import {
+  createEveryoneEntry,
+  createUserEntry,
+} from '../../Assets/data/GuestInfo';
+
 
 /**
  * @param {*} props
@@ -28,10 +33,41 @@ function LoginBannerItem(props) {
    *
    */
   function login() {
-    auth.signInWithPopup(provider).then((result) => {
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      console.log('access token: ', credential.accessToken);
-      console.log('user: ', result.user);
+    auth.signInWithPopup(GoogleAuthProvider).then((result) => {
+      if (result.additionalUserInfo.isNewUser === true) {
+        createUser(result.user);
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  function logout() {
+    auth.signOut();
+  }
+
+  /**
+   *
+   *
+   * @param {*} user
+   */
+  function createUser(user) {
+    // Creates new a user doc
+    db.collection('Users').doc(user.uid).set(createUserEntry(user));
+    // Creates or add user to everyone doc
+    db.collection('Users').doc('Everyone').get().then((doc) => {
+      if (doc.exists) {
+        const update = doc.data();
+        update['all_users'][`${user.uid}`] = createEveryoneEntry(user);
+        db.collection('Users').doc('Everyone').update(update);
+      } else {
+        db.collection('Users').doc('Everyone').set({
+          all_users: {
+            [`${user.uid}`]: createEveryoneEntry(user),
+          },
+        });
+      }
     });
   }
 
@@ -39,9 +75,7 @@ function LoginBannerItem(props) {
     <>
       <div className={styles.background}>
         <button onClick={() => login()}><h1>Login</h1></button>
-        <button onClick={() => signupMenu.current.toggle()}>
-          <h1>Sign Up</h1>
-        </button>
+        <button onClick={() => logout()}><h1>Logout</h1></button>
       </div>
       <SlidingMenuRouting
         ref={signupMenu}

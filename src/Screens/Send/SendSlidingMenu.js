@@ -7,6 +7,7 @@ import styles from './Send.module.css';
 import SendItem from './SendItem';
 import {connect} from 'react-redux';
 import {editUser, editFakeDB} from '../../Actions/userActions';
+import {db} from '../../Firebase/Firebase';
 import {
   IconContext,
   CaretLeft,
@@ -121,6 +122,31 @@ const SendSlidingMenu = forwardRef((props, ref) => {
       })
       editUser(updated);
       editFakeDB(updateFake);
+    } else {
+      sendList.forEach((id) => {
+        // Update User's Fields on DB
+        friends[id]['status'] = 'sent';
+        friends[id]['sent']['lastTimeStamp'] = date.toISOString();
+        friends[id]['lastTimeStamp'] = date.toISOString();
+        friends[id]['sent']['sentSnaps'] += 1;
+        updated['sent'] += 1;
+        db.collection('Users').doc(user.id).update(updated);
+        // Update Friend's Fields on DB
+        db.collection('Users').doc(id).get().then((doc) => {
+          const friendDoc = doc.data();
+          friendDoc['friends'][user.id]['received']['lastTimeStamp'] = date.toISOString();
+          friendDoc['friends'][user.id]['received']['receivedSnaps'] += 1;
+          friendDoc['friends'][user.id]['status'] = 'new';
+          friendDoc['friends'][user.id]['newSnaps'][date.toISOString()] = {
+            'imgURL': dataURL,
+            'snapTime': snapTime,
+            'type': 'image',
+          };
+          friendDoc['received'] += 1;
+          db.collection('Users').doc(id).update(friendDoc)
+        })
+
+      });
     }
 
     setScreen('camera');
