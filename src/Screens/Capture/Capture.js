@@ -7,6 +7,7 @@ import {setScreen} from '../../Actions/cameraActions';
 import SendSlidingMenu from '../Send/SendSlidingMenu';
 import SlidingMenu from '../../Components/SlidingMenu/SlidingMenu';
 import {create} from 'simple-drawing-board';
+import {isMobile} from 'react-device-detect';
 import {
   IconContext,
   X,
@@ -210,7 +211,23 @@ function Capture(props) {
 
   useEffect(() => {
     updateDrawingCanvas();
+    if (sdb !== null) {
+      sdb.setLineSize(5);
+      sdb.setLineColor(hslToHex(color['h'], color['s'], color['l']));
+      if (!isMobile) {
+        undo();
+        redo();
+      }
+    }
   }, [height, width]);
+
+  useEffect(() => {
+    if (sdb !== null) {
+      undo();
+      redo();
+    }
+  }, [orientation]);
+
   useEffect(() => {
     if (screen === 'capture' || screen === 'camera') {
       sdb = null;

@@ -90,7 +90,8 @@ const SendSlidingMenu = forwardRef((props, ref) => {
 
     const img = document.getElementById('imageCanvas');
     const drawing = document.getElementById('drawingCanvas');
-    const filter = document.querySelector('#test img');
+    const filter = document.getElementById('screen1')
+    console.log(filter.style);
     let final = document.getElementById('finalImage');
     final.width = img.width;
     final.height = img.height;
