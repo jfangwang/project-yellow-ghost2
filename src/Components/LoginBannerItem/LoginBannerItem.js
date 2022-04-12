@@ -42,13 +42,6 @@ function LoginBannerItem(props) {
 
   /**
    *
-   */
-  function logout() {
-    auth.signOut();
-  }
-
-  /**
-   *
    *
    * @param {*} user
    */
@@ -74,8 +67,7 @@ function LoginBannerItem(props) {
   return (
     <>
       <div className={styles.background}>
-        <button onClick={() => login()}><h1>Login</h1></button>
-        <button onClick={() => logout()}><h1>Logout</h1></button>
+        <button onClick={() => login()}><h2>Login with Google</h2></button>
       </div>
       <SlidingMenuRouting
         ref={signupMenu}

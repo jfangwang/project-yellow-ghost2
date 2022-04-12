@@ -132,16 +132,16 @@ export function Message(props) {
       const fi = friend['id'];
       const ui = user.id;
       if (id === null) {
-        console.log('id is null');
+        if (fi !== ui) {
+          db.collection('Users').doc(fi).get().then((doc) => {
+            const friendDoc = doc.data();
+            friendDoc['friends'][user.id]['status'] = 'opened';
+            db.collection('Users').doc(fi).update(friendDoc);
+          });
+        }
         userDoc['friends'][friend.id]['status'] = 'received';
         db.collection('Users').doc(user.id).update(userDoc);
-        db.collection('Users').doc(fi).get().then((doc) => {
-          const friendDoc = doc.data();
-          friendDoc['friends'][user.id]['status'] = 'opened';
-          db.collection('Users').doc(fi).update(friendDoc);
-        });
       } else {
-        console.log('id is not null');
         delete userDoc['friends'][friend['id']]['newSnaps'][id];
         userDoc['friends'][fi]['openedByMe'] = {
           lastTimeStamp: date.toISOString(),
@@ -225,7 +225,12 @@ export function Message(props) {
               className={styles.row}
               style={{justifyContent: 'start', marginBottom: '0.2rem'}}
             >
-              <h1>{friend['username']}</h1>
+              <h1>
+                {friend['username'] !== null ?
+                  friend.username :
+                  friend.firstName
+                }
+              </h1>
             </div>
             <div
               className={styles.row}

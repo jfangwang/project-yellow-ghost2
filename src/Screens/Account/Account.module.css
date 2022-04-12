@@ -36,6 +36,12 @@
     margin: 0 0.3rem 0 0.3rem;
 }
 
+.logout button {
+    background-color: lightcoral;
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
 .messagesSettings, .cameraSettings, .uiSettings, .acountSettings {
     width: 100%;
     flex-direction: column;

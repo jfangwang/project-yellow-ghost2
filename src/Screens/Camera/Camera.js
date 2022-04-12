@@ -85,7 +85,6 @@ function Camera(props) {
           const v = document.getElementById('mainCamera');
           const ol = document.querySelector('#cameraOverlay');
           ol.classList.remove(styles.fadeOut);
-          ol.classList.add(styles.loading);
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
           setCameraPermissions(true);
@@ -166,9 +165,9 @@ function Camera(props) {
   function updateVECanvas() {
     const vec = document.getElementById('visualEffectsCanvas');
     const cw = isMobile ?
-      width : (width/height) > aspectRatio ? height * aspectRatio : width;
+      width : ((width/height) > aspectRatio ? height * aspectRatio : width);
     const ch = isMobile ?
-      height : (width/height) > aspectRatio ? height : width*(aspectRatio**-1);
+      height : ((width/height)>aspectRatio ? height : width*(aspectRatio**-1));
     if (h != null && w != null) {
       vec.width = Math.min(cw, w);
       vec.height = Math.min(ch, h);
@@ -192,6 +191,8 @@ function Camera(props) {
   useEffect(() => {
     if (cameraPermissions === true || cameraPermissions === null) {
       if (index === 1 && screen === 'camera') {
+        const ol = document.querySelector('#cameraOverlay');
+        ol.classList.add(styles.loading);
         stopCamera();
         startCamera();
         updateSendList([]);
@@ -255,6 +256,8 @@ function Camera(props) {
             style={{
               maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
           <canvas
@@ -263,6 +266,8 @@ function Camera(props) {
             style={{
               maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
             }}
           />
           { (screen === 'camera') &&
@@ -301,7 +306,7 @@ function Camera(props) {
             </div>
           }
           { cameraPermissions === false &&
-            <>
+            <div className={styles.disabled}>
               <h1>Camera Disabled</h1>
               <button
                 style={{
@@ -311,7 +316,8 @@ function Camera(props) {
               >
                 <h1>Allow</h1>
               </button>
-            </>
+            </div>
+
           }
           <SlidingMenuRouting
             ref={memoriesMenu}

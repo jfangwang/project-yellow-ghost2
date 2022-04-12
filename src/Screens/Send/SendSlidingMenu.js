@@ -218,9 +218,9 @@ const SendSlidingMenu = forwardRef((props, ref) => {
                   <footer>
                     <div className={styles.footerNames}>
                         {sendList.map((item) => (
-                          <h1 key={user.friends[item]['username']}>
-                            {user.friends[item]['username']}
-                          </h1>
+                          <h2 key={user.friends[item]['firstName']}>
+                            {user.friends[item]['firstName']}
+                          </h2>
                         ))}
                     </div>
                     <div>

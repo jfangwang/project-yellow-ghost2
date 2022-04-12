@@ -4,6 +4,9 @@ import {connect} from 'react-redux';
 import styles from './Account.module.css';
 import {editFakeDB} from '../../Actions/userActions';
 import AccountItem from './AccountItem';
+import {auth} from '../../Firebase/Firebase';
+
+const {version} = require('../../../package.json');
 
 /**
  *
@@ -18,7 +21,16 @@ function Account(props) {
     camVideo,
     camMic,
     handleScroll,
+    isUserLoggedIn,
   } = props;
+
+
+  /**
+   *
+   */
+  function logout() {
+    auth.signOut();
+  }
 
   return (
     <div id='background' className={styles.background} onScroll={handleScroll}>
@@ -89,6 +101,14 @@ function Account(props) {
           <AccountItem title='Toggle Camera Stats'></AccountItem>
         </ul>
       </div>
+      {isUserLoggedIn &&
+        <div className={styles.logout}>
+          <button onClick={logout}><h1>Log Out</h1></button>
+        </div>
+      }
+      <div>
+        <p>Project Yellow Ghost {version}</p>
+      </div>
     </div>
   );
 }
@@ -103,6 +123,7 @@ Account.propTypes = {
   showStats: PropTypes.bool,
   cameraButton: PropTypes.string,
   handleScroll: PropTypes.func,
+  isUserLoggedIn: PropTypes.bool,
 };
 
 Account.defaultProps = {
@@ -133,6 +154,7 @@ function mapStateToProps(state) {
     camMic: state.camera.cameraAudioInput,
     showStats: state.camera.showStats,
     cameraButton: state.camera.cameraButton,
+    isUserLoggedIn: state.user.isUserLoggedIn,
   };
 }
 

@@ -1,5 +1,5 @@
 .background {
-    background-color: yellow;
+    background-color: black;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -73,11 +73,22 @@
 
 .visualEffectsCanvas, .imageCanvas {
     position: absolute;
-    /* border: 2px red solid; */
     /* background-color: rgba(255, 10, 10, 0.2) */
 }
+.visualEffectsCanvas {
+    /* border: 2px red solid; */
+}
 .imageCanvas {
+    /* border: 2px blue dotted; */
     /* display: none; */
+}
+.disabled {
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ANIMATIONS */
