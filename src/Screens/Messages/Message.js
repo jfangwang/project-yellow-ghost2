@@ -111,6 +111,7 @@ export function Message(props) {
    * @return {*}
    */
   function getSnap() {
+    console.log(friend);
     const snaps = Object
         .keys(friend['newSnaps']).sort((date1, date2) => date1 - date2);
     if (snaps.length > 0) {
@@ -131,14 +132,16 @@ export function Message(props) {
       const fi = friend['id'];
       const ui = user.id;
       if (id === null) {
-        userDoc['friends'][user.id]['status'] = 'opened';
-        db.collection('Users').doc(ui).update(userDoc);
+        console.log('id is null');
+        userDoc['friends'][friend.id]['status'] = 'received';
+        db.collection('Users').doc(user.id).update(userDoc);
         db.collection('Users').doc(fi).get().then((doc) => {
           const friendDoc = doc.data();
-          friendDoc['friends'][friend.id]['status'] = 'received';
+          friendDoc['friends'][user.id]['status'] = 'opened';
           db.collection('Users').doc(fi).update(friendDoc);
         });
       } else {
+        console.log('id is not null');
         delete userDoc['friends'][friend['id']]['newSnaps'][id];
         userDoc['friends'][fi]['openedByMe'] = {
           lastTimeStamp: date.toISOString(),
