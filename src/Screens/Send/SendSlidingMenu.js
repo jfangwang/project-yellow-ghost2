@@ -7,6 +7,7 @@ import styles from './Send.module.css';
 import SendItem from './SendItem';
 import {connect} from 'react-redux';
 import {editUser, editFakeDB} from '../../Actions/userActions';
+import {changeToIndex} from '../../Actions/globalActions';
 import {db} from '../../Firebase/Firebase';
 import {
   IconContext,
@@ -33,6 +34,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     isUserLoggedIn,
     snapTime,
     localIndex,
+    changeToIndex,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
@@ -45,7 +47,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (show) {
-      changeToIndex(1);
+      changeLocalToIndex(1);
     }
   }, [show]);
 
@@ -53,7 +55,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
    * Change to index
    * @param {*} e
    */
-  function changeToIndex(e) {
+  function changeLocalToIndex(e) {
     setIndex(e);
   }
 
@@ -70,7 +72,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
    * close
    */
   const close = () => {
-    changeToIndex(0);
+    changeLocalToIndex(0);
   };
 
   /**
@@ -170,6 +172,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     setScreen('camera');
     toggleSlide();
     toggleNavFoot();
+    changeToIndex(0);
   };
 
   return (
@@ -186,7 +189,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
             <SwipeableViews
               disabled={disabled}
               index={index}
-              onChangeIndex={changeToIndex}
+              onChangeIndex={changeLocalToIndex}
               onTransitionEnd={checkIndex}
               enableMouseEvents
               axis={axis}
@@ -275,6 +278,7 @@ SendSlidingMenu.propTypes = {
   aspectRatio: PropTypes.number,
   isUserLoggedIn: PropTypes.bool,
   localIndex: PropTypes.number,
+  changeToIndex: PropTypes.func,
 };
 SendSlidingMenu.defaultProps = {
   height: window.innerHeight,
@@ -285,6 +289,7 @@ SendSlidingMenu.defaultProps = {
   toggleNavFoot: () => {},
   editUser: () => {},
   editFakeDB: () => {},
+  changeToIndex: () => {},
   user: {},
   sendList: [],
   isUserLoggedIn: false,
@@ -310,6 +315,7 @@ SendSlidingMenu.defaultProps = {
 const mapDispatchToProps = {
   editUser,
   editFakeDB,
+  changeToIndex,
   // setCameraPermissions,
   // toggleFacingMode,
   // toggleSlide,
