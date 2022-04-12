@@ -18,6 +18,9 @@ function Memories(props) {
       { Object.keys(user.memories).map((id) => (
         <img key={id} src={user.memories[id]['url']}/>
       ))}
+      { Object.keys(user.memories).length <= 0 &&
+        <h2>No Memories Found</h2>
+      }
     </div>
   );
 }

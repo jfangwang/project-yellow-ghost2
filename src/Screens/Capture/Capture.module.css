@@ -91,10 +91,19 @@
     flex-wrap: wrap;
 }
 
-.screen1 {
+.screen1, .screen2, .screen3, .invsibleScreen {
     height: 100%;
     width: 100%;
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position:bottom;
 }
 .screen1 {
-    background-color: rgba(255, 255, 255, 0.5);
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b1/Rick_and_Morty.svg');
+}
+.screen2 {
+    background-image: url('https://images.squarespace-cdn.com/content/v1/570d8b3c4c2f85f6fd8a81de/1463014743560-J9QNIBAVK0H6OPPMKHQE/tumblr_mjco89cUVY1rkz363o1_1280.jpg');
+}
+.screen3 {
+    background-image: url('https://logolook.net/wp-content/uploads/2021/08/Wendys-Logo.svg');
 }

@@ -169,7 +169,7 @@ export class App extends Component {
             onChangeIndex={changeToIndex}
             disabled={slideDisabled}
             style={{
-              backgroundColor: 'lightCoral',
+              backgroundColor: 'white',
               height: height,
               width: width,
             }}

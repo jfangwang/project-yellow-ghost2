@@ -90,12 +90,14 @@ const SendSlidingMenu = forwardRef((props, ref) => {
 
     const img = document.getElementById('imageCanvas');
     const drawing = document.getElementById('drawingCanvas');
+    const filter = document.querySelector('#test img');
     let final = document.getElementById('finalImage');
     final.width = img.width;
     final.height = img.height;
     final = document.getElementById('finalImage').getContext('2d');
     final.clearRect(0, 0, final.width, final.height);
     final.drawImage(img, 0, 0, img.width, img.height);
+    // final.drawImage(filter, 0, 0, filter.width, filter.height);
     final.drawImage(drawing, 0, 0, drawing.width, drawing.height, 0, 0, img.width, img.height);
     const dataURL = document.getElementById('finalImage').toDataURL();
     const date = new Date();

@@ -209,7 +209,6 @@ function AddFriendItem(props) {
             {friend['lastName'] !== null && friend['lastName'][0]}
           </p>
           <p>{friend['username']}</p>
-          <p>{type}</p>
         </div>
       </div>
       <div className={styles.row}>
