@@ -8,6 +8,7 @@ import GuestPic from '../../Assets/images/guest-profile-pic.png';
 import enShort from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import {editUser, editFakeDB} from '../../Actions/userActions';
+import {toggleSlide} from '../../Actions/globalActions';
 import {toggleNavFoot} from '../../Actions/globalActions';
 import {db} from '../../Firebase/Firebase';
 
@@ -37,7 +38,7 @@ const emojiDict = {
  */
 export function Message(props) {
   const {friend, user, isUserLoggedIn, height, width, editUser,
-    toggleNavFoot, fakeDB, editFakeDB,
+    toggleNavFoot, fakeDB, editFakeDB, toggleSlide,
   } = props;
   const [showSnaps, setShowSnaps] = useState(false);
   const messageNewFriend = <div className={styles.messageNewFriend}></div>;
@@ -90,6 +91,7 @@ export function Message(props) {
    * Open Snap
    */
   async function openSnap() {
+    toggleSlide(true);
     setShowSnaps(true);
     const snapID = await getSnap();
     const currSnap = document.getElementById('currentSnap');
@@ -188,6 +190,7 @@ export function Message(props) {
    * Close Snap
    */
   function closeSnap() {
+    toggleSlide(false);
     setShowSnaps(false);
     toggleNavFoot(false);
   }
@@ -290,6 +293,7 @@ Message.propTypes = {
   editFakeDB: PropTypes.func,
   toggleNavFoot: PropTypes.func,
   fakeDB: PropTypes.object,
+  toggleSlide: PropTypes.func,
 };
 
 Message.defaultProps = {
@@ -299,6 +303,7 @@ Message.defaultProps = {
   toggleNavFoot: () => {},
   editUser: () => {},
   editFakeDB: () => {},
+  toggleSlide: () => {},
   friend: {
     username: 'User',
     profilePicUrl: GuestPic,
@@ -332,6 +337,7 @@ const mapDispatchToProps = {
   editUser,
   editFakeDB,
   toggleNavFoot,
+  toggleSlide,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Message);

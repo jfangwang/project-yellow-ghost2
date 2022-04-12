@@ -32,6 +32,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     aspectRatio,
     isUserLoggedIn,
     snapTime,
+    localIndex,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
@@ -90,15 +91,29 @@ const SendSlidingMenu = forwardRef((props, ref) => {
 
     const img = document.getElementById('imageCanvas');
     const drawing = document.getElementById('drawingCanvas');
-    const filter = document.getElementById('screen1')
-    // console.log(filter.style);
+    const filterImg = document.getElementById(`imgFilter${localIndex}`);
     let final = document.getElementById('finalImage');
     final.width = img.width;
     final.height = img.height;
     final = document.getElementById('finalImage').getContext('2d');
     final.clearRect(0, 0, final.width, final.height);
     final.drawImage(img, 0, 0, img.width, img.height);
-    // final.drawImage(filter, 0, 0, filter.width, filter.height);
+    if (localIndex == 1) {
+      final.drawImage(filterImg,
+        (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.17),
+        img.width * 0.7, img.height * 0.17
+        );
+    } else if (localIndex == 2) {
+      final.drawImage(filterImg,
+        (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.15),
+        img.width * 0.7, img.height * 0.15
+        );
+    } else if (localIndex == 3) {
+      final.drawImage(filterImg,
+        (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.23),
+        img.width * 0.7, img.height * 0.23
+        );
+    }
     final.drawImage(drawing, 0, 0, drawing.width, drawing.height, 0, 0, img.width, img.height);
     const dataURL = document.getElementById('finalImage').toDataURL();
     const date = new Date();
@@ -259,6 +274,7 @@ SendSlidingMenu.propTypes = {
   sendList: PropTypes.array,
   aspectRatio: PropTypes.number,
   isUserLoggedIn: PropTypes.bool,
+  localIndex: PropTypes.number,
 };
 SendSlidingMenu.defaultProps = {
   height: window.innerHeight,

@@ -27,7 +27,9 @@ import {MetaTags} from 'react-meta-tags';
 import Timer from '../Timer/Timer';
 import {HueSlider} from 'react-slider-color-picker';
 import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
-// import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
+import filter1 from '../../Assets/images/filters/patagonia_logo.png';
+import filter2 from '../../Assets/images/filters/Wendys-Logo.png';
+import filter3 from '../../Assets/images/filters/Rick-And-Morty-Logo.png';
 
 let sdb = null;
 
@@ -267,9 +269,15 @@ function Capture(props) {
           }}
         >
           <div/>
-          <div className={styles.screen1}/>
-          <div className={styles.screen2}/>
-          <div className={styles.screen3}/>
+          <div id='screen1' className={styles.screen1}>
+            <img id='imgFilter1' src={filter1}/>
+          </div>
+          <div id='screen2' className={styles.screen2}>
+            <img id='imgFilter2' src={filter2}/>
+          </div>
+          <div id='screen3' className={styles.screen3}>
+            <img id='imgFilter3' src={filter3}/>
+          </div>
         </SwipeableViews>
         <SwipeableViews
           enableMouseEvents
@@ -296,9 +304,15 @@ function Capture(props) {
           }}
         >
           <div/>
-          <div className={styles.screen1}/>
-          <div className={styles.screen2}/>
-          <div className={styles.screen3}/>
+          <div id='screen1' className={styles.screen1}>
+            <img src={filter1}/>
+          </div>
+          <div id='screen2' className={styles.screen2}>
+            <img id='imgFilter2' src={filter2}/>
+          </div>
+          <div id='screen3' className={styles.screen3}>
+            <img id='imgFilter3' src={filter3}/>
+          </div>
         </SwipeableViews>
         {/* Canvas for drawing with marker tool */}
         <canvas
@@ -448,6 +462,7 @@ function Capture(props) {
         toggleNavFoot={toggleNavFoot}
         user={user}
         sendList={sendList}
+        localIndex={localIndex}
       />
       <SlidingMenu
         ref={toolTime}
