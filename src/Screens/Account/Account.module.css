@@ -71,3 +71,29 @@
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
 }
+
+.acountSettings ul li,
+.uiSettings ul li,
+.messagesSettings ul li,
+.cameraSettings ul li {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.acountSettings ul li > *,
+.uiSettings ul li > *,
+.messagesSettings ul li > *,
+.cameraSettings ul li > * {
+    margin: 1rem;
+}
+
+.acountSettings li button,
+.uiSettings li button,
+.messagesSettings li button,
+.cameraSettings li button {
+    padding: 1rem;
+    border-radius: 1rem;
+    color: darkblue;
+}
