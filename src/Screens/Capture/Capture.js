@@ -30,6 +30,7 @@ import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
 import filter1 from '../../Assets/images/filters/patagonia_logo.png';
 import filter2 from '../../Assets/images/filters/Wendys-Logo.png';
 import filter3 from '../../Assets/images/filters/Rick-And-Morty-Logo.png';
+import filter4 from '../../Assets/images/filters/color-paint-border.png';
 
 let sdb = null;
 
@@ -269,14 +270,17 @@ function Capture(props) {
           }}
         >
           <div/>
-          <div id='screen1' className={styles.screen1}>
+          <div className={styles.screen1}>
             <img id='imgFilter1' src={filter1}/>
           </div>
-          <div id='screen2' className={styles.screen2}>
+          <div className={styles.screen2}>
             <img id='imgFilter2' src={filter2}/>
           </div>
-          <div id='screen3' className={styles.screen3}>
+          <div className={styles.screen3}>
             <img id='imgFilter3' src={filter3}/>
+          </div>
+          <div className={styles.screen4}>
+            <img style={{height: height * 0.99}} id='imgFilter4' src={filter4}/>
           </div>
         </SwipeableViews>
         <SwipeableViews
@@ -304,14 +308,17 @@ function Capture(props) {
           }}
         >
           <div/>
-          <div id='screen1' className={styles.screen1}>
+          <div className={styles.screen1}>
             <img src={filter1}/>
           </div>
-          <div id='screen2' className={styles.screen2}>
+          <div className={styles.screen2}>
             <img id='imgFilter2' src={filter2}/>
           </div>
-          <div id='screen3' className={styles.screen3}>
+          <div className={styles.screen3}>
             <img id='imgFilter3' src={filter3}/>
+          </div>
+          <div className={styles.screen4}>
+            <img style={{height: height * 0.99}} id='imgFilter4' src={filter4}/>
           </div>
         </SwipeableViews>
         {/* Canvas for drawing with marker tool */}

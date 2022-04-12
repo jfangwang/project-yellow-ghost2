@@ -86,11 +86,11 @@ const SendSlidingMenu = forwardRef((props, ref) => {
       setDisabled(false);
     }
   };
-  /**
-   * Send
-   */
-   function send() {
 
+  /**
+   * Combines all canvas' into one image
+   */
+  function drawFinalImage() {
     const img = document.getElementById('imageCanvas');
     const drawing = document.getElementById('drawingCanvas');
     const filterImg = document.getElementById(`imgFilter${localIndex}`);
@@ -115,8 +115,19 @@ const SendSlidingMenu = forwardRef((props, ref) => {
         (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.23),
         img.width * 0.7, img.height * 0.23
         );
+    } else if (localIndex == 4) {
+      final.drawImage(filterImg,
+        (img.width - (img.width)) / 2, img.height - (img.height * 0.99),
+        img.width, img.height * 0.99
+        );
     }
     final.drawImage(drawing, 0, 0, drawing.width, drawing.height, 0, 0, img.width, img.height);
+  }
+  /**
+   * Send
+   */
+   function send() {
+    drawFinalImage();
     const dataURL = document.getElementById('finalImage').toDataURL();
     const date = new Date();
     const updated = {...user};
