@@ -21,6 +21,7 @@ import {
 } from '../../Actions/cameraActions';
 import Send from '../Send/Send';
 import Memories from '../Memories/Memories';
+import main from './Fireworks';
 
 /**
  *
@@ -65,7 +66,7 @@ function Camera(props) {
     setVidLoaded(false);
     const ratio = isMobile ?
       (orientation !== 'portrait' ? width / height : height / width) :
-      9.5 / 16;
+      (orientation !== 'portrait' ? 16/9.5 : 9.5/16);
     setAspectRatio(ratio);
     const constraints = {
       audio: false,
@@ -88,15 +89,15 @@ function Camera(props) {
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
           setCameraPermissions(true);
-          document.getElementById('mainCamera').onloadedmetadata = function(e) {
+          document.getElementById('mainCamera').onloadeddata = function(e) {
             v.play();
             setw(v.videoWidth);
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
-            updateVECanvas();
             setVidLoaded(true);
             ol.classList.remove(styles.loading);
             ol.classList.add(styles.fadeOut);
+            updateVECanvas();
           };
         })
         .catch(function(err) {
@@ -163,25 +164,32 @@ function Camera(props) {
    * Updates the visual effects canvas
    */
   function updateVECanvas() {
+    const fec = document.getElementById('faceEffectsCanvas');
     const vec = document.getElementById('visualEffectsCanvas');
     const cw = isMobile ?
       width : ((width/height) > aspectRatio ? height * aspectRatio : width);
     const ch = isMobile ?
       height : ((width/height)>aspectRatio ? height : width*(aspectRatio**-1));
     if (h != null && w != null) {
-      vec.width = Math.min(cw, w);
-      vec.height = Math.min(ch, h);
+      // vec.width = Math.min(cw, w);
+      // vec.height = Math.min(ch, h);
+      fec.width = Math.min(cw, w);
+      fec.height = Math.min(ch, h);
     } else {
-      vec.width = cw;
-      vec.height = ch;
+      // vec.width = cw;
+      // vec.height = ch;
+      fec.width = cw;
+      fec.height = ch;
     }
-    // console.log(vec.height, vec.width, h, w);
+    vec.width = width;
+    vec.height = height;
   }
 
   useEffect(() => {
-    document.querySelector('video').onloadeddata = () => {
-      console.log('video loaded');
-    };
+    // document.querySelector('video').onloadeddata = () => {
+    //   console.log('video loaded');
+    // };
+    main();
   }, []);
 
   useEffect(() => {
@@ -196,6 +204,7 @@ function Camera(props) {
         stopCamera();
         startCamera();
         updateSendList([]);
+        updateVECanvas();
         const canvas = document.getElementById('imageCanvas');
         const ctx = canvas.getContext('2d');
         if (facingMode === 'user') {
@@ -261,13 +270,20 @@ function Camera(props) {
             }}
           />
           <canvas
-            id="visualEffectsCanvas"
-            className={styles.visualEffectsCanvas}
+            id="faceEffectsCanvas"
+            className={styles.faceEffectsCanvas}
             style={{
               maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
               width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            }}
+          />
+          <canvas
+            id="visualEffectsCanvas"
+            className={styles.visualEffectsCanvas}
+            style={{
+              zIndex: screen === 'camera' ? 0 : -1,
             }}
           />
           { (screen === 'camera') &&

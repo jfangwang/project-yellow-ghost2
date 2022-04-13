@@ -71,9 +71,13 @@
     position: absolute;
 }
 
-.visualEffectsCanvas, .imageCanvas {
+.faceEffectsCanvas, .visualEffectsCanvas, .imageCanvas {
     position: absolute;
+    z-index: 0;
     /* background-color: rgba(255, 10, 10, 0.2) */
+}
+.faceEffectsCanvas {
+    /* border: 2px red solid; */
 }
 .visualEffectsCanvas {
     /* border: 2px red solid; */
