@@ -225,7 +225,9 @@ function Camera(props) {
         detect(net);
       } else {
         {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
-        ctx.clearRect(0, 0, fec.width, fec.height);
+        if (!TFOn) {
+          ctx.clearRect(0, 0, fec.width, fec.height);
+        }
       }
     });
   }
