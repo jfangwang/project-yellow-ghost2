@@ -95,7 +95,9 @@ function Camera(props) {
         .then(function(mediaStream) {
           const v = document.getElementById('mainCamera');
           const ol = document.querySelector('#cameraOverlay');
-          ol.classList.remove(styles.fadeOut);
+          if (ol) {
+            ol.classList.remove(styles.fadeOut);
+          }
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
           setCameraPermissions(true);
@@ -108,7 +110,7 @@ function Camera(props) {
             updateVECanvas();
             if (TFOn) {
               runFacemesh();
-            } else {
+            } else if (ol) {
               ol.classList.remove(styles.loading);
               ol.classList.add(styles.fadeOut);
             }
@@ -139,6 +141,7 @@ function Camera(props) {
       });
       document.querySelector('#mainCamera').srcObject = null;
     }
+    console.log('stop camera');
     setCurrentStream(null);
     setVidLoaded(false);
   }
@@ -269,7 +272,9 @@ function Camera(props) {
 
   useEffect(() => {
     const ol = document.querySelector('#cameraOverlay');
-    ol.classList.add(styles.loading);
+    if (ol) {
+      ol.classList.add(styles.loading);
+    }
     stopCamera();
     startCamera();
     if (TFOn) {
@@ -290,7 +295,9 @@ function Camera(props) {
     if (cameraPermissions === true || cameraPermissions === null) {
       if (index === 1 && screen === 'camera') {
         const ol = document.querySelector('#cameraOverlay');
-        ol.classList.add(styles.loading);
+        if (ol) {
+          ol.classList.add(styles.loading);
+        }
         stopCamera();
         startCamera();
         updateSendList([]);
@@ -310,7 +317,9 @@ function Camera(props) {
       }
     } else {
       const ol = document.querySelector('#cameraOverlay');
-      ol.classList.remove(styles.loading);
+      if (ol) {
+        ol.classList.remove(styles.loading);
+      }
     }
   }, [index, facingMode, orientation, screen]);
 
@@ -358,6 +367,7 @@ function Camera(props) {
               maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
               width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              zIndex: index == 1 ? 0 : -10,
             }}
           />
           <canvas
@@ -368,13 +378,14 @@ function Camera(props) {
               maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
               width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              zIndex: index == 1 ? 0 : -10,
             }}
           />
           <canvas
             id="visualEffectsCanvas"
             className={styles.visualEffectsCanvas}
             style={{
-              zIndex: screen === 'camera' ? 0 : -1,
+              zIndex: index == 1 ? 0 : -10,
             }}
           />
           { (screen === 'camera') &&

@@ -8,7 +8,9 @@ import SendItem from './SendItem';
 import {connect} from 'react-redux';
 import {editUser, editFakeDB} from '../../Actions/userActions';
 import {changeToIndex} from '../../Actions/globalActions';
-import {db} from '../../Firebase/Firebase';
+import {db, storage} from '../../Firebase/Firebase';
+import firebase from 'firebase/compat/app';
+import { v4 as uuid } from "uuid";
 import {
   IconContext,
   CaretLeft,
@@ -128,26 +130,28 @@ const SendSlidingMenu = forwardRef((props, ref) => {
   /**
    * Send
    */
-   function send() {
+  async function send() {
     drawFinalImage();
     const dataURL = document.getElementById('finalImage').toDataURL();
+    const imgID = uuid()
     const date = new Date();
     const updated = {...user};
-    const updateFake = {...fakeDB};
     const friends = updated.friends;
+    const updateFake = {...fakeDB};
+    console.log(date.toUTCString());
 
     if (!isUserLoggedIn) {
       sendList.forEach((id) => {
         // Update User's Fields
         friends[id]['status'] = 'sent';
-        friends[id]['sent']['lastTimeStamp'] = date.toISOString();
-        friends[id]['lastTimeStamp'] = date.toISOString();
+        friends[id]['sent']['lastTimeStamp'] = date.toUTCString();
+        friends[id]['lastTimeStamp'] = date.toUTCString();
         friends[id]['sent']['sentSnaps'] += 1
         // Update Friend's Fields in FakeDB
-        updateFake[id]['friends'][user.id]['received']['lastTimeStamp'] = date.toISOString();
+        updateFake[id]['friends'][user.id]['received']['lastTimeStamp'] = date.toUTCString();
         updateFake[id]['friends'][user.id]['received']['receivedSnaps'] += 1;
         updateFake[id]['friends'][user.id]['status'] = 'new';
-        updateFake[id]['friends'][user.id]['newSnaps'][date.toISOString()] = {
+        updateFake[id]['friends'][user.id]['newSnaps'][date.toUTCString()] = {
           'imgURL': dataURL,
           'snapTime': snapTime,
           'type': 'image',
@@ -156,29 +160,13 @@ const SendSlidingMenu = forwardRef((props, ref) => {
       editUser(updated);
       editFakeDB(updateFake);
     } else {
-      sendList.forEach((id) => {
-        // Update User's Fields on DB
-        friends[id]['status'] = 'sent';
-        friends[id]['sent']['lastTimeStamp'] = date.toISOString();
-        friends[id]['lastTimeStamp'] = date.toISOString();
-        friends[id]['sent']['sentSnaps'] += 1;
-        updated['sent'] += 1;
-        db.collection('Users').doc(user.id).update(updated);
-        // Update Friend's Fields on DB
-        db.collection('Users').doc(id).get().then((doc) => {
-          const friendDoc = doc.data();
-          friendDoc['friends'][user.id]['received']['lastTimeStamp'] = date.toISOString();
-          friendDoc['friends'][user.id]['received']['receivedSnaps'] += 1;
-          friendDoc['friends'][user.id]['status'] = 'new';
-          friendDoc['friends'][user.id]['newSnaps'][date.toISOString()] = {
-            'imgURL': dataURL,
-            'snapTime': snapTime,
-            'type': 'image',
-          };
-          friendDoc['received'] += 1;
-          db.collection('Users').doc(id).update(friendDoc)
+      const ref = storage.ref(`posts/${imgID}`);
+      await ref.putString(dataURL, 'data_url').then((snapshot) => {
+        snapshot.ref.getDownloadURL().then((imgURL) => {
+          return (imgURL);
+        }).then(async function(imgURL) {
+          await updateUsersDocs(sendList, date, imgID, imgURL);
         })
-
       });
     }
 
@@ -187,6 +175,50 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     toggleNavFoot();
     changeToIndex(0);
   };
+
+  async function updateUsersDocs(sendList, date, imageID, imgURL) {
+    const updated = {...user};
+    const friends = updated.friends;
+    const batch = db.batch();
+    updated['allSnapsSent'][date.toUTCString()] = {};
+    updated['allSnapsSent'][date.toUTCString()]['sentTo'] = [];
+    sendList.forEach((id) => {
+      let friendRef = db.collection('Users').doc(id);
+      // Update User's Fields on DB
+      friends[id]['status'] = 'sent';
+      friends[id]['sent']['lastTimeStamp'] = date.toUTCString();
+      friends[id]['lastTimeStamp'] = date.toUTCString();
+      friends[id]['sent']['sentSnaps'] += 1;
+      updated['sent'] += 1;
+      updated['allSnapsSent'][date.toUTCString()] = {
+        imgID: imageID,
+        sentTo: [...updated['allSnapsSent'][date.toUTCString()]['sentTo'], id]
+      }
+
+      // let userRef = db.collection('Users').doc(user.id);
+      // batch.update(userRef, {
+      //   [`friends.${id}.status`]: 'sent',
+      //   [`friends.${id}.sent.lastTimeStamp`]: date.toUTCString(),
+      //   [`friends.${id}.sent.sentSnaps`] : firebase.firestore.FieldValue.increment(1),
+      //   [`friends.${id}.sent`] : firebase.firestore.FieldValue.increment(1),
+      //   [`friends.${id}.lastTimeStamp`] : date.toUTCString(),
+      // })
+      // Update Friend's Fields on DB
+      batch.update(friendRef, {
+        [`friends.${user.id}.received.lastTimeStamp`]: date.toUTCString(),
+        [`friends.${user.id}.received.receivedSnaps`]: firebase.firestore.FieldValue.increment(1),
+        [`friends.${user.id}.status`]: 'new',
+        [`friends.${user.id}.newSnaps.${date.toUTCString()}`]: {
+          'imgURL': 'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlld3xlbnwwfHwwfHw%3D&w=1000&q=80',
+          'snapTime': snapTime,
+          'type': 'image',
+        },
+        [`received`]: firebase.firestore.FieldValue.increment(1),
+      })
+    });
+    await db.collection('Users').doc(user.id).update(updated);
+    await batch.commit();
+  }
 
   return (
     <>

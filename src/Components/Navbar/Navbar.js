@@ -9,6 +9,7 @@ import Account from '../../Screens/Account/Account';
 import Search from '../../Screens/Search/Search';
 import AddFriends from '../../Screens/AddFriends/AddFriends';
 import Extra from '../../Screens/Extra/Extra';
+import {setScreen} from '../../Actions/cameraActions';
 import {
   IconContext,
   User,
@@ -163,6 +164,7 @@ Navbar.propTypes = {
   placeHolder: PropTypes.bool,
   toggleFacingMode: PropTypes.func,
   hideNavFoot: PropTypes.bool,
+  setScreen: PropTypes.func,
 };
 
 Navbar.defaultProps = {
@@ -174,6 +176,7 @@ Navbar.defaultProps = {
   opacity: 1,
   toggleSlide: () => { },
   toggleFacingMode: () => { },
+  setScreen: () => {},
   placeHolder: true,
   hideNavFoot: false,
 };
@@ -197,6 +200,7 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
   toggleSlide,
   toggleFacingMode,
+  setScreen,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

@@ -16,7 +16,7 @@ import {
   toggleSlide,
 } from '../Actions/globalActions';
 import {connect} from 'react-redux';
-import {db} from '../Firebase/Firebase';
+import {db, storage} from '../Firebase/Firebase';
 import {
   editUser,
   editEveryone,
@@ -39,18 +39,19 @@ export function startUserSS(user) {
   userSnapshot = db.collection('Users').doc(user.uid).onSnapshot(
       {includeMetadataChanges: false},
       (doc) => {
-        console.log('starting User SS: ', doc.data());
         store.dispatch(editUser(doc.data()));
-        // Delete pending deleted snaps
-        if (doc.data()['deleteSnaps'].length > 0) {
-          doc.data()['deleteSnaps'].forEach((id) => {
-            db.collection('Photos').doc(id).delete();
-            storage.ref(`posts/${id}`).delete();
-          });
-          db.collection('Users').doc(user.uid).update({
-            deleteSnaps: [],
-          });
-        }
+        // Delete opened snaps
+        Object.keys(doc.data()['allSnapsSent'])
+            .forEach(async function(imgDate) {
+              if (doc.data()['allSnapsSent'][imgDate]['sentTo'].length == 0) {
+                const imgID = doc.data()['allSnapsSent'][imgDate]['imgID'];
+                await storage.ref(`posts/${imgID}`).delete();
+                db.collection('Users').doc(user.uid).update({
+                  [`allSnapsSent.${imgDate}`]: firebase.firestore
+                      .FieldValue.delete(),
+                });
+              }
+            });
       }, (err) => console.log('error: ', err));
 }
 

@@ -103,13 +103,13 @@ function AddFriendItem(props) {
         const newDate = new Date().toLocaleString();
         update.friends[friend.id] = {
           ...update.addedMe[friend.id],
-          friendship: newDate,
           ...friendContent,
+          friendship: newDate,
         };
         fakeUpdate[friend.id]['friends'][update.id] = {
           ...update.pending[friend.id],
-          friendship: newDate,
           ...friendContent,
+          friendship: newDate,
         };
         delete update.addedMe[friend.id];
         delete fakeUpdate[friend.id]['pending'][user.id];
@@ -141,8 +141,8 @@ function AddFriendItem(props) {
       if (!Object.keys(user.brokeup).includes(friend.id)) {
         const newDate = new Date().toLocaleString();
         userDoc.friends[friend.id] = {
-          ...friendContent,
           ...userDoc.addedMe[friend.id],
+          ...friendContent,
           friendship: newDate,
         };
         delete userDoc.addedMe[friend.id];
@@ -150,8 +150,8 @@ function AddFriendItem(props) {
         db.collection('Users').doc(friend.id).get().then((friendDoc) => {
           const doc = friendDoc.data();
           doc['friends'][userDoc.id] = {
-            ...friendContent,
             ...doc.pending[user.id],
+            ...friendContent,
             friendship: newDate,
           };
           delete doc.pending[user.id];

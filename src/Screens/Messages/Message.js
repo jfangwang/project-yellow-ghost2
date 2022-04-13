@@ -11,6 +11,7 @@ import {editUser, editFakeDB} from '../../Actions/userActions';
 import {toggleSlide} from '../../Actions/globalActions';
 import {toggleNavFoot} from '../../Actions/globalActions';
 import {db} from '../../Firebase/Firebase';
+import firebase from 'firebase/compat/app';
 
 const formatter = buildFormatter(enShort);
 export const statusDict = {
@@ -116,7 +117,6 @@ export function Message(props) {
    * @return {*}
    */
   function getSnap() {
-    console.log(friend);
     const snaps = Object
         .keys(friend['newSnaps']).sort((date1, date2) => date1 - date2);
     if (snaps.length > 0) {
@@ -133,33 +133,34 @@ export function Message(props) {
   function updateDB(id) {
     const date = new Date();
     if (isUserLoggedIn) {
-      const userDoc = {...user};
+      // const userDoc = {...user};
       const fi = friend['id'];
       const ui = user.id;
       if (id === null) {
         if (fi !== ui) {
-          db.collection('Users').doc(fi).get().then((doc) => {
-            const friendDoc = doc.data();
-            friendDoc['friends'][user.id]['status'] = 'opened';
-            db.collection('Users').doc(fi).update(friendDoc);
+          db.collection('Users').doc(fi).update({
+            [`friends.${ui}.status`]: 'opened',
           });
         }
-        userDoc['friends'][friend.id]['status'] = 'received';
-        db.collection('Users').doc(user.id).update(userDoc);
+        db.collection('Users').doc(ui).update({
+          [`friends.${fi}.status`]: 'received',
+        });
       } else {
-        delete userDoc['friends'][friend['id']]['newSnaps'][id];
-        userDoc['friends'][fi]['openedByMe'] = {
-          lastTimeStamp: date.toISOString(),
-          opened: userDoc['friends'][fi]['openedByMe']['opened'] + 1,
-        };
-        db.collection('Users').doc(ui).update(userDoc);
-        db.collection('Users').doc(fi).get().then((doc) => {
-          const friendDoc = doc.data();
-          friendDoc['friends'][ui]['openedByFriend'] = {
-            lastTimeStamp: date.toISOString(),
-            opened: friendDoc['friends'][ui]['openedByFriend']['opened'] + 1,
-          };
-          db.collection('Users').doc(fi).update(friendDoc);
+        // User Doc
+        db.collection('Users').doc(ui).update({
+          [`friends.${fi}.newSnaps.${id}`]: firebase.firestore
+              .FieldValue.delete(),
+          [`friends.${fi}.openedByMe.lastTimeStamp`]: date.toUTCString(),
+          [`friends.${fi}.openedByMe.opened`]: firebase.firestore
+              .FieldValue.increment(1),
+        });
+        // Friend Doc
+        db.collection('Users').doc(fi).update({
+          [`friends.${ui}.openedByFriend.lastTimeStamp`]: date.toUTCString(),
+          [`friends.${ui}.openedByFriend.opened`]: firebase.firestore
+              .FieldValue.increment(1),
+          [`allSnapsSent.${id}.sentTo`]: firebase.firestore
+              .FieldValue.arrayRemove(ui),
         });
       }
     } else {
@@ -175,12 +176,12 @@ export function Message(props) {
         const ui = user.id;
         // User
         update['friends'][fi]['openedByMe'] = {
-          lastTimeStamp: date.toISOString(),
+          lastTimeStamp: date.toUTCString(),
           opened: update['friends'][fi]['openedByMe']['opened'] + 1,
         };
         // Friend
         updateFake[ui]['friends'][ui]['openedByFriend'] = {
-          lastTimeStamp: date.toISOString(),
+          lastTimeStamp: date.toUTCString(),
           opened: updateFake[ui]['friends'][ui]['openedByFriend']['opened'] + 1,
         };
       }

@@ -280,9 +280,9 @@ export function createUserEntry(user) {
   const date = new Date().toLocaleString();
   return {
     addedMe: {},
+    allSnapsSent: {},
     brokeup: {},
     created: date,
-    deleteSnaps: {},
     email: user.email,
     faceIDURL: null,
     firstName: user.displayName,
