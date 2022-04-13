@@ -92,6 +92,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
    */
   function drawFinalImage() {
     const img = document.getElementById('imageCanvas');
+    const fec = document.getElementById('faceEffectsCanvas');
     const drawing = document.getElementById('drawingCanvas');
     const filterImg = document.getElementById(`imgFilter${localIndex}`);
     let final = document.getElementById('finalImage');
@@ -100,6 +101,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     final = document.getElementById('finalImage').getContext('2d');
     final.clearRect(0, 0, final.width, final.height);
     final.drawImage(img, 0, 0, img.width, img.height);
+    final.drawImage(fec, 0, 0, img.width, img.height);
     if (localIndex == 1) {
       final.drawImage(filterImg,
         (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.17),

@@ -104,9 +104,10 @@ function Camera(props) {
   }
 
   /**
-   * Stops the camera
+   *
+   * @param {boolean} [fvo=true]
    */
-  function stopFaceInputCamera() {
+  function stopFaceInputCamera(fvo = true) {
     if (faceStream !== null) {
       faceStream.getTracks().forEach((element) => {
         element.stop();
@@ -115,6 +116,12 @@ function Camera(props) {
     }
     console.log('face camera stopped', faceStream);
     faceStream = null;
+    if (fvo == false) {
+      const fec = document.getElementById('faceEffectsCanvas');
+      const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
+      ctx.translate(fec.width * -1, 0);
+      ctx.clearRect(0, 0, fec.width, fec.height);
+    }
   }
 
   /**
@@ -200,6 +207,7 @@ function Camera(props) {
    * Capture
    */
   function capture() {
+    const fec = document.getElementById('faceEffectsCanvas');
     const video = document.getElementById('mainCamera');
     const canvas = document.getElementById('imageCanvas');
     const ctx = canvas.getContext('2d');
@@ -213,6 +221,11 @@ function Camera(props) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       captureImage('Image Taken Place Holder');
     }
+    if (faceVideoOn) {
+      ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
+    }
+    ctx.scale(1, 1);
+    ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
     toggleNavFoot(false);
     toggleSlide(false);
     setScreen('capture');
@@ -258,8 +271,6 @@ function Camera(props) {
         detect(net);
       });
     } else {
-      ctx.translate(fec.width * -1, 0);
-      ctx.clearRect(0, 0, fec.width, fec.height);
       console.log('faceStream is null');
     }
   }
@@ -433,7 +444,7 @@ function Camera(props) {
                       ((screen === 'camera' && vidLoaded && cameraPermissions) ?
                         startFaceInputCamera : () => {}) :
                       (() => {
-                        stopFaceInputCamera();
+                        stopFaceInputCamera(false);
                         setFaceVideoOn(false);
                       })
                     }
@@ -469,7 +480,11 @@ function Camera(props) {
           </SlidingMenuRouting>
         </IconContext.Provider>
         { screen === 'capture' &&
-          <Capture aspectRatio={aspectRatio} camH={h} camW={w}/>
+          <Capture
+            aspectRatio={aspectRatio}
+            camH={h}
+            camW={w}
+          />
         }
         { screen === 'send' &&
           <Send />
