@@ -176,7 +176,7 @@ function Camera(props) {
     ctx.scale(1, 1);
     ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
     toggleNavFoot(false);
-    toggleSlide(false);
+    toggleSlide(true);
     setScreen('capture');
   }
 
