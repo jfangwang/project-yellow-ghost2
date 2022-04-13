@@ -121,6 +121,7 @@ function AddFriendItem(props) {
     } else if (type === 'quickAdd') {
       fakeUpdate[friend.id]['addedMe'][user.id] = fakeUpdate[user.id];
       update['pending'][friend.id] = fakeUpdate[friend.id];
+      update['pending'][friend.id]['status'] = 'pending';
     } else if (type === 'friends') {
       update.brokeup[friend.id] = update.friends[friend.id];
       delete update.friends[friend.id];
@@ -168,6 +169,7 @@ function AddFriendItem(props) {
       }
     } else if (type === 'quickAdd') {
       userDoc['pending'][friend.id] = everyone[friend.id];
+      userDoc['pending'][friend.id]['status'] = 'pending';
 
       db.collection('Users').doc(friend.id).get().then((friendDoc) => {
         const doc = friendDoc.data();

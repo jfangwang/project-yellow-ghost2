@@ -78,10 +78,13 @@ export function Message(props) {
       break;
     case 'pending':
       icon = messagePending;
+      break;
     case 'not-friends':
       icon = messageNotFriends;
+      break;
     case 'blocked':
       icon = messageBlocked;
+      break;
     default:
       icon = messageUnknown;
       break;
@@ -243,7 +246,8 @@ export function Message(props) {
               <h3 id='messageStatus'>
                 {statusDict[friend['status']]}
               </h3>
-              { friend['lastTimeStamp'] !== null &&
+              { (friend['lastTimeStamp'] !== null &&
+                friend['lastTimeStamp'] !== undefined) &&
                 <>
                   <div className={styles.separator}/>
                   <h3>
@@ -255,7 +259,7 @@ export function Message(props) {
                 </>
               }
               <div className={styles.separator}/>
-              <h3>{friend['streak']}</h3>
+              <h3>{friend['streak'] === undefined ? 0 : friend['streak']}</h3>
               <h5>{user.streakEmoji}</h5>
             </div>
           </div>
