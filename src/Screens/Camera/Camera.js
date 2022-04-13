@@ -242,16 +242,18 @@ function Camera(props) {
       width : ((width/height) > aspectRatio ? height * aspectRatio : width);
     const ch = isMobile ?
       height : ((width/height)>aspectRatio ? height : width*(aspectRatio**-1));
-    if (h != null && w != null) {
-      // vec.width = Math.min(cw, w);
-      // vec.height = Math.min(ch, h);
-      fec.width = Math.min(cw, w);
-      fec.height = Math.min(ch, h);
-    } else {
-      // vec.width = cw;
-      // vec.height = ch;
-      fec.width = cw;
-      fec.height = ch;
+    if (index === 1 && screen === 'camera') {
+      if (h != null && w != null) {
+        // vec.width = Math.min(cw, w);
+        // vec.height = Math.min(ch, h);
+        fec.width = Math.min(cw, w);
+        fec.height = Math.min(ch, h);
+      } else {
+        // vec.width = cw;
+        // vec.height = ch;
+        fec.width = cw;
+        fec.height = ch;
+      }
     }
     vec.width = width;
     vec.height = height;
@@ -278,8 +280,8 @@ function Camera(props) {
   }, [TFOn]);
 
   useEffect(() => {
+    updateVECanvas();
     if (index === 1 && screen === 'camera') {
-      updateVECanvas();
       setTFOn(false);
     }
   }, [height, width]);
