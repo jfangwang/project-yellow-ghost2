@@ -141,7 +141,6 @@ function Camera(props) {
       });
       document.querySelector('#mainCamera').srcObject = null;
     }
-    console.log('stop camera');
     setCurrentStream(null);
     setVidLoaded(false);
   }
@@ -392,13 +391,13 @@ function Camera(props) {
             <div id='cameraOverlay' className={styles.cameraOverlay}>
               <div className={styles.cameraHeader}>
                 <Navbar opacity={0} position="relative" />
-                <div className={styles.cameraStats}>
+                {/* <div className={styles.cameraStats}>
                   <p>Device AR: {width/height}</p>
                   <p>Height: {height} Width: {width}</p>
                   <p>Cam AR: {w/h}</p>
                   <p>Cam H: {h} Cam W: {w}</p>
                   <p>orientation: {orientation}</p>
-                </div>
+                </div> */}
               </div>
               <div className={styles.cameraFooter}>
                 <div className={styles.cameraButtons}>

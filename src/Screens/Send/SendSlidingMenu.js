@@ -41,6 +41,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   useImperativeHandle(ref, () => ({
     toggle(e = !show) {
       setShow(e);
@@ -131,6 +132,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
    * Send
    */
   async function send() {
+    setIsLoading(true);
     drawFinalImage();
     const dataURL = document.getElementById('finalImage').toDataURL();
     const imgID = uuid()
@@ -138,7 +140,6 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     const updated = {...user};
     const friends = updated.friends;
     const updateFake = {...fakeDB};
-    console.log(date.toUTCString());
 
     if (!isUserLoggedIn) {
       sendList.forEach((id) => {
@@ -159,6 +160,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
       })
       editUser(updated);
       editFakeDB(updateFake);
+      setIsLoading(false);
     } else {
       const ref = storage.ref(`posts/${imgID}`);
       await ref.putString(dataURL, 'data_url').then((snapshot) => {
@@ -166,6 +168,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
           return (imgURL);
         }).then(async function(imgURL) {
           await updateUsersDocs(sendList, date, imgID, imgURL);
+          setIsLoading(false);
         })
       });
     }
@@ -209,7 +212,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
         [`friends.${user.id}.received.receivedSnaps`]: firebase.firestore.FieldValue.increment(1),
         [`friends.${user.id}.status`]: 'new',
         [`friends.${user.id}.newSnaps.${date.toUTCString()}`]: {
-          'imgURL': 'https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmlld3xlbnwwfHwwfHw%3D&w=1000&q=80',
+          'imgURL': imgURL,
           'snapTime': snapTime,
           'type': 'image',
         },
@@ -290,13 +293,21 @@ const SendSlidingMenu = forwardRef((props, ref) => {
                         ))}
                     </div>
                     <div>
-                      <button
-                        className={styles.sendButton}
-                        onClick={send}
-                      >
-                        <h2 style={{marginRight: '0.2rem'}}>Send</h2>
-                        <PaperPlaneRight />
-                      </button>
+                      { !isloading ?
+                        <button
+                          className={styles.sendButton}
+                          onClick={send}
+                        >
+                          <h2 style={{marginRight: '0.2rem'}}>Send</h2>
+                          <PaperPlaneRight />
+                        </button> :
+                        <button
+                          className={styles.sendButton}
+                          onClick={() => {}}
+                        >
+                          <h2 style={{marginRight: '0.2rem'}}>Loading</h2>
+                        </button>
+                      }
                     </div>
                   </footer>
                 }

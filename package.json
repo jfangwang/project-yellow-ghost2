@@ -36,7 +36,9 @@
     "test": "jest --env=jsdom",
     "test-watch": "jest --watch --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint './src/**/*.js' --fix"
+    "lint": "eslint './src/**/*.js' --fix",
+    "version": "npm run build && firebase deploy && git add -A",
+    "postversion": "git push && git push --tags"
   },
   "eslintConfig": {
     "extends": [

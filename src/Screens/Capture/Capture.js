@@ -108,7 +108,6 @@ function Capture(props) {
    */
   function toggleDraw() {
     if (activeTool == null) {
-      console.log('asdf');
       setActiveTool('draw');
       if (sdb == null) {
         sdb = create(document.getElementById('drawingCanvas'));
