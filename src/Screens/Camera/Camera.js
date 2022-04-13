@@ -29,7 +29,6 @@ import * as facemesh from '@tensorflow-models/face-landmarks-detection';
 
 let fdcount = 0;
 let net;
-let faceStream = null;
 
 /**
  *
@@ -55,7 +54,7 @@ function Camera(props) {
     updateSendList,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
-  const [faceVideoOn, setFaceVideoOn] = useState(false);
+  const [TFOn, setTFOn] = useState(false);
   const [aspectRatio, setAspectRatio] = useState(
     isMobile ? (width/height) : 9.5/16);
   const [w, setw] = useState(null);
@@ -69,66 +68,12 @@ function Camera(props) {
   const memoriesMenu = useRef();
 
   /**
-   * Starts the FaceInputCamera
-   */
-  function startFaceInputCamera() {
-    updateVECanvas();
-    const fec = document.getElementById('faceEffectsCanvas');
-    const constraints = {
-      audio: false,
-      video: {
-        facingMode: facingMode,
-        aspectRatio: {
-          exact: aspectRatio,
-        },
-        width: {ideal: fec.width},
-        height: {ideal: fec.height},
-      },
-    };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then(function(stream) {
-          const fv = document.getElementById('faceInputCamera');
-          fv.srcObject = stream;
-          faceStream = stream;
-          fv.onloadeddata = (event) => {
-            console.log('face input camera is running');
-            setFaceVideoOn(true);
-            runFacemesh();
-          };
-        })
-        .catch(function(err) {
-          console.log('faceInputCamera: ', err);
-          faceStream = null;
-        });
-  }
-
-  /**
-   *
-   * @param {boolean} [fvo=true]
-   */
-  function stopFaceInputCamera(fvo = true) {
-    if (faceStream !== null) {
-      faceStream.getTracks().forEach((element) => {
-        element.stop();
-      });
-      document.querySelector('#faceInputCamera').srcObject = null;
-    }
-    console.log('face camera stopped', faceStream);
-    faceStream = null;
-    if (fvo == false) {
-      const fec = document.getElementById('faceEffectsCanvas');
-      const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
-      ctx.translate(fec.width * -1, 0);
-      ctx.clearRect(0, 0, fec.width, fec.height);
-    }
-  }
-
-  /**
    * Starts the camera
    */
   function startCamera() {
+    updateVECanvas();
     setVidLoaded(false);
+    const fec = document.getElementById('faceEffectsCanvas');
     const ratio = isMobile ?
       (orientation !== 'portrait' ? width / height : height / width) :
       (orientation !== 'portrait' ? 16/9.5 : 9.5/16);
@@ -140,8 +85,8 @@ function Camera(props) {
         aspectRatio: {
           exact: ratio,
         },
-        width: {ideal: 10000},
-        height: {ideal: 10000},
+        width: {ideal: !TFOn ? 10000 : Math.max(fec.height, fec.width)},
+        height: {ideal: !TFOn ? 10000 : Math.max(fec.height, fec.width)},
       },
     };
 
@@ -160,9 +105,13 @@ function Camera(props) {
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
             setVidLoaded(true);
-            ol.classList.remove(styles.loading);
-            ol.classList.add(styles.fadeOut);
             updateVECanvas();
+            if (TFOn) {
+              runFacemesh();
+            } else {
+              ol.classList.remove(styles.loading);
+              ol.classList.add(styles.fadeOut);
+            }
           };
         })
         .catch(function(err) {
@@ -221,7 +170,7 @@ function Camera(props) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       captureImage('Image Taken Place Holder');
     }
-    if (faceVideoOn) {
+    if (TFOn) {
       ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
     }
     ctx.scale(1, 1);
@@ -249,30 +198,36 @@ function Camera(props) {
    */
   async function detect(net) {
     // Get canvas context
+    const ol = document.querySelector('#cameraOverlay');
     const fec = document.getElementById('faceEffectsCanvas');
     const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
-    if (faceStream != null) {
-      fdcount += 1;
-      if (fdcount === 1) {
-        ctx.translate(fec.width, 0);
-      }
-      const video = document.getElementById('faceInputCamera');
-      const face = await net.estimateFaces({
-        input: video,
-        flipHorizontal: true,
-      });
+    const video = document.getElementById('mainCamera');
+    const face = await net.estimateFaces({
+      input: video,
+      flipHorizontal: facingMode === 'user' ? true : false,
+    });
 
-      requestAnimationFrame(()=>{
+    fdcount += 1;
+    if (fdcount === 1) {
+      {facingMode === 'user' && ctx.translate(fec.width, 0);}
+      ol.classList.remove(styles.loading);
+      ol.classList.add(styles.fadeOut);
+      toggleSlide(false);
+    }
+
+    requestAnimationFrame(()=>{
+      if (document.getElementById('closeFace')) {
         console.log('running');
-        ctx.translate(fec.width * -1, 0);
+        {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
         ctx.clearRect(0, 0, fec.width, fec.height);
-        ctx.translate(fec.width, 0);
+        {facingMode === 'user' && ctx.translate(fec.width, 0);}
         drawMesh(face, ctx);
         detect(net);
-      });
-    } else {
-      console.log('faceStream is null');
-    }
+      } else {
+        {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
+        ctx.clearRect(0, 0, fec.width, fec.height);
+      }
+    });
   }
 
   /**
@@ -298,7 +253,7 @@ function Camera(props) {
     }
     vec.width = width;
     vec.height = height;
-    console.log(fec.width, fec.height, width, height);
+    // console.log(fec.width, fec.height, width, height);
   }
 
   useEffect(() => {
@@ -309,7 +264,20 @@ function Camera(props) {
   }, []);
 
   useEffect(() => {
+    const ol = document.querySelector('#cameraOverlay');
+    ol.classList.add(styles.loading);
+    stopCamera();
+    startCamera();
+    if (TFOn) {
+      toggleSlide(true);
+    } else {
+      toggleSlide(false);
+    }
+  }, [TFOn]);
+
+  useEffect(() => {
     updateVECanvas();
+    setTFOn(false);
   }, [height, width]);
 
   useEffect(() => {
@@ -319,11 +287,9 @@ function Camera(props) {
         ol.classList.add(styles.loading);
         stopCamera();
         startCamera();
-        if (faceVideoOn) {
-          startFaceInputCamera();
-        }
         updateSendList([]);
         updateVECanvas();
+        setTFOn(false);
         const canvas = document.getElementById('imageCanvas');
         const ctx = canvas.getContext('2d');
         if (facingMode === 'user') {
@@ -335,7 +301,6 @@ function Camera(props) {
         canvas.height = 0;
       } else {
         stopCamera();
-        stopFaceInputCamera();
       }
     } else {
       const ol = document.querySelector('#cameraOverlay');
@@ -370,15 +335,6 @@ function Camera(props) {
             weight: 'bold',
           }}
         >
-          <video
-            autoPlay
-            playsInline
-            id='faceInputCamera'
-            className={styles.faceInputCamera}
-            style={{
-              transform: facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)',
-            }}
-          />
           <video
             autoPlay
             playsInline
@@ -439,16 +395,16 @@ function Camera(props) {
                       capture : () => {}
                     }
                   />
-                  <button
-                    onClick={ faceVideoOn == false ?
-                      ((screen === 'camera' && vidLoaded && cameraPermissions) ?
-                        startFaceInputCamera : () => {}) :
-                      (() => {
-                        stopFaceInputCamera(false);
-                        setFaceVideoOn(false);
-                      })
-                    }
-                  >{faceVideoOn == false ? <MaskHappy /> : <XCircle />}</button>
+                  { !TFOn ?
+                    <button
+                      onClick={
+                        (screen === 'camera'&&vidLoaded&&cameraPermissions) ?
+                        () => setTFOn(true) : () => {}}
+                    ><MaskHappy /></button> :
+                    <button id='closeFace' onClick={() => setTFOn(false)}>
+                      <XCircle />
+                    </button>
+                  }
                 </div>
                 <Footer position="relative" opacity={0} />
               </div>

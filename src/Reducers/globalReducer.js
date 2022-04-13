@@ -54,7 +54,7 @@ export function globalReducer(state = initialState, action) {
         decIndex: action.decIndex,
       };
     case TOGGLE_SLIDE:
-      if (action.state) {
+      if (action.state == true || action.state == false) {
         return {
           ...state,
           slideDisabled: action.state,
