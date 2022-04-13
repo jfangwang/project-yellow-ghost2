@@ -278,8 +278,10 @@ function Camera(props) {
   }, [TFOn]);
 
   useEffect(() => {
-    updateVECanvas();
-    setTFOn(false);
+    if (index === 1 && screen === 'camera') {
+      updateVECanvas();
+      setTFOn(false);
+    }
   }, [height, width]);
 
   useEffect(() => {
