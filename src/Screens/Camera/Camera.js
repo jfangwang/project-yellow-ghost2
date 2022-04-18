@@ -22,13 +22,20 @@ import {
 import Send from '../Send/Send';
 import Memories from '../Memories/Memories';
 import main from './Fireworks';
-import {drawMesh} from './utilities';
+import {
+  drawDots,
+  drawBox,
+  drawTriangles,
+  drawRandomColorMask,
+} from './utilities';
 // import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgl';
 import * as facemesh from '@tensorflow-models/face-landmarks-detection';
 
 let fdcount = 0;
 let net;
+let interval;
+let filter = null;
 
 /**
  *
@@ -197,7 +204,10 @@ function Camera(props) {
     net =
     await facemesh.createDetector(model, detectorConfig);
     console.log('model loaded');
-    detect(net);
+    // detect(net);
+    interval = setInterval(async () => {
+      await detect(net);
+    }, 10);
   };
 
   /**
@@ -209,39 +219,35 @@ function Camera(props) {
     const fec = document.getElementById('faceEffectsCanvas');
     const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
     const video = document.getElementById('mainCamera');
-    const estimationConfig = {
-      flipHorizontal: facingMode === 'user' ? true : false,
-    };
-    const face = await net.estimateFaces(video, estimationConfig);
-    // const face = await net.estimateFaces({
-    //   input: video,
-    //   flipHorizontal: facingMode === 'user' ? false : false,
-    // });
-
-    fdcount += 1;
-    if (fdcount === 1) {
-      // {facingMode === 'user' && ctx.translate(fec.width, 0);}
-      ol.classList.remove(styles.loading);
-      ol.classList.add(styles.fadeOut);
-      toggleSlide(false);
-    }
-
-    requestAnimationFrame(()=>{
-      if (document.getElementById('closeFace')) {
-        console.log('running');
-        // {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
-        ctx.clearRect(0, 0, fec.width, fec.height);
-        // {facingMode === 'user' && ctx.translate(fec.width, 0);}
-        drawMesh(face, ctx);
-        // console.log(face);
-        detect(net);
-      } else {
-        // {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
-        if (!TFOn) {
-          ctx.clearRect(0, 0, fec.width, fec.height);
-        }
+    if (document.getElementById('closeFace')) {
+      const estimationConfig = {
+        flipHorizontal: facingMode === 'user' ? true : false,
+      };
+      const face = await net.estimateFaces(video, estimationConfig);
+      fdcount += 1;
+      if (fdcount === 1) {
+        ol.classList.remove(styles.loading);
+        ol.classList.add(styles.fadeOut);
+        toggleSlide(false);
+        filter = '';
       }
-    });
+
+      ctx.clearRect(0, 0, fec.width, fec.height);
+      console.log('filter: ', filter);
+      if (filter === 'box') {
+        drawBox(face, ctx);
+      } else if (filter === 'dots') {
+        drawDots(face, ctx);
+      } else if (filter === 'mask') {
+        drawTriangles(face, ctx);
+      } else if (filter === 'coloredMask') {
+        drawRandomColorMask(face, ctx);
+      }
+    } else {
+      clearInterval(interval);
+      filter = null;
+      ctx.clearRect(0, 0, fec.width, fec.height);
+    }
   }
 
   /**
@@ -410,6 +416,25 @@ function Camera(props) {
                 </div> */}
               </div>
               <div className={styles.cameraFooter}>
+                {TFOn &&
+                  <div>
+                    <button onClick={() => filter = ''}>
+                      <h1>Nothing</h1>
+                    </button>
+                    <button onClick={() => filter = 'box'}>
+                      <h1>Box</h1>
+                    </button>
+                    <button onClick={() => filter = 'dots'}>
+                      <h1>Dots</h1>
+                    </button>
+                    <button onClick={() => filter = 'mask'}>
+                      <h1>Mask</h1>
+                    </button>
+                    <button onClick={() => filter = 'coloredMask'}>
+                      <h1>Colored Mask</h1>
+                    </button>
+                  </div>
+                }
                 <div className={styles.cameraButtons}>
                   <button onClick={() => memoriesMenu.current.toggle()}>
                     <Image />
