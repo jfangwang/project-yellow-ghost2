@@ -189,8 +189,13 @@ function Camera(props) {
     fdcount = 0;
     updateVECanvas();
     console.log('Starting Facemesh');
+    const model = facemesh.SupportedModels.MediaPipeFaceMesh;
+    const detectorConfig = {
+      runtime: 'mediapipe', // or 'tfjs'
+      solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh',
+    };
     net =
-    await facemesh.load(facemesh.SupportedPackages.mediapipeFacemesh);
+    await facemesh.createDetector(model, detectorConfig);
     console.log('model loaded');
     detect(net);
   };
@@ -204,14 +209,16 @@ function Camera(props) {
     const fec = document.getElementById('faceEffectsCanvas');
     const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
     const video = document.getElementById('mainCamera');
-    const face = await net.estimateFaces({
-      input: video,
-      flipHorizontal: facingMode === 'user' ? true : false,
-    });
+    const estimationConfig = {flipHorizontal: true};
+    const face = await net.estimateFaces(video, estimationConfig);
+    // const face = await net.estimateFaces({
+    //   input: video,
+    //   flipHorizontal: facingMode === 'user' ? false : false,
+    // });
 
     fdcount += 1;
     if (fdcount === 1) {
-      {facingMode === 'user' && ctx.translate(fec.width, 0);}
+      // {facingMode === 'user' && ctx.translate(fec.width, 0);}
       ol.classList.remove(styles.loading);
       ol.classList.add(styles.fadeOut);
       toggleSlide(false);
@@ -220,13 +227,14 @@ function Camera(props) {
     requestAnimationFrame(()=>{
       if (document.getElementById('closeFace')) {
         console.log('running');
-        {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
+        // {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
         ctx.clearRect(0, 0, fec.width, fec.height);
-        {facingMode === 'user' && ctx.translate(fec.width, 0);}
+        // {facingMode === 'user' && ctx.translate(fec.width, 0);}
         drawMesh(face, ctx);
+        console.log(face);
         detect(net);
       } else {
-        {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
+        // {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
         if (!TFOn) {
           ctx.clearRect(0, 0, fec.width, fec.height);
         }
