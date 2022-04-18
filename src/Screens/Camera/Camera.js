@@ -209,7 +209,9 @@ function Camera(props) {
     const fec = document.getElementById('faceEffectsCanvas');
     const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
     const video = document.getElementById('mainCamera');
-    const estimationConfig = {flipHorizontal: true};
+    const estimationConfig = {
+      flipHorizontal: facingMode === 'user' ? true : false,
+    };
     const face = await net.estimateFaces(video, estimationConfig);
     // const face = await net.estimateFaces({
     //   input: video,
