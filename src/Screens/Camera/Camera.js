@@ -231,7 +231,7 @@ function Camera(props) {
         ctx.clearRect(0, 0, fec.width, fec.height);
         // {facingMode === 'user' && ctx.translate(fec.width, 0);}
         drawMesh(face, ctx);
-        console.log(face);
+        // console.log(face);
         detect(net);
       } else {
         // {facingMode === 'user' && ctx.translate(fec.width * -1, 0);}
