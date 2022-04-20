@@ -140,3 +140,30 @@ animation-duration: 0.3s;
 animation: fadeIn;
 animation-duration: 1s;
 }
+
+.slider {
+    background-color: transparent;
+    width: 80%;
+}
+
+.sliderItem {
+    border: 0.25rem white solid;
+    display: flex !important;
+    background-color: red;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    width: 4rem !important;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.slick-slide {
+  margin: 0 10px;
+}
+.slick-list {
+  margin: 0 -10px;
+}

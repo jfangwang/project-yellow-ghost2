@@ -31,11 +31,28 @@ import {
 // import * as tf from '@tensorflow/tfjs';
 import '@tensorflow/tfjs-backend-webgl';
 import * as facemesh from '@tensorflow-models/face-landmarks-detection';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 let fdcount = 0;
 let net;
 let interval;
 let filter = null;
+const filterList = ['nothing', 'box', 'dots', 'mask', 'coloredMask'];
+const settings = {
+  className: styles.slider,
+  dots: false,
+  infinite: true,
+  slidesToScroll: 1,
+  centerMode: true,
+  focusOnSelect: true,
+  variableWidth: true,
+  centerPadding: '0px',
+  touchThreshold: 8,
+  speed: 250,
+  afterChange: (e) => filter = filterList[e],
+};
 
 /**
  *
@@ -228,8 +245,7 @@ function Camera(props) {
       if (fdcount === 1) {
         ol.classList.remove(styles.loading);
         ol.classList.add(styles.fadeOut);
-        toggleSlide(false);
-        filter = '';
+        filter = 'nothing';
       }
 
       ctx.clearRect(0, 0, fec.width, fec.height);
@@ -246,7 +262,6 @@ function Camera(props) {
     } else {
       clearInterval(interval);
       filter = null;
-      ctx.clearRect(0, 0, fec.width, fec.height);
     }
   }
 
@@ -296,6 +311,7 @@ function Camera(props) {
       toggleSlide(true);
     } else {
       toggleSlide(false);
+      filter = null;
     }
   }, [TFOn]);
 
@@ -417,23 +433,18 @@ function Camera(props) {
               </div>
               <div className={styles.cameraFooter}>
                 {TFOn &&
-                  <div>
-                    <button onClick={() => filter = ''}>
-                      <h1>Nothing</h1>
-                    </button>
-                    <button onClick={() => filter = 'box'}>
-                      <h1>Box</h1>
-                    </button>
-                    <button onClick={() => filter = 'dots'}>
-                      <h1>Dots</h1>
-                    </button>
-                    <button onClick={() => filter = 'mask'}>
-                      <h1>Mask</h1>
-                    </button>
-                    <button onClick={() => filter = 'coloredMask'}>
-                      <h1>Colored Mask</h1>
-                    </button>
-                  </div>
+                  <>
+                    <Slider {...settings}>
+                      {filterList.map((item) => (
+                        <div
+                          key={item}
+                          className={styles.sliderItem}
+                        >
+                          <h3>{item}</h3>
+                        </div>
+                      ))}
+                    </Slider>
+                  </>
                 }
                 <div className={styles.cameraButtons}>
                   <button onClick={() => memoriesMenu.current.toggle()}>
