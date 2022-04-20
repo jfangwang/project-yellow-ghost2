@@ -1,5 +1,5 @@
 .background {
-    background-color: yellow;
+    background-color: grey;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -9,6 +9,13 @@
 .mainCamera {
     width: 100%;
     height: 100%;
+    position: absolute;
+}
+.faceInputCamera {
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: -1;
     position: absolute;
 }
 
@@ -57,8 +64,8 @@
 }
 
 .captureButton {
-    width: 7.2em;
-    height: 7.2em;
+    width: 5.2rem;
+    height: 5.2rem;
     background: transparent;
     border: 0.5rem solid rgb(255, 255, 255);
     border-radius: 50%;
@@ -71,13 +78,28 @@
     position: absolute;
 }
 
-.visualEffectsCanvas, .imageCanvas {
+.faceEffectsCanvas, .visualEffectsCanvas, .imageCanvas {
     position: absolute;
-    /* border: 2px red solid; */
     /* background-color: rgba(255, 10, 10, 0.2) */
 }
+.faceEffectsCanvas {
+    /* border: 2px cyan solid; */
+}
+.visualEffectsCanvas {
+    /* border: 2px red solid; */
+}
 .imageCanvas {
+    /* border: 2px blue dotted; */
     /* display: none; */
+}
+.disabled {
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
 }
 
 /* ANIMATIONS */
@@ -117,4 +139,36 @@ animation-duration: 0.3s;
 .fadeIn {
 animation: fadeIn;
 animation-duration: 1s;
+}
+
+.slider {
+    background-color: transparent;
+    width: 85%;
+    border: 1px white solid;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    position: fixed !important;
+    margin-bottom: 2.2rem;
+}
+
+.sliderItem {
+    border: 0.25rem white solid;
+    display: flex !important;
+    background-color: red;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    width: 4rem !important;
+    overflow: hidden;
+    border-radius: 100%;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.slick-slide {
+  margin: 0 10px;
+}
+.slick-list {
+  margin: 0 -10px;
 }

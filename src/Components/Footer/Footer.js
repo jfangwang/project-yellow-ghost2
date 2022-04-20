@@ -14,7 +14,14 @@ import {IconContext, Chat, Camera, Users} from 'phosphor-react';
  * @return {*}
  */
 export function Footer(props) {
-  const {index, opacity, position, hideNavFoot} = props;
+  const {index, opacity, position, hideNavFoot, decIndex} = props;
+
+  const color = `rgb(
+    ${255 - (Math.abs(1 - decIndex) * 255)},
+    ${255 - (Math.abs(1 - decIndex) * 255)},
+    ${255 - (Math.abs(1 - decIndex) * 255)}
+  )`;
+
   return (
     <>
       <footer
@@ -32,13 +39,13 @@ export function Footer(props) {
           }}
         >
           <Link to="/messages" replace>
-            <Chat color={index === 0 ? 'DodgerBlue' : 'white'}/>
+            <Chat color={index === 0 ? 'DodgerBlue' : color}/>
           </Link>
           <Link to="/camera" replace>
-            <Camera color={index === 1 ? 'yellow' : 'white'}/>
+            <Camera color={index === 1 ? 'yellow' : color}/>
           </Link>
           <Link to="/discover" replace>
-            <Users color={index === 2 ? 'purple' : 'white'}/>
+            <Users color={index === 2 ? 'purple' : color}/>
           </Link>
         </IconContext.Provider>
       </footer>
@@ -53,6 +60,7 @@ Footer.propTypes = {
   position: PropTypes.string,
   index: PropTypes.number,
   hideNavFoot: PropTypes.bool,
+  decIndex: PropTypes.number,
 };
 
 Footer.defaultProps = {
@@ -75,6 +83,7 @@ function mapStateToProps(state) {
     width: state.global.width,
     index: state.global.index,
     hideNavFoot: state.global.hideNavFoot,
+    decIndex: state.global.decIndex,
   };
 }
 

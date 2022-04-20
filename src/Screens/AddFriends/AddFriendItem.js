@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './AddFriendItem.module.css';
 import {connect} from 'react-redux';
 import {editUser, editFakeDB} from '../../Actions/userActions';
+import {db} from '../../Firebase/Firebase';
 import {
   IconContext,
   UserMinus,
@@ -51,6 +52,7 @@ function AddFriendItem(props) {
     fakeDB,
     editUser,
     editFakeDB,
+    everyone,
   } = props;
 
   let buttonType;
@@ -76,9 +78,17 @@ function AddFriendItem(props) {
     if (isUserLoggedIn === false) {
       delete fakeUpdate[friend.id]['addedMe'][user.id];
       delete update['pending'][friend.id];
+      editUser(update);
+      editFakeDB(fakeUpdate);
+    } else {
+      delete update['pending'][friend.id];
+      db.collection('Users').doc(user.id).update(update);
+      db.collection('Users').doc(friend.id).get().then((friendDoc) => {
+        const doc = friendDoc.data();
+        delete doc['addedMe'][user.id];
+        db.collection('Users').doc(friend.id).update(doc);
+      });
     }
-    editUser(update);
-    editFakeDB(fakeUpdate);
     console.log('remove pending');
   }
 
@@ -93,13 +103,13 @@ function AddFriendItem(props) {
         const newDate = new Date().toLocaleString();
         update.friends[friend.id] = {
           ...update.addedMe[friend.id],
-          friendship: newDate,
           ...friendContent,
+          friendship: newDate,
         };
         fakeUpdate[friend.id]['friends'][update.id] = {
           ...update.pending[friend.id],
-          friendship: newDate,
           ...friendContent,
+          friendship: newDate,
         };
         delete update.addedMe[friend.id];
         delete fakeUpdate[friend.id]['pending'][user.id];
@@ -111,6 +121,7 @@ function AddFriendItem(props) {
     } else if (type === 'quickAdd') {
       fakeUpdate[friend.id]['addedMe'][user.id] = fakeUpdate[user.id];
       update['pending'][friend.id] = fakeUpdate[friend.id];
+      update['pending'][friend.id]['status'] = 'pending';
     } else if (type === 'friends') {
       update.brokeup[friend.id] = update.friends[friend.id];
       delete update.friends[friend.id];
@@ -125,6 +136,64 @@ function AddFriendItem(props) {
    */
   function change() {
     console.log('firebase');
+    const userDoc = {...user};
+    if (type === 'addedMe') {
+      if (!Object.keys(user.brokeup).includes(friend.id)) {
+        const newDate = new Date().toLocaleString();
+        userDoc.friends[friend.id] = {
+          ...userDoc.addedMe[friend.id],
+          ...friendContent,
+          friendship: newDate,
+        };
+        delete userDoc.addedMe[friend.id];
+
+        db.collection('Users').doc(friend.id).get().then((friendDoc) => {
+          const doc = friendDoc.data();
+          doc['friends'][userDoc.id] = {
+            ...doc.pending[user.id],
+            ...friendContent,
+            friendship: newDate,
+          };
+          delete doc.pending[user.id];
+          db.collection('Users').doc(friend.id).update(doc);
+        });
+      } else {
+        userDoc.friends[friend.id] = userDoc.brokeup[friend.id];
+        delete userDoc.brokeup[friend.id];
+
+        db.collection('Users').doc(friend.id).get().then((friendDoc) => {
+          const doc = friendDoc.data();
+          doc['friends'][user.id]['status'] = 'new-friend';
+          db.collection('Users').doc(friend.id).update(doc);
+        });
+      }
+    } else if (type === 'quickAdd') {
+      userDoc['pending'][friend.id] = everyone[friend.id];
+      userDoc['pending'][friend.id]['status'] = 'pending';
+
+      db.collection('Users').doc(friend.id).get().then((friendDoc) => {
+        const doc = friendDoc.data();
+        doc['addedMe'][user.id] = everyone[user.id];
+        db.collection('Users').doc(friend.id).update(doc);
+      });
+    } else if (type === 'friends') {
+      userDoc.brokeup[friend.id] = userDoc.friends[friend.id];
+      delete userDoc.friends[friend.id];
+      db.collection('Users').doc(user.id).update(userDoc);
+
+      db.collection('Users').doc(friend.id).get().then((friendDoc) => {
+        const doc = friendDoc.data();
+        if (Object.keys(doc['friends']).includes(user.id)) {
+          doc['friends'][user.id]['status'] = 'not-friends';
+        } else {
+          delete doc['brokeup'][user.id];
+          delete userDoc.brokeup[friend.id];
+          db.collection('Users').doc(user.id).update(userDoc);
+        }
+        db.collection('Users').doc(friend.id).update(doc);
+      });
+    }
+    db.collection('Users').doc(user.id).update(userDoc);
   }
 
   return (
@@ -137,9 +206,11 @@ function AddFriendItem(props) {
       <div className={styles.row}>
         <img src={friend['profilePicUrl']} className={styles.profilePic}/>
         <div className={styles.info}>
-          <p>{friend['firstName']} {friend['lastName'][0]}</p>
+          <p>
+            {friend['firstName']}
+            {friend['lastName'] !== null && friend['lastName'][0]}
+          </p>
           <p>{friend['username']}</p>
-          <p>{type}</p>
         </div>
       </div>
       <div className={styles.row}>
@@ -177,6 +248,7 @@ AddFriendItem.propTypes = {
   fakeDB: PropTypes.object,
   editUser: PropTypes.func,
   editFakeDB: PropTypes.func,
+  everyone: PropTypes.object,
 };
 
 AddFriendItem.defaultProps = {
@@ -199,6 +271,7 @@ function mapStateToProps(state) {
   return {
     isUserLoggedIn: state.user.isUserLoggedIn,
     fakeDB: state.user.fakeDB,
+    everyone: state.user.everyone,
   };
 }
 

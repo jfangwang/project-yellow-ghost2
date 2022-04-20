@@ -32,7 +32,7 @@ class Messages extends Component {
    * @memberof Messages
    */
   render() {
-    const {friends, user} = this.props;
+    const {friends, user, isUserLoggedIn} = this.props;
     return (
       <>
         <MetaTags>
@@ -44,7 +44,7 @@ class Messages extends Component {
         </MetaTags>
         <div className={styles.backgrounds}>
           <Navbar opacity={0} position="relative" />
-          <LoginBannerItem />
+          {!isUserLoggedIn && <LoginBannerItem />}
           {Object.keys(friends).map((id) => (
             <Message key={id} friend={friends[id]} user={user}/>
           ))}
@@ -63,6 +63,7 @@ Messages.propTypes = {
   width: PropTypes.number,
   friends: PropTypes.object,
   user: PropTypes.object,
+  isUserLoggedIn: PropTypes.bool,
 };
 
 Messages.defaultProps = {
@@ -85,6 +86,7 @@ function mapStateToProps(state) {
     width: state.global.width,
     friends: state.user.user.friends,
     user: state.user.user,
+    isUserLoggedIn: state.user.isUserLoggedIn,
   };
 }
 

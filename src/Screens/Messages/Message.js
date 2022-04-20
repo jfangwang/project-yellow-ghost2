@@ -8,7 +8,10 @@ import GuestPic from '../../Assets/images/guest-profile-pic.png';
 import enShort from 'react-timeago/lib/language-strings/en-short';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import {editUser, editFakeDB} from '../../Actions/userActions';
+import {toggleSlide} from '../../Actions/globalActions';
 import {toggleNavFoot} from '../../Actions/globalActions';
+import {db} from '../../Firebase/Firebase';
+import firebase from 'firebase/compat/app';
 
 const formatter = buildFormatter(enShort);
 export const statusDict = {
@@ -36,7 +39,7 @@ const emojiDict = {
  */
 export function Message(props) {
   const {friend, user, isUserLoggedIn, height, width, editUser,
-    toggleNavFoot, fakeDB, editFakeDB,
+    toggleNavFoot, fakeDB, editFakeDB, toggleSlide,
   } = props;
   const [showSnaps, setShowSnaps] = useState(false);
   const messageNewFriend = <div className={styles.messageNewFriend}></div>;
@@ -76,10 +79,13 @@ export function Message(props) {
       break;
     case 'pending':
       icon = messagePending;
+      break;
     case 'not-friends':
       icon = messageNotFriends;
+      break;
     case 'blocked':
       icon = messageBlocked;
+      break;
     default:
       icon = messageUnknown;
       break;
@@ -89,6 +95,7 @@ export function Message(props) {
    * Open Snap
    */
   async function openSnap() {
+    toggleSlide(true);
     setShowSnaps(true);
     const snapID = await getSnap();
     const currSnap = document.getElementById('currentSnap');
@@ -110,16 +117,12 @@ export function Message(props) {
    * @return {*}
    */
   function getSnap() {
-    if (isUserLoggedIn) {
-      console.log('not working yet');
+    const snaps = Object
+        .keys(friend['newSnaps']).sort((date1, date2) => date1 - date2);
+    if (snaps.length > 0) {
+      return (snaps[0]);
     } else {
-      const snaps = Object
-          .keys(friend['newSnaps']).sort((date1, date2) => date1 - date2);
-      if (snaps.length > 0) {
-        return (snaps[0]);
-      } else {
-        return (null);
-      }
+      return (null);
     }
   }
 
@@ -130,7 +133,36 @@ export function Message(props) {
   function updateDB(id) {
     const date = new Date();
     if (isUserLoggedIn) {
-      console.log('not updating db');
+      // const userDoc = {...user};
+      const fi = friend['id'];
+      const ui = user.id;
+      if (id === null) {
+        if (fi !== ui) {
+          db.collection('Users').doc(fi).update({
+            [`friends.${ui}.status`]: 'opened',
+          });
+        }
+        db.collection('Users').doc(ui).update({
+          [`friends.${fi}.status`]: 'received',
+        });
+      } else {
+        // User Doc
+        db.collection('Users').doc(ui).update({
+          [`friends.${fi}.newSnaps.${id}`]: firebase.firestore
+              .FieldValue.delete(),
+          [`friends.${fi}.openedByMe.lastTimeStamp`]: date.toUTCString(),
+          [`friends.${fi}.openedByMe.opened`]: firebase.firestore
+              .FieldValue.increment(1),
+        });
+        // Friend Doc
+        db.collection('Users').doc(fi).update({
+          [`friends.${ui}.openedByFriend.lastTimeStamp`]: date.toUTCString(),
+          [`friends.${ui}.openedByFriend.opened`]: firebase.firestore
+              .FieldValue.increment(1),
+          [`allSnapsSent.${id}.sentTo`]: firebase.firestore
+              .FieldValue.arrayRemove(ui),
+        });
+      }
     } else {
       const update = {...user};
       const updateFake = {...fakeDB};
@@ -144,12 +176,12 @@ export function Message(props) {
         const ui = user.id;
         // User
         update['friends'][fi]['openedByMe'] = {
-          lastTimeStamp: date.toISOString(),
+          lastTimeStamp: date.toUTCString(),
           opened: update['friends'][fi]['openedByMe']['opened'] + 1,
         };
         // Friend
         updateFake[ui]['friends'][ui]['openedByFriend'] = {
-          lastTimeStamp: date.toISOString(),
+          lastTimeStamp: date.toUTCString(),
           opened: updateFake[ui]['friends'][ui]['openedByFriend']['opened'] + 1,
         };
       }
@@ -162,6 +194,7 @@ export function Message(props) {
    * Close Snap
    */
   function closeSnap() {
+    toggleSlide(false);
     setShowSnaps(false);
     toggleNavFoot(false);
   }
@@ -199,7 +232,12 @@ export function Message(props) {
               className={styles.row}
               style={{justifyContent: 'start', marginBottom: '0.2rem'}}
             >
-              <h1>{friend['username']}</h1>
+              <h1>
+                {friend['username'] !== null ?
+                  friend.username :
+                  friend.firstName
+                }
+              </h1>
             </div>
             <div
               className={styles.row}
@@ -209,7 +247,8 @@ export function Message(props) {
               <h3 id='messageStatus'>
                 {statusDict[friend['status']]}
               </h3>
-              { friend['lastTimeStamp'] !== null &&
+              { (friend['lastTimeStamp'] !== null &&
+                friend['lastTimeStamp'] !== undefined) &&
                 <>
                   <div className={styles.separator}/>
                   <h3>
@@ -221,7 +260,7 @@ export function Message(props) {
                 </>
               }
               <div className={styles.separator}/>
-              <h3>{friend['streak']}</h3>
+              <h3>{friend['streak'] === undefined ? 0 : friend['streak']}</h3>
               <h5>{user.streakEmoji}</h5>
             </div>
           </div>
@@ -259,6 +298,7 @@ Message.propTypes = {
   editFakeDB: PropTypes.func,
   toggleNavFoot: PropTypes.func,
   fakeDB: PropTypes.object,
+  toggleSlide: PropTypes.func,
 };
 
 Message.defaultProps = {
@@ -268,6 +308,7 @@ Message.defaultProps = {
   toggleNavFoot: () => {},
   editUser: () => {},
   editFakeDB: () => {},
+  toggleSlide: () => {},
   friend: {
     username: 'User',
     profilePicUrl: GuestPic,
@@ -301,6 +342,7 @@ const mapDispatchToProps = {
   editUser,
   editFakeDB,
   toggleNavFoot,
+  toggleSlide,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Message);

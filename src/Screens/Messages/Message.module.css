@@ -5,8 +5,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px lightblue solid;
-    border-bottom: 1px lightblue solid;
+    border-top: 1px lightgray solid;
+    border-bottom: 1px lightgray solid;
     flex-wrap: wrap;
     width: 100%;
 }

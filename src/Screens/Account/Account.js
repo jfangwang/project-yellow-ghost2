@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import styles from './Account.module.css';
 import {editFakeDB} from '../../Actions/userActions';
-import AccountItem from './AccountItem';
-import LoginBannerItem from '../../Components/LoginBannerItem/LoginBannerItem';
+import {auth} from '../../Firebase/Firebase';
+
+const {version} = require('../../../package.json');
 
 /**
  *
@@ -16,10 +17,20 @@ function Account(props) {
   const {
     user,
     camRes,
-    camVideo,
-    camMic,
+    // camVideo,
+    // camMic,
     handleScroll,
+    isUserLoggedIn,
+    snapTime,
   } = props;
+
+
+  /**
+   *
+   */
+  function logout() {
+    auth.signOut();
+  }
 
   return (
     <div id='background' className={styles.background} onScroll={handleScroll}>
@@ -36,61 +47,74 @@ function Account(props) {
         </div>
       </div>
 
-      <LoginBannerItem />
-
       <div className={styles.acountSettings}>
         <h1>Account Settings</h1>
         <ul>
-          <AccountItem title='Change Username'>
-            <input type='text' id='username' placeholder={user.username}>
-            </input>
-          </AccountItem>
-          <AccountItem title='Change Profile Pic'></AccountItem>
-          <AccountItem title='Manage Streak Emoji'>
-            <p>Current Emoji: {user.streakEmoji}</p>
-            <button>Change</button>
-          </AccountItem>
-          <AccountItem title='Manage Phone Number'>
-            <p>Current Number: {!user.phoneNumber ? 'None' : user.phoneNumber}
-            </p>
-          </AccountItem>
-          <AccountItem title='Manage Face ID'>
-            <p>Current Face ID: {!user.faceID ? 'None' : user.faceID}
-            </p>
-          </AccountItem>
+          <li>
+            <h3>Full Name</h3>
+            <p>{user.firstName} {user.lastName}</p>
+            <button>Update</button>
+          </li>
+          <li>
+            <h3>Username</h3>
+            <p>{user.username === null ? 'NULL' : user.username}</p>
+            <button>Update</button>
+          </li>
+          <li>
+            <h3>Streak Emoji</h3>
+            <p>{user.streakEmoji}</p>
+            <button>Update</button>
+          </li>
+          <li>
+            <h3>Phone Number</h3>
+            <p>{user.phoneNumber === null ? 'NULL' : user.phoneNumber}</p>
+            <button>Update</button>
+          </li>
+          <li>
+            <h3>Face ID</h3>
+            <p>{user.faceID === null ? 'NULL' : user.faceID}</p>
+            <button>Update</button>
+          </li>
         </ul>
       </div>
 
       <div className={styles.uiSettings}>
         <h1>UI Settings</h1>
         <ul>
-          <AccountItem title='Set Theme'></AccountItem>
+          <li>
+            <h3>Themes</h3>
+            <p>Light Mode</p>
+          </li>
         </ul>
       </div>
 
       <div className={styles.messagesSettings}>
         <h1>Messages Settings</h1>
         <ul>
-          <AccountItem title='Manage Snap Timer'></AccountItem>
+          <li>
+            <h3>Default Time Limit</h3>
+            <p>{snapTime === - 1 ? 'No Limit' : snapTime}</p>
+            <button>Update</button>
+          </li>
         </ul>
       </div>
 
       <div className={styles.cameraSettings}>
         <h1>Camera Settings</h1>
         <ul>
-          <AccountItem title='Set Camera Resolution'>
-            <p>Resolution: {camRes}</p>
-          </AccountItem>
-          <AccountItem title='Change Capture Button Location'>
-
-          </AccountItem>
-          <AccountItem title='Set Camera Video'>
-            <p>Video: {camVideo}</p>
-          </AccountItem>
-          <AccountItem title='Set Camera Mic'><p>Mic: {camMic}</p></AccountItem>
-          <AccountItem title='Set Audio'><p>Audio:</p></AccountItem>
-          <AccountItem title='Toggle Camera Stats'></AccountItem>
+          <li>
+            <h3>Resolution</h3>
+            <p>{camRes}</p>
+          </li>
         </ul>
+      </div>
+      {isUserLoggedIn &&
+        <div className={styles.logout}>
+          <button onClick={logout}><h1>Log Out</h1></button>
+        </div>
+      }
+      <div>
+        <p>Project Yellow Ghost {version}</p>
       </div>
     </div>
   );
@@ -106,6 +130,8 @@ Account.propTypes = {
   showStats: PropTypes.bool,
   cameraButton: PropTypes.string,
   handleScroll: PropTypes.func,
+  isUserLoggedIn: PropTypes.bool,
+  snapTime: PropTypes.number,
 };
 
 Account.defaultProps = {
@@ -136,6 +162,8 @@ function mapStateToProps(state) {
     camMic: state.camera.cameraAudioInput,
     showStats: state.camera.showStats,
     cameraButton: state.camera.cameraButton,
+    isUserLoggedIn: state.user.isUserLoggedIn,
+    snapTime: state.camera.snapTime,
   };
 }
 

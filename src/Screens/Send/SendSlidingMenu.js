@@ -7,6 +7,10 @@ import styles from './Send.module.css';
 import SendItem from './SendItem';
 import {connect} from 'react-redux';
 import {editUser, editFakeDB} from '../../Actions/userActions';
+import {changeToIndex} from '../../Actions/globalActions';
+import {db, storage} from '../../Firebase/Firebase';
+import firebase from 'firebase/compat/app';
+import { v4 as uuid } from "uuid";
 import {
   IconContext,
   CaretLeft,
@@ -31,10 +35,13 @@ const SendSlidingMenu = forwardRef((props, ref) => {
     aspectRatio,
     isUserLoggedIn,
     snapTime,
+    localIndex,
+    changeToIndex,
   } = props;
   const [show, setShow] = useState(false);
   const [index, setIndex] = useState(0);
   const [disabled, setDisabled] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
   useImperativeHandle(ref, () => ({
     toggle(e = !show) {
       setShow(e);
@@ -43,7 +50,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (show) {
-      changeToIndex(1);
+      changeLocalToIndex(1);
     }
   }, [show]);
 
@@ -51,7 +58,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
    * Change to index
    * @param {*} e
    */
-  function changeToIndex(e) {
+  function changeLocalToIndex(e) {
     setIndex(e);
   }
 
@@ -68,7 +75,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
    * close
    */
   const close = () => {
-    changeToIndex(0);
+    changeLocalToIndex(0);
   };
 
   /**
@@ -82,38 +89,70 @@ const SendSlidingMenu = forwardRef((props, ref) => {
       setDisabled(false);
     }
   };
-  /**
-   * Send
-   */
-   function send() {
 
+  /**
+   * Combines all canvas' into one image
+   */
+  function drawFinalImage() {
     const img = document.getElementById('imageCanvas');
+    const fec = document.getElementById('faceEffectsCanvas');
     const drawing = document.getElementById('drawingCanvas');
+    const filterImg = document.getElementById(`imgFilter${localIndex}`);
     let final = document.getElementById('finalImage');
     final.width = img.width;
     final.height = img.height;
     final = document.getElementById('finalImage').getContext('2d');
     final.clearRect(0, 0, final.width, final.height);
     final.drawImage(img, 0, 0, img.width, img.height);
+    final.drawImage(fec, 0, 0, img.width, img.height);
+    if (localIndex == 1) {
+      final.drawImage(filterImg,
+        (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.17),
+        img.width * 0.7, img.height * 0.17
+        );
+    } else if (localIndex == 2) {
+      final.drawImage(filterImg,
+        (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.15),
+        img.width * 0.7, img.height * 0.15
+        );
+    } else if (localIndex == 3) {
+      final.drawImage(filterImg,
+        (img.width - (img.width * 0.7)) / 2, img.height - (img.height * 0.23),
+        img.width * 0.7, img.height * 0.23
+        );
+    } else if (localIndex == 4) {
+      final.drawImage(filterImg,
+        (img.width - (img.width)) / 2, img.height - (img.height * 0.99),
+        img.width, img.height * 0.99
+        );
+    }
     final.drawImage(drawing, 0, 0, drawing.width, drawing.height, 0, 0, img.width, img.height);
+  }
+  /**
+   * Send
+   */
+  async function send() {
+    setIsLoading(true);
+    drawFinalImage();
     const dataURL = document.getElementById('finalImage').toDataURL();
+    const imgID = uuid()
     const date = new Date();
     const updated = {...user};
-    const updateFake = {...fakeDB};
     const friends = updated.friends;
+    const updateFake = {...fakeDB};
 
     if (!isUserLoggedIn) {
       sendList.forEach((id) => {
         // Update User's Fields
         friends[id]['status'] = 'sent';
-        friends[id]['sent']['lastTimeStamp'] = date.toISOString();
-        friends[id]['lastTimeStamp'] = date.toISOString();
+        friends[id]['sent']['lastTimeStamp'] = date.toUTCString();
+        friends[id]['lastTimeStamp'] = date.toUTCString();
         friends[id]['sent']['sentSnaps'] += 1
         // Update Friend's Fields in FakeDB
-        updateFake[id]['friends'][user.id]['received']['lastTimeStamp'] = date.toISOString();
+        updateFake[id]['friends'][user.id]['received']['lastTimeStamp'] = date.toUTCString();
         updateFake[id]['friends'][user.id]['received']['receivedSnaps'] += 1;
         updateFake[id]['friends'][user.id]['status'] = 'new';
-        updateFake[id]['friends'][user.id]['newSnaps'][date.toISOString()] = {
+        updateFake[id]['friends'][user.id]['newSnaps'][date.toUTCString()] = {
           'imgURL': dataURL,
           'snapTime': snapTime,
           'type': 'image',
@@ -121,12 +160,68 @@ const SendSlidingMenu = forwardRef((props, ref) => {
       })
       editUser(updated);
       editFakeDB(updateFake);
+      setIsLoading(false);
+    } else {
+      const ref = storage.ref(`posts/${imgID}`);
+      await ref.putString(dataURL, 'data_url').then((snapshot) => {
+        snapshot.ref.getDownloadURL().then((imgURL) => {
+          return (imgURL);
+        }).then(async function(imgURL) {
+          await updateUsersDocs(sendList, date, imgID, imgURL);
+          setIsLoading(false);
+        })
+      });
     }
 
     setScreen('camera');
     toggleSlide();
     toggleNavFoot();
+    changeToIndex(0);
   };
+
+  async function updateUsersDocs(sendList, date, imageID, imgURL) {
+    const updated = {...user};
+    const friends = updated.friends;
+    const batch = db.batch();
+    updated['allSnapsSent'][date.toUTCString()] = {};
+    updated['allSnapsSent'][date.toUTCString()]['sentTo'] = [];
+    sendList.forEach((id) => {
+      let friendRef = db.collection('Users').doc(id);
+      // Update User's Fields on DB
+      friends[id]['status'] = 'sent';
+      friends[id]['sent']['lastTimeStamp'] = date.toUTCString();
+      friends[id]['lastTimeStamp'] = date.toUTCString();
+      friends[id]['sent']['sentSnaps'] += 1;
+      updated['sent'] += 1;
+      updated['allSnapsSent'][date.toUTCString()] = {
+        imgID: imageID,
+        sentTo: [...updated['allSnapsSent'][date.toUTCString()]['sentTo'], id]
+      }
+
+      // let userRef = db.collection('Users').doc(user.id);
+      // batch.update(userRef, {
+      //   [`friends.${id}.status`]: 'sent',
+      //   [`friends.${id}.sent.lastTimeStamp`]: date.toUTCString(),
+      //   [`friends.${id}.sent.sentSnaps`] : firebase.firestore.FieldValue.increment(1),
+      //   [`friends.${id}.sent`] : firebase.firestore.FieldValue.increment(1),
+      //   [`friends.${id}.lastTimeStamp`] : date.toUTCString(),
+      // })
+      // Update Friend's Fields on DB
+      batch.update(friendRef, {
+        [`friends.${user.id}.received.lastTimeStamp`]: date.toUTCString(),
+        [`friends.${user.id}.received.receivedSnaps`]: firebase.firestore.FieldValue.increment(1),
+        [`friends.${user.id}.status`]: 'new',
+        [`friends.${user.id}.newSnaps.${date.toUTCString()}`]: {
+          'imgURL': imgURL,
+          'snapTime': snapTime,
+          'type': 'image',
+        },
+        [`received`]: firebase.firestore.FieldValue.increment(1),
+      })
+    });
+    await db.collection('Users').doc(user.id).update(updated);
+    await batch.commit();
+  }
 
   return (
     <>
@@ -142,7 +237,7 @@ const SendSlidingMenu = forwardRef((props, ref) => {
             <SwipeableViews
               disabled={disabled}
               index={index}
-              onChangeIndex={changeToIndex}
+              onChangeIndex={changeLocalToIndex}
               onTransitionEnd={checkIndex}
               enableMouseEvents
               axis={axis}
@@ -192,19 +287,27 @@ const SendSlidingMenu = forwardRef((props, ref) => {
                   <footer>
                     <div className={styles.footerNames}>
                         {sendList.map((item) => (
-                          <h1 key={user.friends[item]['username']}>
-                            {user.friends[item]['username']}
-                          </h1>
+                          <h2 key={user.friends[item]['firstName']}>
+                            {user.friends[item]['firstName']}
+                          </h2>
                         ))}
                     </div>
                     <div>
-                      <button
-                        className={styles.sendButton}
-                        onClick={send}
-                      >
-                        <h2 style={{marginRight: '0.2rem'}}>Send</h2>
-                        <PaperPlaneRight />
-                      </button>
+                      { !isloading ?
+                        <button
+                          className={styles.sendButton}
+                          onClick={send}
+                        >
+                          <h2 style={{marginRight: '0.2rem'}}>Send</h2>
+                          <PaperPlaneRight />
+                        </button> :
+                        <button
+                          className={styles.sendButton}
+                          onClick={() => {}}
+                        >
+                          <h2 style={{marginRight: '0.2rem'}}>Loading</h2>
+                        </button>
+                      }
                     </div>
                   </footer>
                 }
@@ -230,6 +333,8 @@ SendSlidingMenu.propTypes = {
   sendList: PropTypes.array,
   aspectRatio: PropTypes.number,
   isUserLoggedIn: PropTypes.bool,
+  localIndex: PropTypes.number,
+  changeToIndex: PropTypes.func,
 };
 SendSlidingMenu.defaultProps = {
   height: window.innerHeight,
@@ -240,6 +345,7 @@ SendSlidingMenu.defaultProps = {
   toggleNavFoot: () => {},
   editUser: () => {},
   editFakeDB: () => {},
+  changeToIndex: () => {},
   user: {},
   sendList: [],
   isUserLoggedIn: false,
@@ -265,6 +371,7 @@ SendSlidingMenu.defaultProps = {
 const mapDispatchToProps = {
   editUser,
   editFakeDB,
+  changeToIndex,
   // setCameraPermissions,
   // toggleFacingMode,
   // toggleSlide,

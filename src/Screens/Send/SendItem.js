@@ -53,7 +53,11 @@ function SendItem(props) {
           src={friend.profilePicUrl}
         />
         <div className={styles.col}>
-          <h3>{friend.username}</h3>
+          <h3>
+            {friend.username ?
+            friend.username :
+            `${friend.firstName}`}
+          </h3>
           <div className={styles.row}>
             <h4 style={{marginRight: '0.2rem'}}>{friend.streak}</h4>
             <h5>{user.streakEmoji}</h5>

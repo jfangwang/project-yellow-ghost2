@@ -13,7 +13,10 @@ export function BestFriends(props) {
     <li className={styles.bestFriends}>
       <button>
         <img src={friend.profilePicUrl}/>
-        <h3>{friend.username}</h3>
+        {friend.username !== null ?
+          <h3>{friend.username}</h3> :
+          <h3>{friend.firstName}</h3>
+        }
       </button>
     </li>
   );
@@ -42,14 +45,17 @@ export function Recent(props) {
     case 'blocked':
       status = 'Blocked';
     default:
-      status = '';
+      status = friend.status;
       break;
   }
   return (
     <li className={styles.recent}>
       <button>
         <img src={friend.profilePicUrl}/>
-        <h3>{friend.username}</h3>
+        {friend.username !== null ?
+          <h3>{friend.username}</h3> :
+          <h3>{friend.firstName}</h3>
+        }
         <h3 className={styles.status}>{status}</h3>
       </button>
     </li>

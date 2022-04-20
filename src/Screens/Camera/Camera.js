@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './Camera.module.css';
 import {useDoubleTap} from 'use-double-tap';
-import {MaskHappy, Image, IconContext} from 'phosphor-react';
+import {MaskHappy, Image, IconContext, XCircle} from 'phosphor-react';
 import SlidingMenuRouting
   from '../../Components/SlidingMenu/SlidingMenuRouting';
 import Navbar from '../../Components/Navbar/Navbar';
@@ -21,6 +21,39 @@ import {
 } from '../../Actions/cameraActions';
 import Send from '../Send/Send';
 import Memories from '../Memories/Memories';
+import main from './Fireworks';
+import {
+  drawDots,
+  drawBox,
+  drawTriangles,
+  drawRandomColorMask,
+} from './utilities';
+// import * as tf from '@tensorflow/tfjs';
+import '@tensorflow/tfjs-backend-webgl';
+import * as facemesh from '@tensorflow-models/face-landmarks-detection';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
+let fdcount = 0;
+let net;
+let interval;
+let filter = null;
+const filterList = ['nothing', 'box', 'dots', 'mask', 'coloredMask'];
+const settings = {
+  className: styles.slider,
+  dots: false,
+  infinite: true,
+  slidesToScroll: 1,
+  centerMode: true,
+  focusOnSelect: true,
+  variableWidth: true,
+  centerPadding: '0px',
+  touchThreshold: 5,
+  speed: 300,
+  swipe: true,
+  afterChange: (e) => filter = filterList[e],
+};
 
 /**
  *
@@ -44,16 +77,24 @@ function Camera(props) {
     setScreen,
     captureImage,
     updateSendList,
+    hideNavFoot,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
+  const [TFOn, setTFOn] = useState(false);
   const [aspectRatio, setAspectRatio] = useState(
     isMobile ? (width/height) : 9.5/16);
   const [w, setw] = useState(null);
   const [h, seth] = useState(null);
   const [vidLoaded, setVidLoaded] = useState(false);
   const doubleTap = useDoubleTap(() => {
-    if (screen === 'camera') {
-      toggleFacingMode();
+    if (TFOn) {
+      if (screen === 'camera' && vidLoaded && filter !== null) {
+        toggleFacingMode();
+      }
+    } else {
+      if (screen === 'camera' && vidLoaded) {
+        toggleFacingMode();
+      }
     }
   });
   const memoriesMenu = useRef();
@@ -62,10 +103,12 @@ function Camera(props) {
    * Starts the camera
    */
   function startCamera() {
+    updateVECanvas();
     setVidLoaded(false);
+    const fec = document.getElementById('faceEffectsCanvas');
     const ratio = isMobile ?
       (orientation !== 'portrait' ? width / height : height / width) :
-      9.5 / 16;
+      (orientation !== 'portrait' ? 16/9.5 : 9.5/16);
     setAspectRatio(ratio);
     const constraints = {
       audio: false,
@@ -74,8 +117,8 @@ function Camera(props) {
         aspectRatio: {
           exact: ratio,
         },
-        width: {ideal: 10000},
-        height: {ideal: 10000},
+        width: {ideal: !TFOn ? 10000 : Math.max(fec.height, fec.width)},
+        height: {ideal: !TFOn ? 10000 : Math.max(fec.height, fec.width)},
       },
     };
 
@@ -84,20 +127,25 @@ function Camera(props) {
         .then(function(mediaStream) {
           const v = document.getElementById('mainCamera');
           const ol = document.querySelector('#cameraOverlay');
-          ol.classList.remove(styles.fadeOut);
-          ol.classList.add(styles.loading);
+          if (ol) {
+            ol.classList.remove(styles.fadeOut);
+          }
           document.getElementById('mainCamera').srcObject = mediaStream;
           setCurrentStream(mediaStream);
           setCameraPermissions(true);
-          document.getElementById('mainCamera').onloadedmetadata = function(e) {
+          document.getElementById('mainCamera').onloadeddata = function(e) {
             v.play();
             setw(v.videoWidth);
             seth(v.videoHeight);
             setAspectRatio(v.videoWidth / v.videoHeight);
-            updateVECanvas();
             setVidLoaded(true);
-            ol.classList.remove(styles.loading);
-            ol.classList.add(styles.fadeOut);
+            updateVECanvas();
+            if (TFOn) {
+              runFacemesh();
+            } else if (ol) {
+              ol.classList.remove(styles.loading);
+              ol.classList.add(styles.fadeOut);
+            }
           };
         })
         .catch(function(err) {
@@ -123,7 +171,7 @@ function Camera(props) {
       currentStream.getTracks().forEach((element) => {
         element.stop();
       });
-      document.querySelector('video').srcObject = null;
+      document.querySelector('#mainCamera').srcObject = null;
     }
     setCurrentStream(null);
     setVidLoaded(false);
@@ -142,6 +190,7 @@ function Camera(props) {
    * Capture
    */
   function capture() {
+    const fec = document.getElementById('faceEffectsCanvas');
     const video = document.getElementById('mainCamera');
     const canvas = document.getElementById('imageCanvas');
     const ctx = canvas.getContext('2d');
@@ -155,46 +204,146 @@ function Camera(props) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       captureImage('Image Taken Place Holder');
     }
-    toggleNavFoot(false);
-    toggleSlide(false);
+    if (TFOn) {
+      ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
+    }
+    ctx.scale(1, 1);
+    ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
+    toggleNavFoot(true);
+    toggleSlide(true);
     setScreen('capture');
+  }
+
+  /**
+   * Starts Tensorflow
+   */
+  async function runFacemesh() {
+    fdcount = 0;
+    updateVECanvas();
+    console.log('Starting Facemesh');
+    const model = facemesh.SupportedModels.MediaPipeFaceMesh;
+    const detectorConfig = {
+      runtime: 'mediapipe', // or 'tfjs'
+      solutionPath: 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh',
+    };
+    net =
+    await facemesh.createDetector(model, detectorConfig);
+    console.log('model loaded');
+    // detect(net);
+    interval = setInterval(async () => {
+      await detect(net);
+    }, 10);
+  };
+
+  /**
+   * @param {*} net
+   */
+  async function detect(net) {
+    // Get canvas context
+    const ol = document.querySelector('#cameraOverlay');
+    const fec = document.getElementById('faceEffectsCanvas');
+    const ctx = document.getElementById('faceEffectsCanvas').getContext('2d');
+    const video = document.getElementById('mainCamera');
+    if (document.getElementById('closeFace')) {
+      const estimationConfig = {
+        flipHorizontal: facingMode === 'user' ? true : false,
+      };
+      const face = await net.estimateFaces(video, estimationConfig);
+      fdcount += 1;
+      if (fdcount === 1) {
+        ol.classList.remove(styles.loading);
+        ol.classList.add(styles.fadeOut);
+        filter = 'nothing';
+      }
+
+      ctx.clearRect(0, 0, fec.width, fec.height);
+      console.log('filter: ', filter);
+      if (filter === 'box') {
+        drawBox(face, ctx);
+      } else if (filter === 'dots') {
+        drawDots(face, ctx);
+      } else if (filter === 'mask') {
+        drawTriangles(face, ctx);
+      } else if (filter === 'coloredMask') {
+        drawRandomColorMask(face, ctx);
+      }
+    } else {
+      clearInterval(interval);
+      filter = null;
+    }
   }
 
   /**
    * Updates the visual effects canvas
    */
   function updateVECanvas() {
+    const fec = document.getElementById('faceEffectsCanvas');
     const vec = document.getElementById('visualEffectsCanvas');
     const cw = isMobile ?
-      width : (width/height) > aspectRatio ? height * aspectRatio : width;
+      width : ((width/height) > aspectRatio ? height * aspectRatio : width);
     const ch = isMobile ?
-      height : (width/height) > aspectRatio ? height : width*(aspectRatio**-1);
-    if (h != null && w != null) {
-      vec.width = Math.min(cw, w);
-      vec.height = Math.min(ch, h);
-    } else {
-      vec.width = cw;
-      vec.height = ch;
+      height : ((width/height)>aspectRatio ? height : width*(aspectRatio**-1));
+    if (index === 1 && screen === 'camera') {
+      if (h != null && w != null) {
+        // vec.width = Math.min(cw, w);
+        // vec.height = Math.min(ch, h);
+        fec.width = Math.min(cw, w);
+        fec.height = Math.min(ch, h);
+      } else {
+        // vec.width = cw;
+        // vec.height = ch;
+        fec.width = cw;
+        fec.height = ch;
+      }
     }
-    // console.log(vec.height, vec.width, h, w);
+    vec.width = width;
+    vec.height = height;
+    // console.log(fec.width, fec.height, width, height);
   }
 
   useEffect(() => {
-    document.querySelector('video').onloadeddata = () => {
-      console.log('video loaded');
-    };
+    // document.querySelector('video').onloadeddata = () => {
+    //   console.log('video loaded');
+    // };
+    main();
   }, []);
 
   useEffect(() => {
+    const ol = document.querySelector('#cameraOverlay');
+    if (ol) {
+      ol.classList.add(styles.loading);
+    }
+    stopCamera();
+    startCamera();
+    if (TFOn) {
+      toggleSlide(true);
+      toggleNavFoot(true);
+    } else {
+      toggleSlide(false);
+      toggleNavFoot(false);
+      filter = null;
+    }
+  }, [TFOn]);
+
+  useEffect(() => {
     updateVECanvas();
+    if (index === 1 && screen === 'camera') {
+      setTFOn(false);
+    }
   }, [height, width]);
 
   useEffect(() => {
     if (cameraPermissions === true || cameraPermissions === null) {
       if (index === 1 && screen === 'camera') {
+        const ol = document.querySelector('#cameraOverlay');
+        if (ol) {
+          ol.classList.add(styles.loading);
+        }
         stopCamera();
         startCamera();
         updateSendList([]);
+        updateVECanvas();
+        setTFOn(false);
         const canvas = document.getElementById('imageCanvas');
         const ctx = canvas.getContext('2d');
         if (facingMode === 'user') {
@@ -209,7 +358,9 @@ function Camera(props) {
       }
     } else {
       const ol = document.querySelector('#cameraOverlay');
-      ol.classList.remove(styles.loading);
+      if (ol) {
+        ol.classList.remove(styles.loading);
+      }
     }
   }, [index, facingMode, orientation, screen]);
 
@@ -255,53 +406,88 @@ function Camera(props) {
             style={{
               maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
               maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              zIndex: index == 1 ? 0 : -10,
+            }}
+          />
+          <canvas
+            id="faceEffectsCanvas"
+            className={styles.faceEffectsCanvas}
+            style={{
+              maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+              height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              zIndex: index == 1 ? 0 : -10,
             }}
           />
           <canvas
             id="visualEffectsCanvas"
             className={styles.visualEffectsCanvas}
             style={{
-              maxWidth: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-              maxHeight: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+              zIndex: index == 1 ? 0 : -10,
             }}
           />
           { (screen === 'camera') &&
             <div id='cameraOverlay' className={styles.cameraOverlay}>
               <div className={styles.cameraHeader}>
-                <Navbar opacity={0} position="relative" />
-                <div className={styles.cameraStats}>
+                { !hideNavFoot && <Navbar opacity={0} position="relative" /> }
+                {/* <div className={styles.cameraStats}>
                   <p>Device AR: {width/height}</p>
                   <p>Height: {height} Width: {width}</p>
                   <p>Cam AR: {w/h}</p>
                   <p>Cam H: {h} Cam W: {w}</p>
                   <p>orientation: {orientation}</p>
-                </div>
+                </div> */}
               </div>
               <div className={styles.cameraFooter}>
-                <div className={styles.cameraButtons}>
-                  <button onClick={() => memoriesMenu.current.toggle()}>
-                    <Image />
-                  </button>
+                {TFOn &&
+                  <Slider {...settings}>
+                    {filterList.map((item) => (
+                      <div
+                        key={item}
+                        className={styles.sliderItem}
+                      >
+                        <h3>{item}</h3>
+                      </div>
+                    ))}
+                  </Slider>
+                }
+                <div
+                  style={{flexDirection: TFOn ? 'column' : 'row'}}
+                  className={styles.cameraButtons}
+                >
+                  { !TFOn &&
+                    <button onClick={() => memoriesMenu.current.toggle()}>
+                      <Image />
+                    </button>
+                  }
                   <button
+                    style={{zIndex: TFOn ? 1 : 0}}
                     className={styles.captureButton}
                     onClick={
                       (screen === 'camera' && vidLoaded && cameraPermissions) ?
                       capture : () => {}
                     }
                   />
-                  <button
-                    onClick={
-                      (screen === 'camera' && vidLoaded && cameraPermissions) ?
-                      () => {} : () => {}
-                    }
-                  ><MaskHappy /></button>
+                  { !TFOn ?
+                    <button
+                      onClick={
+                        (screen === 'camera'&&vidLoaded&&cameraPermissions) ?
+                        () => setTFOn(true) : () => {}}
+                    ><MaskHappy /></button> :
+                    <button id='closeFace' onClick={() => setTFOn(false)}>
+                      <XCircle />
+                    </button>
+                  }
                 </div>
-                <Footer position="relative" opacity={0} />
+                { !hideNavFoot && <Footer position="relative" opacity={0} /> }
               </div>
             </div>
           }
           { cameraPermissions === false &&
-            <>
+            <div className={styles.disabled}>
               <h1>Camera Disabled</h1>
               <button
                 style={{
@@ -311,7 +497,8 @@ function Camera(props) {
               >
                 <h1>Allow</h1>
               </button>
-            </>
+            </div>
+
           }
           <SlidingMenuRouting
             ref={memoriesMenu}
@@ -325,7 +512,11 @@ function Camera(props) {
           </SlidingMenuRouting>
         </IconContext.Provider>
         { screen === 'capture' &&
-          <Capture aspectRatio={aspectRatio} camH={h} camW={w}/>
+          <Capture
+            aspectRatio={aspectRatio}
+            camH={h}
+            camW={w}
+          />
         }
         { screen === 'send' &&
           <Send />
@@ -350,6 +541,7 @@ Camera.propTypes = {
   setScreen: PropTypes.func,
   captureImage: PropTypes.func,
   updateSendList: PropTypes.func,
+  hideNavFoot: PropTypes.bool,
 };
 
 Camera.defaultProps = {
@@ -384,6 +576,7 @@ function mapStateToProps(state) {
     cameraPermissions: state.camera.cameraPermissions,
     orientation: state.global.orientation,
     screen: state.camera.screen,
+    hideNavFoot: state.global.hideNavFoot,
   };
 }
 

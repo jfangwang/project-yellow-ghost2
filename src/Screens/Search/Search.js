@@ -15,7 +15,7 @@ function Search(props) {
     <div className={styles.background} onScroll={handleScroll}>
       <h2>Best Friends</h2>
       <ul className={styles.bestFriendsContainer}>
-        {Object.keys(user.friends).map((id) => (
+        {Object.keys(user.friends).slice(0, 6).map((id) => (
           <BestFriends key={id} friend={user.friends[id]}/>
         ))}
       </ul>

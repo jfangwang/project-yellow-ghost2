@@ -7,6 +7,7 @@ import {setScreen} from '../../Actions/cameraActions';
 import SendSlidingMenu from '../Send/SendSlidingMenu';
 import SlidingMenu from '../../Components/SlidingMenu/SlidingMenu';
 import {create} from 'simple-drawing-board';
+import {isMobile} from 'react-device-detect';
 import {
   IconContext,
   X,
@@ -25,7 +26,11 @@ import {
 import {MetaTags} from 'react-meta-tags';
 import Timer from '../Timer/Timer';
 import {HueSlider} from 'react-slider-color-picker';
-// import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
+import SwipeableViews from 'react-swipeable-views/lib/SwipeableViews';
+import filter1 from '../../Assets/images/filters/patagonia_logo.png';
+import filter2 from '../../Assets/images/filters/Wendys-Logo.png';
+import filter3 from '../../Assets/images/filters/Rick-And-Morty-Logo.png';
+import filter4 from '../../Assets/images/filters/color-paint-border.png';
 
 let sdb = null;
 
@@ -53,6 +58,8 @@ function Capture(props) {
   const [activeTool, setActiveTool] = useState(null);
   const [hideUI, setHideUI] = useState(false);
   const [color, setColor] = useState({h: 56, s: 100, l: 50, a: 1});
+  const [localIndex, setLocalIndex] = useState(0);
+  const [showFilters, setShowFilters] = useState(true);
 
   /**
    * Close
@@ -101,7 +108,6 @@ function Capture(props) {
    */
   function toggleDraw() {
     if (activeTool == null) {
-      console.log('asdf');
       setActiveTool('draw');
       if (sdb == null) {
         sdb = create(document.getElementById('drawingCanvas'));
@@ -207,7 +213,23 @@ function Capture(props) {
 
   useEffect(() => {
     updateDrawingCanvas();
+    if (sdb !== null) {
+      sdb.setLineSize(5);
+      sdb.setLineColor(hslToHex(color['h'], color['s'], color['l']));
+      if (!isMobile) {
+        undo();
+        redo();
+      }
+    }
   }, [height, width]);
+
+  useEffect(() => {
+    if (sdb !== null) {
+      undo();
+      redo();
+    }
+  }, [orientation]);
+
   useEffect(() => {
     if (screen === 'capture' || screen === 'camera') {
       sdb = null;
@@ -225,6 +247,79 @@ function Capture(props) {
       <div
         className={styles.background}
       >
+        <SwipeableViews
+          enableMouseEvents
+          index={localIndex}
+          containerStyle={{
+            width: (width/height) <= (aspectRatio) ?
+              width : height * aspectRatio,
+            height: (width/height) <= (aspectRatio) ?
+              width * (aspectRatio ** -1) : height,
+          }}
+          style={{
+            position: 'absolute',
+            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            zIndex: 1,
+          }}
+          slideStyle={{
+            height: '100%',
+            width: '100%',
+            display: showFilters ? 'block' : 'none',
+          }}
+        >
+          <div/>
+          <div className={styles.screen1}>
+            <img id='imgFilter1' src={filter1}/>
+          </div>
+          <div className={styles.screen2}>
+            <img id='imgFilter2' src={filter2}/>
+          </div>
+          <div className={styles.screen3}>
+            <img id='imgFilter3' src={filter3}/>
+          </div>
+          <div className={styles.screen4}>
+            <img style={{height: height * 0.99}} id='imgFilter4' src={filter4}/>
+          </div>
+        </SwipeableViews>
+        <SwipeableViews
+          enableMouseEvents
+          index={localIndex}
+          onChangeIndex={(e) => setLocalIndex(e)}
+          onSwitching={() => setShowFilters(false)}
+          onTransitionEnd={() => setShowFilters(true)}
+          containerStyle={{
+            width: (width/height) <= (aspectRatio) ?
+              width : height * aspectRatio,
+            height: (width/height) <= (aspectRatio) ?
+              width * (aspectRatio ** -1) : height,
+          }}
+          style={{
+            position: 'absolute',
+            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            zIndex: 4,
+          }}
+          slideStyle={{
+            height: '100%',
+            width: '100%',
+            display: !showFilters ? 'block' : 'none',
+          }}
+        >
+          <div/>
+          <div className={styles.screen1}>
+            <img src={filter1}/>
+          </div>
+          <div className={styles.screen2}>
+            <img id='imgFilter2' src={filter2}/>
+          </div>
+          <div className={styles.screen3}>
+            <img id='imgFilter3' src={filter3}/>
+          </div>
+          <div className={styles.screen4}>
+            <img style={{height: height * 0.99}} id='imgFilter4' src={filter4}/>
+          </div>
+        </SwipeableViews>
         {/* Canvas for drawing with marker tool */}
         <canvas
           id='drawingCanvas'
@@ -232,7 +327,7 @@ function Capture(props) {
           style={{
             width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
             height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-            zIndex: activeTool === 'draw' ? 1 : 0,
+            zIndex: activeTool === 'draw' ? 4 : 1,
             // border: '4px blue solid',
             position: 'absolute',
           }}
@@ -244,37 +339,16 @@ function Capture(props) {
           style={{
             width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
             height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-            zIndex: activeTool === null ? 1 : 0,
+            zIndex: activeTool === null ? 0 : 0,
             // border: '2px red solid',
             position: 'absolute',
           }}
         />
-        {/* <SwipeableViews
-          enableMouseEvents
-          containerStyle={{
-            width: (width/height) <= (aspectRatio) ?
-              width : height * aspectRatio,
-            height: (width/height) <= (aspectRatio) ?
-              width * (aspectRatio ** -1) : height,
-          }}
-          style={{
-            position: 'absolute',
-            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
-            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
-          }}
-          slideStyle={{
-            height: '100%',
-            width: '100%',
-          }}
-        >
-          <div/>
-          <div className={styles.screen1}/>
-        </SwipeableViews> */}
         { !hideUI &&
           <>
             <header
               style={{
-                zIndex: 1,
+                zIndex: 4,
               }}
             >
               <IconContext.Provider
@@ -304,6 +378,7 @@ function Capture(props) {
                   style={{
                     flexDirection: orientation === 'landscape' ?
                       'row':'column',
+                    zIndex: 4,
                   }}
                 >
                   { activeTool == null || activeTool === 'text' ?
@@ -354,7 +429,7 @@ function Capture(props) {
 
             <footer
               style={{
-                zIndex: 1,
+                zIndex: 4,
               }}
               className={styles.captureFooter}
             >
@@ -393,6 +468,7 @@ function Capture(props) {
         toggleNavFoot={toggleNavFoot}
         user={user}
         sendList={sendList}
+        localIndex={localIndex}
       />
       <SlidingMenu
         ref={toolTime}

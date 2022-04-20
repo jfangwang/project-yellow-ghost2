@@ -54,7 +54,7 @@ export function globalReducer(state = initialState, action) {
         decIndex: action.decIndex,
       };
     case TOGGLE_SLIDE:
-      if (action.state) {
+      if (action.state == true || action.state == false) {
         return {
           ...state,
           slideDisabled: action.state,
@@ -71,17 +71,10 @@ export function globalReducer(state = initialState, action) {
         orientation: action.orientation,
       };
     case TOGGLE_NAV_FOOT:
-      if (action.state) {
-        return {
-          ...state,
-          hideNavFoot: action.state,
-        };
-      } else {
-        return {
-          ...state,
-          hideNavFoot: !state.hideNavFoot,
-        };
-      }
+      return {
+        ...state,
+        hideNavFoot: action.state,
+      };
     default:
       return state;
   }
