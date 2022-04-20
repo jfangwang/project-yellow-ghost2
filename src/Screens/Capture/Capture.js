@@ -22,6 +22,7 @@ import {
   CaretLeft,
   ArrowCounterClockwise,
   ArrowClockwise,
+  Check,
 } from 'phosphor-react';
 import {MetaTags} from 'react-meta-tags';
 import Timer from '../Timer/Timer';
@@ -31,6 +32,8 @@ import filter1 from '../../Assets/images/filters/patagonia_logo.png';
 import filter2 from '../../Assets/images/filters/Wendys-Logo.png';
 import filter3 from '../../Assets/images/filters/Rick-And-Morty-Logo.png';
 import filter4 from '../../Assets/images/filters/color-paint-border.png';
+import {drawFinalImage} from '../Send/SendSlidingMenu';
+import {editUser} from '../../Actions/userActions';
 
 let sdb = null;
 
@@ -52,6 +55,7 @@ function Capture(props) {
     sendList,
     orientation,
     screen,
+    editUser,
   } = props;
   const sendMenu = useRef();
   const toolTime = useRef();
@@ -60,6 +64,22 @@ function Capture(props) {
   const [color, setColor] = useState({h: 56, s: 100, l: 50, a: 1});
   const [localIndex, setLocalIndex] = useState(0);
   const [showFilters, setShowFilters] = useState(true);
+  const [savedMem, setSavedMem] = useState(false);
+
+  /**
+   *
+   */
+  function saveToMemories() {
+    drawFinalImage(localIndex);
+    const newMem = {};
+    newMem.date = new Date().toLocaleString();
+    newMem.type = 'image';
+    newMem.url = document.getElementById('finalImage').toDataURL();
+    const updated = {...user};
+    updated.memories[newMem.date] = newMem;
+    editUser(updated);
+    setSavedMem(true);
+  }
 
   /**
    * Close
@@ -247,6 +267,14 @@ function Capture(props) {
       <div
         className={styles.background}
       >
+        <canvas
+          id='finalImage'
+          style={{
+            width: (width/height) <= (aspectRatio) ? '100%' : 'auto',
+            height: (width/height) <= (aspectRatio) ? 'auto' : '100%',
+            display: 'none',
+          }}
+        />
         <SwipeableViews
           enableMouseEvents
           index={localIndex}
@@ -441,7 +469,12 @@ function Capture(props) {
                 }}
               >
                 <div>
-                  <button disabled><DownloadSimple /></button>
+                  <button
+                    disabled={savedMem}
+                    onClick={savedMem ? () => {} : saveToMemories}
+                  >
+                    { savedMem ? <Check color='green'/> : <DownloadSimple />}
+                  </button>
                   <button disabled><Export /></button>
                 </div>
                 <div>
@@ -487,6 +520,7 @@ Capture.propTypes = {
   toggleSlide: PropTypes.func,
   toggleNavFoot: PropTypes.func,
   setScreen: PropTypes.func,
+  editUser: PropTypes.func,
   screen: PropTypes.string,
   aspectRatio: PropTypes.number,
   camH: PropTypes.number,
@@ -503,6 +537,7 @@ Capture.defaultProps = {
   toggleSlide: () => { },
   toggleNavFoot: () => { },
   setScreen: () => { },
+  editUser: () => { },
   screen: 'camera',
   aspectRatio: 9.5/16,
   camH: null,
@@ -534,6 +569,7 @@ const mapDispatchToProps = {
   toggleSlide,
   toggleNavFoot,
   setScreen,
+  editUser,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Capture);
