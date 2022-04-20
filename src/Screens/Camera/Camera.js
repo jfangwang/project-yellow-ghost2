@@ -87,8 +87,14 @@ function Camera(props) {
   const [h, seth] = useState(null);
   const [vidLoaded, setVidLoaded] = useState(false);
   const doubleTap = useDoubleTap(() => {
-    if (screen === 'camera') {
-      toggleFacingMode();
+    if (TFOn) {
+      if (screen === 'camera' && vidLoaded && filter !== null) {
+        toggleFacingMode();
+      }
+    } else {
+      if (screen === 'camera' && vidLoaded) {
+        toggleFacingMode();
+      }
     }
   });
   const memoriesMenu = useRef();
