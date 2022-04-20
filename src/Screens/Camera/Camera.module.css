@@ -64,12 +64,11 @@
 }
 
 .captureButton {
-    width: 7.2em;
-    height: 7.2em;
+    width: 5.2rem;
+    height: 5.2rem;
     background: transparent;
     border: 0.5rem solid rgb(255, 255, 255);
     border-radius: 50%;
-    z-index: 1;
 }
 
 .slidingMenuContainer {

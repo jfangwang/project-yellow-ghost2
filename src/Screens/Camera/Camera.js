@@ -458,6 +458,7 @@ function Camera(props) {
                     </button>
                   }
                   <button
+                    style={{zIndex: TFOn ? 1 : 0}}
                     className={styles.captureButton}
                     onClick={
                       (screen === 'camera' && vidLoaded && cameraPermissions) ?
