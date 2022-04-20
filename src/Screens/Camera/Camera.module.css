@@ -69,6 +69,7 @@
     background: transparent;
     border: 0.5rem solid rgb(255, 255, 255);
     border-radius: 50%;
+    z-index: 1;
 }
 
 .slidingMenuContainer {
@@ -143,7 +144,12 @@ animation-duration: 1s;
 
 .slider {
     background-color: transparent;
-    width: 80%;
+    width: 85%;
+    border: 1px white solid;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    position: fixed !important;
+    margin-bottom: 6rem;
 }
 
 .sliderItem {

@@ -49,8 +49,9 @@ const settings = {
   focusOnSelect: true,
   variableWidth: true,
   centerPadding: '0px',
-  touchThreshold: 8,
-  speed: 250,
+  touchThreshold: 5,
+  speed: 300,
+  swipe: true,
   afterChange: (e) => filter = filterList[e],
 };
 
@@ -433,23 +434,26 @@ function Camera(props) {
               </div>
               <div className={styles.cameraFooter}>
                 {TFOn &&
-                  <>
-                    <Slider {...settings}>
-                      {filterList.map((item) => (
-                        <div
-                          key={item}
-                          className={styles.sliderItem}
-                        >
-                          <h3>{item}</h3>
-                        </div>
-                      ))}
-                    </Slider>
-                  </>
+                  <Slider {...settings}>
+                    {filterList.map((item) => (
+                      <div
+                        key={item}
+                        className={styles.sliderItem}
+                      >
+                        <h3>{item}</h3>
+                      </div>
+                    ))}
+                  </Slider>
                 }
-                <div className={styles.cameraButtons}>
-                  <button onClick={() => memoriesMenu.current.toggle()}>
-                    <Image />
-                  </button>
+                <div
+                  style={{flexDirection: TFOn ? 'column' : 'row'}}
+                  className={styles.cameraButtons}
+                >
+                  { !TFOn &&
+                    <button onClick={() => memoriesMenu.current.toggle()}>
+                      <Image />
+                    </button>
+                  }
                   <button
                     className={styles.captureButton}
                     onClick={
