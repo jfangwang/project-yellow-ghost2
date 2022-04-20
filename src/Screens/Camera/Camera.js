@@ -77,6 +77,7 @@ function Camera(props) {
     setScreen,
     captureImage,
     updateSendList,
+    hideNavFoot,
   } = props;
   const [currentStream, setCurrentStream] = useState(null);
   const [TFOn, setTFOn] = useState(false);
@@ -202,7 +203,7 @@ function Camera(props) {
     }
     ctx.scale(1, 1);
     ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
-    toggleNavFoot(false);
+    toggleNavFoot(true);
     toggleSlide(true);
     setScreen('capture');
   }
@@ -310,8 +311,10 @@ function Camera(props) {
     startCamera();
     if (TFOn) {
       toggleSlide(true);
+      toggleNavFoot(true);
     } else {
       toggleSlide(false);
+      toggleNavFoot(false);
       filter = null;
     }
   }, [TFOn]);
@@ -423,7 +426,7 @@ function Camera(props) {
           { (screen === 'camera') &&
             <div id='cameraOverlay' className={styles.cameraOverlay}>
               <div className={styles.cameraHeader}>
-                <Navbar opacity={0} position="relative" />
+                { !hideNavFoot && <Navbar opacity={0} position="relative" /> }
                 {/* <div className={styles.cameraStats}>
                   <p>Device AR: {width/height}</p>
                   <p>Height: {height} Width: {width}</p>
@@ -472,7 +475,7 @@ function Camera(props) {
                     </button>
                   }
                 </div>
-                <Footer position="relative" opacity={0} />
+                { !hideNavFoot && <Footer position="relative" opacity={0} /> }
               </div>
             </div>
           }
@@ -531,6 +534,7 @@ Camera.propTypes = {
   setScreen: PropTypes.func,
   captureImage: PropTypes.func,
   updateSendList: PropTypes.func,
+  hideNavFoot: PropTypes.bool,
 };
 
 Camera.defaultProps = {
@@ -565,6 +569,7 @@ function mapStateToProps(state) {
     cameraPermissions: state.camera.cameraPermissions,
     orientation: state.global.orientation,
     screen: state.camera.screen,
+    hideNavFoot: state.global.hideNavFoot,
   };
 }
 
