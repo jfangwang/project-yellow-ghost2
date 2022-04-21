@@ -189,7 +189,7 @@ function Camera(props) {
   /**
    * Capture
    */
-  function capture() {
+  async function capture() {
     const fec = document.getElementById('faceEffectsCanvas');
     const video = document.getElementById('mainCamera');
     const canvas = document.getElementById('imageCanvas');
@@ -197,18 +197,19 @@ function Camera(props) {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     if (facingMode === 'user') {
-      ctx.scale(-1, 1);
-      ctx.drawImage(video, canvas.width * -1, 0, canvas.width, canvas.height);
+      await ctx.scale(-1, 1);
+      await ctx
+          .drawImage(video, canvas.width * -1, 0, canvas.width, canvas.height);
       captureImage('Image Taken Place Holder');
     } else {
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      await ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
       captureImage('Image Taken Place Holder');
     }
     if (TFOn) {
-      ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
+      await ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
     }
-    ctx.scale(1, 1);
-    ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
+    await ctx.scale(1, 1);
+    await ctx.drawImage(fec, 0, 0, canvas.width, canvas.height);
     toggleNavFoot(true);
     toggleSlide(true);
     setScreen('capture');
