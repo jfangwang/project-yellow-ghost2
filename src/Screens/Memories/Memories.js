@@ -25,9 +25,11 @@ function Memories(props) {
 
   return (
     <div className={styles.background}>
-      <button onClick={() => toggleEdit()}>
-        {edit && Object.keys(user.memories).length > 0 ? 'Cancel' : 'Edit'}
-      </button>
+      {Object.keys(user.memories).length > 0 &&
+        <button onClick={() => toggleEdit()}>
+          {edit ? 'Cancel' : 'Edit'}
+        </button>
+      }
       <div className={styles.memoriesSection} onScroll={handleScroll}>
         { Object.keys(user.memories).map((id) => (
           <Memory key={id} imgObj={user.memories[id]} edit={edit} user={user}/>
