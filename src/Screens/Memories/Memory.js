@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {editUser, editFakeDB} from '../../Actions/userActions';
 import {connect} from 'react-redux';
 import styles from './Memory.module.css';
+import {db, storage} from '../../Firebase/Firebase';
 import {
   IconContext,
   XCircle,
@@ -19,12 +20,17 @@ function Memory(props) {
    *
    */
   function remove() {
+    const updated = {...user};
+    const d = imgObj.date;
+    const ref = storage.ref(`posts/${updated.memories[d]['id']}`);
     if (isUserLoggedIn) {
-      console.log('firebase not connected yet');
+      delete updated.memories[imgObj.date];
+      ref.delete().then(async () => {
+        await db.collection('Users').doc(user.id).update(updated);
+      });
     } else {
-      const update = {...user};
       delete user.memories[imgObj.date];
-      editUser(update);
+      editUser(updated);
     }
   }
 

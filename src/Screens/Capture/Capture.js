@@ -34,6 +34,8 @@ import filter3 from '../../Assets/images/filters/Rick-And-Morty-Logo.png';
 import filter4 from '../../Assets/images/filters/color-paint-border.png';
 import {drawFinalImage} from '../Send/SendSlidingMenu';
 import {editUser} from '../../Actions/userActions';
+import {db, storage} from '../../Firebase/Firebase';
+import {v4 as uuid} from 'uuid';
 
 let sdb = null;
 
@@ -56,6 +58,7 @@ function Capture(props) {
     orientation,
     screen,
     editUser,
+    isUserLoggedIn,
   } = props;
   const sendMenu = useRef();
   const toolTime = useRef();
@@ -65,20 +68,38 @@ function Capture(props) {
   const [localIndex, setLocalIndex] = useState(0);
   const [showFilters, setShowFilters] = useState(true);
   const [savedMem, setSavedMem] = useState(false);
+  const [isloading, setIsLoading] = useState(false);
 
   /**
    *
    */
-  function saveToMemories() {
+  async function saveToMemories() {
+    setIsLoading(true);
     drawFinalImage(localIndex);
     const newMem = {};
     newMem.date = new Date().toLocaleString();
     newMem.type = 'image';
-    newMem.url = document.getElementById('finalImage').toDataURL();
+    newMem.id = uuid();
+    const dataURL = document.getElementById('finalImage').toDataURL();
     const updated = {...user};
     updated.memories[newMem.date] = newMem;
-    editUser(updated);
-    setSavedMem(true);
+    if (isUserLoggedIn) {
+      const ref = storage.ref(`posts/${newMem.id}`);
+      await ref.putString(dataURL, 'data_url').then((snapshot) => {
+        snapshot.ref.getDownloadURL().then((imgURL) => {
+          return (imgURL);
+        }).then(async function(imgURL) {
+          updated.memories[newMem.date]['url'] = imgURL;
+          await db.collection('Users').doc(user.id).update(updated);
+          setIsLoading(false);
+          setSavedMem(true);
+        });
+      });
+    } else {
+      editUser(updated);
+      setSavedMem(true);
+      setIsLoading(false);
+    }
   }
 
   /**
@@ -473,7 +494,10 @@ function Capture(props) {
                     disabled={savedMem}
                     onClick={savedMem ? () => {} : saveToMemories}
                   >
-                    { savedMem ? <Check color='green'/> : <DownloadSimple />}
+                    {isloading ?
+                      <p>Loading</p> :
+                      (savedMem ? <Check color='green'/> : <DownloadSimple />)
+                    }
                   </button>
                   <button disabled><Export /></button>
                 </div>
@@ -529,6 +553,7 @@ Capture.propTypes = {
   sendList: PropTypes.array,
   orientation: PropTypes.string,
   screen: PropTypes.string,
+  isUserLoggedIn: PropTypes.bool,
 };
 
 Capture.defaultProps = {
@@ -545,6 +570,7 @@ Capture.defaultProps = {
   user: {},
   sendList: [],
   screen: 'camera',
+  isUserLoggedIn: false,
   orientation: window.innerHeight > window.innerWidth ?
   'portrait':'landscape',
 };
@@ -562,6 +588,7 @@ function mapStateToProps(state) {
     sendList: state.camera.sendList,
     orientation: state.global.orientation,
     screen: state.camera.screen,
+    isUserLoggedIn: state.user.isUserLoggedIn,
   };
 }
 
